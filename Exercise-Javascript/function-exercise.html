@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Function-Exercise</title>
+</head>
+<body>
+  <script>
+    // function Greets (name ) {
+    //   if (!name){
+    //   console.log(`Hi! There`)
+    // } else  {
+    //   console.log(`Hi ${name}`)
+    // }
+    // }
+    
+
+    // Greets('Nahid pasha ');
+    //     Greets( 'Shahid Pasha');
+
+    //         Greets('Fazil Pasha');
+
+    //             Greets('');
+
+    /*  function convertToF(celsius) {
+        return (celsius * 9/5) +32;
+      }
+
+      console.log(convertToF(25));
+
+      // Define the convertTC function
+    function convertTC(fahrenheit) {
+      return (fahrenheit - 32) * 5/9;
+    }
+
+    console.log(convertTC(80)) */
+
+
+function convertToCelsius(fahrenheit) {
+        return (fahrenheit - 32) * 5 / 9;
+      }
+
+      // Define the convertToFahrenheit function
+      function convertToFahrenheit(celsius) {
+        return (celsius * 9 / 5) + 32;
+      }
+
+      // Corrected the function name spelling
+      function CovertTempreture(Degree , Units) {
+        if (Units === 'C'){
+        const result = convertToFahrenheit(Degree);
+        return `${result}F`;
+        } else if(Units === 'F') {
+          const result = convertToCelsius(Degree);
+          return `${result}C`;
+        }
+      }
+
+      // Corrected the function call spelling
+       console.log(CovertTempreture(25, 'C'));
+      console.log(CovertTempreture(86, 'F'));
+
+
+
+      
+  </script>
+</body>
+</html>
