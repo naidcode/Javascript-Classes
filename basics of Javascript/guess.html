@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>guess number</title>
+  </head>
+  <body>
+    <h2>Guess the number (1-100)</h2>
+    <input type="number" class="guessinput" placeholder="enter your number" />
+    <button
+      onclick="
+    checkguess() 
+    "
+    >
+      Submit
+    </button>
+    <p id="message"></p>
+    <p id="history"></p>
+  </body>
+  <script>
+    let secretNUmber = Math.floor(Math.random() * 100) + 1;
+    let guessHistory = [];
+    let isgameover = false;
+
+    function checkguess() {
+      let input = document.querySelector(".guessinput");
+      let userguess = Number(input.value);
+      let message = "";
+      let messageelement = document.querySelector(".message");
+      let historyelement = document.querySelector(".history");
+
+      if (isgameover) {
+        messageelement.textContent = "Game is Over Refresh to play again!";
+
+        return;
+      }
+
+      if (!userguess || userguess < 1 || userguess > 100) {
+        messageelement.textContent = "choose number between 1-100";
+        return;
+      }
+      guessHistory.push(userguess);
+      if (userguess === secretNUmber) {
+        message = "congrat you guess right number";
+        isgameover = true;
+      } else if (userguess < secretNUmber) {
+        message = "you choose lower number";
+        isgameover = false;
+      } else usergame > secretNUmber;
+      {
+        message = "you choose higher number";
+      }
+      isgameover = false;
+
+      messageelement.textContent = message;
+
+      let historyguess = "previous guess";
+      for (let i = 0; i < guessHistory; i++) {
+        historyguess +=
+          guessHistory[i] + (i !== guessHistory.length - 1 ? "," : "");
+      }
+      historyelement.textContent = historyguess;
+      input.value = "";
+      input.focus();
+    }
+  </script>
+</html>

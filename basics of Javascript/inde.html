@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Guess the Number</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, button { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>🎲 Guess the Number (1–100)</h2>
+  <input type="number" id="guessInput" placeholder="Enter your guess" />
+  <button onclick="checkGuess()">Submit Guess</button>
+  <p id="message"></p>
+  <p id="history"></p>
+</body>
+</html>
+<script>
+let secretNumber = Math.floor(Math.random() * 100) + 1;
+let guessHistory = [];
+let isGameOver = false;
+
+function checkGuess() {
+  let input = document.getElementById('guessInput');
+  let userGuess = Number(input.value);
+  let message = '';
+  let messageElement = document.getElementById('message');
+  let historyElement = document.getElementById('history');
+
+  if (isGameOver) {
+    messageElement.textContent = "Game is over! Refresh to play again.";
+    return;
+  }
+
+  if (!userGuess || userGuess < 1 || userGuess > 100) {
+    messageElement.textContent = "Please enter a number between 1 and 100.";
+    return;
+  }
+
+  guessHistory.push(userGuess);
+  if (userGuess === secretNumber) {
+    message = `🎉 Correct! The number was ${secretNumber}.`;
+    isGameOver = true;
+  } else if (userGuess > secretNumber) {
+    message = "📉 Too high! Try again.";
+  } else {
+    message = "📈 Too low! Try again.";
+  }
+
+  messageElement.textContent = message;
+
+  // Using for loop to show history
+  let historyText = 'Previous guesses: ';
+  for (let i = 0; i < guessHistory.length; i++) {
+    historyText += guessHistory[i] + (i !== guessHistory.length - 1 ? ', ' : '');
+  }
+  historyElement.textContent = historyText;
+
+  input.value = '';
+  input.focus();
+}
+
+</script>
