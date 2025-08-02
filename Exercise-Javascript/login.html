@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Exercise</title>
+</head>
+<body>
+  <script>
+    let storedusername = 'Nahid';
+    let storeduserPassword = 'nahid123'
+
+    function login(user , password) {
+      let usercorrectname = user === storedusername;
+      let usercorrectpassword = password === storeduserPassword;
+
+
+      if (usercorrectname && usercorrectpassword) {
+          console.log("welcome to our stored")
+      } else if (!usercorrectname && usercorrectpassword){
+        console.log('user name is wrong')
+      } else if (usercorrectname && !usercorrectpassword){
+        console.log("user password is wrong")
+      } else{
+        console.log("user name and user password both are wrong")
+      }
+    } 
+
+
+    login('Nahid' , 'nahid123'); //correct 
+    // login('Admin' , 'nahid123'); //user name wrong
+    // login('Nahid', 'nahidd123'  ) //user password wrong
+    // login('nahidd' , 'nahiddd1234') //both are wrong
+
+  </script>
+</body>
+</html>
