@@ -39,7 +39,7 @@ console.log(product2);
 console.log(product2['name'])
 console.log(product2['Delivery-time']);
 
-console.log(product2.rating.stars, product2.rating.count);
+console.log(product2.rating.stars);
 product2.fun();
 
 
