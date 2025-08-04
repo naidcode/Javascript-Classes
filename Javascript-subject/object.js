@@ -43,3 +43,11 @@ console.log(product2.rating.stars);
 product2.fun();
 
 
+console.log(JSON.stringify(product2));
+
+const jsonstring = JSON.stringify(product2);
+console.log(JSON.parse(jsonstring));
+
+
+console.log('hello'.length);
+console.log('hello'.toUpperCase())
