@@ -59,6 +59,19 @@
 //   console.log("Senior citizen")
 // }
 
+// let name = 'Muhee';
+// let pincode = '2006';
+
+// let username = 'Muheed';
+// let userpincode = '2006';
+
+// if (username === name && userpincode === pincode){
+//   console.log('succesfully login!')
+// } else {
+//   console.log('invalid')
+// }
+
+
 
 
 
