@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOM-Exercise</title>
+  </head>
+  <body>
+    <button
+      class="a9"
+      onclick="
+  console.log(document.querySelector('.a9'))  
+    "
+    >
+      9A
+    </button>
+    <button
+      class="b9"
+      onclick="
+      BButton();
+    "
+    >
+      9B
+    </button>
+    <!-- Head and Tail  -->
+    <button onclick="
+    document.querySelector('.js-choice').innerHTML = 'you choose heads'
+    ">head</button>
+    <button onclick="
+    document.querySelector('.js-choice').innerHTML = 'you choose tails'
+    ">tails</button>
+    <p class="js-choice"></p>
+
+    <!-- Name printer -->
+     <input type="text" placeholder="enter your name" class="js-name" onkeydown="
+     enteruse()
+     ">
+     <button 
+     onclick="
+     nameprint()
+     ">enter</button>
+     <p class="jss-para"></p>
+   
+  </body>
+  <script>
+    function enteruse() {
+      if (event.key === 'Enter'){
+      nameprint();
+     }
+    }
+    function nameprint(){
+       const elementinput = document.querySelector('.js-name');
+     document.querySelector('.jss-para')
+     .innerHTML = `your name is ${elementinput.value}`;
+    }
+    function BButton() {
+      const buttonelement = document.querySelector(".b9");
+      if (buttonelement.innerHTML === "9B") {
+        buttonelement.innerHTML = "9B Done!";
+      } else {
+        buttonelement.innerHTML = "9B";
+      }
+    }
+  </script>
+</html>
