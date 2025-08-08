@@ -72,6 +72,29 @@
 // }
 
 
+// let price = 500;
+// let quantity = 5;
+
+// let total = price * quantity;
+
+// if (total >= 500){
+//   let discount = total *0.10;
+//   let finalprice = total - discount;
+//   console.log(`total ${total}`)
+//   console.log(`after discount ${discount}`)
+//   console.log(`final price is: ${finalprice}`);
+// } else {
+//   console.log(`no discount price is less than 500 total is : ${total}`)
+// }
+
+// let balance = 5000;
+// let withdrawAmount = 5000;
 
 
-
+// if (withdrawAmount <= 0) {
+//   console.log('invalid withdrawal amount');
+// } else if (withdrawAmount <= balance) {
+//   console.log(`withdrawal successful. Remaining balance: ₹${balance - withdrawAmount}`);
+// } else {
+//   console.log('insufficient balance');
+// }
