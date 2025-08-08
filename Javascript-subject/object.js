@@ -1,4 +1,4 @@
- /*let product = {
+ let product = {
   name: 'nahid ',
   age: 20,
 }
@@ -8,7 +8,7 @@ let result;
 result = product;
 
 console.log(result);
-console.log(result.name); //we can see object values by putting . and value name.
+console.log(result.name); //we can see object values by putting '.' and value name.
 console.log(product.age);
 
 result.name = 'fazil'; // we can change the value of object like this.
@@ -21,7 +21,7 @@ product.prices = "2500";  // if you want to add new property use this.
 console.log(product)
 
 delete product.prices;  //to delete the property from object use this.
-console.log(product) */
+console.log(product) 
 
 let product2 = {
   name: "fazil pasha ",
