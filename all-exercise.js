@@ -136,3 +136,16 @@
 //   console.log(`${c} is the largest number`);
 // }
 //  //the largest number is c output
+
+// let year = 1900;
+
+// if (year % 400 === 0) {
+//   console.log('leap year')
+// } else if (year % 100 === 0){
+//   console.log('not a leap year')
+// }  else if (year % 4 === 0) {
+//   console.log('leap year')
+// } else{
+//   console.log('not a leap year')
+// }
+// //not a leap year output
