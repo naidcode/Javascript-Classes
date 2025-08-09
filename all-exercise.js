@@ -113,12 +113,26 @@
 // }
 
 
-let number = 0;
+// let number = 0;
 
-if (number > 0) {
-  console.log('Positive')
-} else if (number < 0) {
-  console.log('negative')
-}  else{
-  console.log('Zero')
-}
+// if (number > 0) {
+//   console.log('Positive')
+// } else if (number < 0) {
+//   console.log('negative')
+// }  else{
+//   console.log('Zero')
+// }
+
+// let a = 25;
+// let b = 150;
+// let c = 4000;
+
+
+// if (a >= b && a >= c) {
+//   console.log(`${a} is the largest number`);
+// } else if (b >= a && b >= c) {
+//   console.log(`${b} is the largest number`);
+// } else {
+//   console.log(`${c} is the largest number`);
+// }
+//  //the largest number is c output
