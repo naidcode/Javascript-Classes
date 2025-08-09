@@ -98,3 +98,17 @@
 // } else {
 //   console.log('insufficient balance');
 // }
+
+// let tempreture = 98.6;
+// let unit = 'F';
+
+// if (unit ==='C'){
+// let fehrenheit = (tempreture * 5/9)+ 32;
+// console.log(`${fehrenheit}`)
+// } else if (unit === 'F'){
+//   let celcius = (tempreture - 32) * 5/9;
+//   console.log(`${celcius}`)
+// } else {
+//   console.log('invalid tempreture');
+// }
+
