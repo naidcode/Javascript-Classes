@@ -19,6 +19,29 @@
         color: black;
         background-color: rgb(208, 200, 200);
       }
+      p{
+        font-size: 17px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      input{
+      height: 40px;
+      width: 250px;
+      border: 2px solid black;
+      outline: none;
+      border-radius: 5px;
+      }
+      input::placeholder{
+        font-size: 16px;
+        padding: 5px;
+      }
+      .calculate{
+        padding: 13px 20px;
+        background-color: green;
+        color: white;
+        font-size: 16px;
+        border: none;
+      }
+
     </style>
   </head>
   <body>
@@ -32,10 +55,12 @@
       Subscribe
     </button>
     <p>Amazon Shiping Project</p>
+    <p>Orders under $40 = +$10 shipping. <br>
+Orders over $40 = FREE shipping.</p>
     <input type="text" placeholder="calculate" class="js-input" onkeydown="
         costKeydown();
     ">
-    <button
+    <button class="calculate"
       onclick="
         costCalculator()
         "
