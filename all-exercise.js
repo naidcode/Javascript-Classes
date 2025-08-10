@@ -166,3 +166,22 @@
 //     console.log('invalid operator')
 //     break;
 // }  //output is 15
+
+// let user = {
+//   name: 'Nahid Pasha',
+//   age: 20,
+//   isMember: true
+// }
+
+// function Checkuser(user) {
+//   if (user.age >= 18 && user.isMember){
+//     console.log(`Welcome ${user.name} you have full access.`)
+//   } else if (user.age < 18 && user.isMember){
+//     console.log(`Hi, ${user.name} you have limited access.`)
+//   }else{
+//     console.log(`${user.name} please became a member of access`)
+//   }
+// } 
+// //output is first statement
+
+// Checkuser(user)
