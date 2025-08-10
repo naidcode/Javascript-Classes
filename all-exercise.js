@@ -185,3 +185,24 @@
 // //output is first statement
 
 // Checkuser(user)
+
+// let cart = {
+//   items: 5,
+//   totalprice: 2500,
+//   isMember: true
+// }
+
+// function calculateFinalPrice(cart) {
+//   let discount = 0;
+//   if (cart.isMember && cart.totalprice > 1000){
+//    discount = cart.totalprice * 15 / 100;
+//   } else if (cart.isMember && cart.totalprice <= 1000) {
+//    discount = cart.totalprice * 10 / 100;
+//   } else {
+//     discount = 0; //no discount for non members
+//   }
+//   let finalPrice = cart.totalprice - discount;
+//   console.log(`you brought ${cart.items} items after discount your final price is ${finalPrice}`)
+// } 
+
+// calculateFinalPrice(cart)
