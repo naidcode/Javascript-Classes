@@ -149,3 +149,20 @@
 //   console.log('not a leap year')
 // }
 // //not a leap year output
+
+
+// let num1 = 10;
+// let num2 = 5;
+// let op = '+';
+
+// switch (op) {
+//   case '+':
+//     console.log(num1 + num2)
+//     break;
+//   case '-':
+//     console.log(num1 - num2);
+//     break;
+//   default:
+//     console.log('invalid operator')
+//     break;
+// }  //output is 15
