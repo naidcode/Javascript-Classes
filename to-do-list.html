@@ -1,47 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>DOM To-Do List (No Arrays)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To Do List</title>
 </head>
 <body>
-
-  <h2>Simple To-Do List</h2>
-
-  <input type="text" id="taskInput" placeholder="Enter your task" />
-  <button id="addTaskBtn">Add Task</button>
-
-  <ul id="taskList"></ul>
-
-  <script>
-    const taskInput = document.getElementById('taskInput');
-    const addTaskBtn = document.getElementById('addTaskBtn');
-    const taskList = document.getElementById('taskList');
-
-    addTaskBtn.addEventListener('click', function () {
-      const taskText = taskInput.value.trim();
-
-      if (taskText === '') {
-        alert('Please enter a task');
-        return;
-      }
-
-      const li = document.createElement('li');
-      li.innerText = taskText;
-
-      const deleteBtn = document.createElement('button');
-      deleteBtn.innerText = 'Delete';
-      deleteBtn.style.margin = '5px';
-
-      deleteBtn.addEventListener('click', function () {
-        taskList.removeChild(li);
-      });
-
-      li.appendChild(deleteBtn);
-      taskList.appendChild(li);
-
-      taskInput.value = '';
-    });
-  </script>
-
+  <p>To Do list </p>
+  <input type="text" placeholder="enter name " class="js-name">
+  <button onclick="
+  ToDoList()
+  ">Add</button>
 </body>
+<script>
+let List = []
+  function ToDoList() {
+    let inputElement = document.querySelector('.js-name');
+    let name = inputElement.value;
+    List.push(name)
+    console.log(List)
+    inputElement.value = '';
+  }
+
+
+ 
+</script>
 </html>
