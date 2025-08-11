@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arreys and LOops</title>
+</head>
+<body>
+  <script>
+    let myArrays= [
+      20,
+      30,
+      10,
+      100
+  ]
+  console.log(myArrays)
+  console.log(myArrays[0]);
+
+myArrays[0] = 1000;
+console.log(myArrays);
+
+console.log(Array.isArray([1,2]));
+console.log(myArrays.length);
+
+
+myArrays.push('trillion'); //.push we use to add values in array
+console.log(myArrays)
+
+myArrays.splice(3 );  //.splice we use to remove the value of array
+console.log(myArrays)
+
+
+ //Lets Learn LOops;
+
+
+  let i = 1;
+
+
+  while (i <= 10) {  //while lOops
+    console.log(i);
+    i++;
+  }
+
+  for (let i = 0; i < 10; i++) {  //For LOops
+    console.log(i)
+    
+  }
+
+  let todo = [
+    'dinner',  //0
+    'lunch', //1
+    'breakfast', //2
+  ]
+
+  for (let index = 0; index < todo.length; index++) {
+    const element = todo[index];
+    console.log(element)
+  }
+
+  let nuns = [1,1,1,1,100];
+  let total = 0;
+
+
+  for (let i = 0; i < nuns.length; i++) {
+    const element = nuns[i];
+    total += element
+  }
+  console.log(total)
+
+  let double = [];
+
+  for (let i = 0; i < nuns.length; i++) {
+    const element = nuns[i];
+    double.push(element * 2)
+  }
+  console.log(double)
+  </script>
+</body>
+</html>
