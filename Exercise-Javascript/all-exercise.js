@@ -206,3 +206,40 @@
 // } 
 
 // calculateFinalPrice(cart)
+
+
+let order = {
+  customername: 'Nahid Pasha',
+  items: [
+    { name: "Burger", price: 150 },
+    { name: "Pizza", price: 350 },
+    { name: "Pasta", price: 2000 }
+  ],
+  isMember: false,
+}
+
+function calculateBill(order) {
+  let totalPrice = 0;
+
+  // Calculate total price
+  for (let i = 0; i < order.items.length; i++) {
+    totalPrice += order.items[i].price;
+  }
+
+  let discount = 0;
+
+  if (order.isMember) {
+    discount = totalPrice * 10 / 100;
+    console.log('For Members: 10% discount');
+  } else if (totalPrice >= 2000) {
+    console.log(`Free delivery because you buy more than 2000`);
+  } else {
+    console.log(`50 rupees delivery charges added: ${totalPrice + 50}`);
+  }
+
+  let finalPrice = totalPrice - discount;
+  console.log(`Total Price: ${totalPrice}`);
+  console.log(`Final Price after discount: ${finalPrice}`);
+}
+
+calculateBill(order);
