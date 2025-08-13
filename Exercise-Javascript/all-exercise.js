@@ -208,38 +208,62 @@
 // calculateFinalPrice(cart)
 
 
-let order = {
-  customername: 'Nahid Pasha',
-  items: [
-    { name: "Burger", price: 150 },
-    { name: "Pizza", price: 350 },
-    { name: "Pasta", price: 2000 }
-  ],
-  isMember: false,
-}
+// let order = {
+//   customername: 'Nahid Pasha',
+//   items: [
+//     { name: "Burger", price: 150 },
+//     { name: "Pizza", price: 350 },
+//     { name: "Pasta", price: 2000 }
+//   ],
+//   isMember: false,
+// }
 
-function calculateBill(order) {
-  let totalPrice = 0;
+// function calculateBill(order) {
+//   let totalPrice = 0;
 
-  // Calculate total price
-  for (let i = 0; i < order.items.length; i++) {
-    totalPrice += order.items[i].price;
-  }
+//   // Calculate total price
+//   for (let i = 0; i < order.items.length; i++) {
+//     totalPrice += order.items[i].price;
+//   }
 
-  let discount = 0;
+//   let discount = 0;
 
-  if (order.isMember) {
-    discount = totalPrice * 10 / 100;
-    console.log('For Members: 10% discount');
-  } else if (totalPrice >= 2000) {
-    console.log(`Free delivery because you buy more than 2000`);
-  } else {
-    console.log(`50 rupees delivery charges added: ${totalPrice + 50}`);
-  }
+//   if (order.isMember) {
+//     discount = totalPrice * 10 / 100;
+//     console.log('For Members: 10% discount');
+//   } else if (totalPrice >= 2000) {
+//     console.log(`Free delivery because you buy more than 2000`);
+//   } else {
+//     console.log(`50 rupees delivery charges added: ${totalPrice + 50}`);
+//   }
 
-  let finalPrice = totalPrice - discount;
-  console.log(`Total Price: ${totalPrice}`);
-  console.log(`Final Price after discount: ${finalPrice}`);
-}
+//   let finalPrice = totalPrice - discount;
+//   console.log(`Total Price: ${totalPrice}`);
+//   console.log(`Final Price after discount: ${finalPrice}`);
+// }
 
-calculateBill(order);
+// calculateBill(order);
+
+let billAmount = 456.789;
+let discount = 10;
+
+let displayBill = billAmount.toFixed(2);
+console.log(displayBill);
+
+let discountfinal = (billAmount * discount) / 100;
+let finalamount = Math.round((discountfinal * discount )* 100)
+console.log(finalamount)
+
+
+let price = 199.99;
+let quantity = 3;
+
+// Without parseFloat (wrong)
+let totalWrong = price * quantity; // Works here but still string input
+console.log(totalWrong); // "string"
+
+// With parseFloat (correct)
+let total = parseFloat(price * quantity);
+console.log(total); // 599.97 (number)
+
+
