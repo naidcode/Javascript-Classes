@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculate Bill with Friends</title>
+</head>
+<body>
+ <h2>Calculate Bill with Friends</h2>
+ <label>Total Bill: </label>
+ <input type="number" id="bill" placeholder="Enter bill amount"><br><br>
+ <input type="number" id="person" placeholder="Enter total persons"><br><br>
+ <input type="number" id="tips" placeholder="Enter tip percentage"><br><br>
+ 
+ <button onclick="calculateAmount()">Calculate</button>
+
+ <p id="tipperpersons"></p>
+ <p id="totalperpersons"></p>
+
+ <script>
+    function calculateAmount() {
+        let bill = parseFloat(document.getElementById('bill').value);
+        let person = parseInt(document.getElementById('person').value);
+        let tips = parseFloat(document.getElementById('tips').value);
+
+        if (isNaN(bill) || isNaN(person) || isNaN(tips) || bill <= 0 || person <= 0 || tips < 0) {
+            alert("❌ Enter valid details");
+            return;
+        }
+
+        let totaltip = bill * tips / 100;
+        let tipperperson = totaltip / person;
+        let totalperperson = (bill + totaltip) / person;
+
+        document.getElementById('tipperpersons').innerText = `Tip per person ₹${tipperperson.toFixed(2)}`;
+        document.getElementById('totalperpersons').innerText = `Amount per person ₹${totalperperson.toFixed(2)}`;
+    }
+ </script>
+</body>
+</html>
+
