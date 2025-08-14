@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parse Comparison</title>
+</head>
+<body>
+    <h2>Tip Calculator</h2>
+
+<label>Bill Amount: ₹</label>
+<input type="number" id="bill" placeholder="e.g., 1500"><br><br>
+
+<label>Number of People: </label>
+<input type="number" id="people" placeholder="e.g., 3"><br><br>
+
+<label>Tip Percentage: </label>
+<input type="number" id="tip" placeholder="e.g., 10"><br><br>
+
+<button onclick="calculateTip()">Calculate Tip</button>
+
+<h3>Results:</h3>
+<p id="tipPerPerson"></p>
+<p id="totalPerPerson"></p>
+
+
+    <script>
+        function calculateTip() {
+    let bill = parseFloat(document.getElementById("bill").value);
+    let people = parseInt(document.getElementById("people").value);
+    let tipPercent = parseFloat(document.getElementById("tip").value);
+
+    // Stop if invalid input
+    if (isNaN(bill) || isNaN(people) || isNaN(tipPercent) || bill <= 0 || people <= 0 || tipPercent < 0) {
+        alert("❌ Please enter valid values!");
+        return; // stops execution
+    }
+
+    // Tip calculation
+    let totalTip = bill * tipPercent / 100;
+    let tipPerPerson = totalTip / people;
+
+    // Total per person
+    let totalPerPerson = (bill + totalTip) / people;
+
+    // Display with 2 decimals
+    document.getElementById("tipPerPerson").innerText = `Tip per person: ₹${tipPerPerson.toFixed(2)}`;
+    document.getElementById("totalPerPerson").innerText = `Total per person: ₹${totalPerPerson.toFixed(2)}`;
+}
+
+    </script>
+</body>
+</html>
