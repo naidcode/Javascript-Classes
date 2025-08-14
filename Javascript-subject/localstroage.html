@@ -1,0 +1,72 @@
+<script>
+
+  //save number like this 
+localStorage.setItem("age" , 20);
+console.log(localStorage.getItem("age"))
+
+
+
+let user = { name: "Nahid", age: 20 };
+localStorage.setItem("user", JSON.stringify(user)); //save an abject use JSON.stringify
+console.log(user);
+
+
+let savedUser = JSON.parse(localStorage.getItem("user"));  //to read use JSON.parse
+console.log(savedUser.name); // "Nahid"
+console.log(savedUser.age);  // 20;
+
+
+let cloths = ["shirt" , "Pants" , "caps"]
+localStorage.setItem("cloths", JSON.stringify(cloths));
+
+let readarrays = JSON.parse(localStorage.getItem("cloths"));  //to save 
+console.log(readarrays[1]);
+
+
+let counter = Number(localStorage.getItem("count")) || 0;
+counter++;
+localStorage.setItem("count", counter);
+console.log(counter); // increments every refresh
+
+/*Think of LocalStorage like a notebook you keep inside your desk:
+
+You can write something (setItem).
+
+You can read it later (getItem).
+
+You can erase a single note (removeItem).
+
+You can throw away the whole notebook (clear).
+
+The key thing: LocalStorage only stores strings → That’s why we use
+JSON.stringify() to save and JSON.parse() to read complex data like objects or arrays.*/
+
+//Mini Practical Exercise
+
+localStorage.setItem("user" , JSON.stringify({age: 20 , name: "nahid pasha"}));
+
+let detail = JSON.parse(localStorage.getItem("user"));
+console.log(detail);
+
+detail.skill = "full stack developer";
+localStorage.setItem("user" , JSON.stringify(detail));
+// console.log(detail);
+
+localStorage.removeItem("user")
+
+
+ let groceryListss = [
+  { name: "Apple", quantity: 5 },
+  { name: "Banana", quantity: 0 }, // sold out
+  { name: "Mango", quantity: 10 },
+  { name: "Orange", quantity: 0 }  // sold out
+];
+
+for (let i = 0; i < groceryListss.length; i++) {
+  if (groceryListss[i].quantity === 0) {
+    continue; // Skip sold-out items
+  }
+  console.log(`Buy ${groceryListss[i].quantity} ${groceryListss[i].name}`);
+}
+
+</script>
