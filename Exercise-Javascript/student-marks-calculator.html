@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" placeholder="name" id="js-name">
+  <button onclick="
+  entername()
+  ">add</button>
+  <p class="result"></p>
+</body>
+<script>
+  let todo = [];
+
+  function entername() {
+    let todoname = document.getElementById('js-name');
+    let name = todoname.value;
+    todo.push(name);
+    console.log(todo)
+
+    todoname.value = '';
+     document.querySelector('.result').innerHTML = `${name}`
+  }
+  
+ 
+
+
+  // let random = 0;
+
+  // while (random < 0.5) {
+  //   random = Math.random()
+  //   console.log(random)
+  // }
+</script>
+</html>
+<!-- <h2>Student Grade Calculator</h2>
+
+<label>
+  <input type="checkbox" value="95"> Math (95)
+</label><br>
+
+<label>
+  <input type="checkbox" value="90"> Science (90)
+</label><br>
+
+<label>
+  <input type="checkbox" value="85"> English (85)
+</label><br>
+
+<label>
+  <input type="checkbox" value="80"> History (80)
+</label><br>
+
+<label>
+  <input type="checkbox" value="92"> Computer (92)
+</label><br>
+
+<button onclick="calculateMarks()">Calculate</button>
+
+<p id="result"></p>
+
+<script>
+function calculateMarks() {
+  let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  let totalMarks = 0;
+  let subjectCount = 0;
+
+  // Loop through checkboxes
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].checked) {
+      totalMarks += Number(checkboxes[i].value);
+      subjectCount++;
+    }
+  }
+
+  if (subjectCount === 0) {
+    document.getElementById("result").innerHTML = "Please select at least one subject.";
+    return;
+  }
+
+  let average = totalMarks / subjectCount;
+  let grade = "";
+
+  if (average >= 90) grade = "A+";
+  else if (average >= 80) grade = "A";
+  else if (average >= 70) grade = "B";
+  else if (average >= 60) grade = "C";
+  else grade = "Fail";
+
+  document.getElementById("result").innerHTML = `
+    Total Marks: ${totalMarks} <br>
+    Average: ${average.toFixed(2)} <br>
+    Grade: ${grade}
+  `;
+}
+</script> -->
