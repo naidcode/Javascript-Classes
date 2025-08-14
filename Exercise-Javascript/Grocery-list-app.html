@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grocery List App</title>
+</head>
+<body>
+  <h2>Grocery List App</h2>
+
+  <label>Item Name</label>
+  <input type="text" id="itemname" placeholder="Enter item name"><br><br>
+
+  <label>Item Quantity</label>
+  <input type="number" id="itemquantity" placeholder="Enter quantity"><br><br>
+
+  <button onclick="addItem()">Add Item</button>
+  <ul id="grocerylist"></ul>
+
+  <script>
+    // ✅ Load saved list from localStorage or empty array
+    let groceryList = JSON.parse(localStorage.getItem("groceryList")) || [];
+    renderList(); // Show saved list when page loads
+
+    function addItem() {
+      let itemname = document.getElementById('itemname').value.trim();
+      let itemquantity = Number(document.getElementById('itemquantity').value);
+
+      // Validation
+      if (itemname === "" || itemquantity <= 0) {
+        alert("Please fill in both fields correctly.");
+        return;
+      }
+
+      // Create new item object
+      let item = { name: itemname, quantity: itemquantity };
+
+      // Add to list and save
+      groceryList.push(item);
+      localStorage.setItem("groceryList", JSON.stringify(groceryList));
+
+      // Clear input fields
+      document.getElementById('itemname').value = '';
+      document.getElementById('itemquantity').value = '';
+
+      // Re-render the updated list
+      renderList();
+    }
+
+    function renderList() {
+      let list = document.getElementById("grocerylist");
+      list.innerHTML = ""; // Clear old list
+
+      groceryList.forEach((item, index) => {
+        let li = document.createElement("li");
+        li.textContent = `${item.name} (${item.quantity})`;
+
+        // Delete button
+        let deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "❌ Delete";
+        deleteBtn.onclick = function () {
+          deleteItem(index);
+        };
+
+        li.appendChild(deleteBtn);
+        list.appendChild(li);
+      });
+    }
+
+    function deleteItem(index) {
+      groceryList.splice(index, 1);
+      localStorage.setItem("groceryList", JSON.stringify(groceryList));
+      renderList();
+    }
+
+
+   
+  </script>
+</body>
+</html>
