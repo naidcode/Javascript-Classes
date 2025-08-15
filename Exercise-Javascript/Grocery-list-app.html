@@ -18,7 +18,7 @@
   <ul id="grocerylist"></ul>
 
   <script>
-    // ✅ Load saved list from localStorage or empty array
+    // Load saved list from localStorage or empty array
     let groceryList = JSON.parse(localStorage.getItem("groceryList")) || [];
     renderList(); // Show saved list when page loads
 
@@ -57,7 +57,7 @@
 
         // Delete button
         let deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "❌ Delete";
+        deleteBtn.textContent = "Delete";
         deleteBtn.onclick = function () {
           deleteItem(index);
         };
