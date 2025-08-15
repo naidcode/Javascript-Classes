@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shoping-Cart-App</title>
+  </head>
+  <body>
+    <h2>Shoping-Cart-App</h2>
+    <label for="">item name</label>
+    <input type="text" placeholder="enter item name" id="ItemName" />
+    <br /><br />
+    <label for="">Price</label>
+    <input type="number" placeholder="enter price" id="itemPrice" />
+    <br /><br />
+    <button id="js-addButton" onclick="addItem()">Add Item</button> <br /><br />
+    <ul id="listItem"></ul>
+    <br />
+    <p id="totalPrice"></p>
+  </body>
+  <script>
+    let Cart = JSON.parse(localStorage.getItem("Cart")) || [];
+    function addItem() {
+      let ItemName = document.getElementById("ItemName").value.trim();
+      let itemPrice = Number(document.getElementById("itemPrice").value);
+
+      if (!ItemName || itemPrice <= 0) {
+        alert(`first fill both input`);
+        return;
+      }
+
+      let item = {
+        name: ItemName,
+        price: itemPrice,
+      };
+
+      Cart.push(item);
+      updateStorage();
+
+      document.getElementById("ItemName").value = "";
+      document.getElementById("itemPrice").value = "";
+
+      renderCart()
+
+    }
+
+   // ✅ Function to render cart
+    function renderCart() {
+      const ul = document.getElementById("listItem");
+      ul.innerHTML = ""; // Clear previous list
+
+      let total = 0; // Initialize total
+
+      for (let i = 0; i < Cart.length; i++) {
+        const item = Cart[i];
+        total += item.price; // Add item price to total
+
+        // Create list item
+        const li = document.createElement("li");
+        li.textContent = `${item.name} - ₹${item.price} `;
+
+        // Create delete button
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "❌ Delete";
+        deleteButton.onclick = function() {
+          Cart.splice(i, 1);
+          updateStorage();
+          renderCart();
+        };
+
+        li.appendChild(deleteButton);
+        ul.appendChild(li);
+      }
+      document.getElementById("totalPrice").textContent = `Total: ${total}`;
+    }
+    
+
+    function updateStorage() {
+      localStorage.setItem("Cart", JSON.stringify(Cart));
+    }
+    renderCart()
+  </script>
+</html>
