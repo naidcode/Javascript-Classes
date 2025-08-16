@@ -1,47 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grocery-app</title>
-</head>
-<body>
-  <label for="">Name</label>
-  <input type="text" placeholder="enter name " id="js-name"> <br><br>
-  <label for="">Quantity</label>
-  <input type="number" placeholder="enter quantity" id="js-Quantity"> <br><br>
-  <button id="js-button" onclick="addItem()">Add Items</button> <br><br>
-  <ul id="groceryList"></ul>
-</body>
-<script>
-  let groceryList = JSON.parse(localStorage.getItem("groceryList")) || [];
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grocery-app</title>
+  </head>
+  <body>
+    <label for="">Name</label>
+    <input type="text" placeholder="enter name " id="js-name" /> <br /><br />
+    <label for="">Quantity</label>
+    <input type="number" placeholder="enter quantity" id="js-Quantity" />
+    <br /><br />
+    <button id="js-button" onclick="addItem()">Add Items</button> <br /><br />
+    <ul id="groceryList"></ul>
+  </body>
+  <script>
+    let groceryList = JSON.parse(localStorage.getItem("groceryList")) || [];
 
-  function addItem() {
-    let name = document.getElementById("js-name").value.trim();
-    let Quantity = Number(document.getElementById("js-Quantity").value);
+    function addItem() {
+      let name = document.getElementById("js-name").value.trim();
+      let Quantity = Number(document.getElementById("js-Quantity").value);
 
-
-    if(!name || Quantity <= 0) {
-      alert("first fill both inputs");
-      return;
-    }
-
-  let Item = { name: name, Quantity: Quantity, isBought: false }
-
-       
-       groceryList.push(Item)
-       localStorage.setItem("groceryList" , JSON.stringify(groceryList));
-
-       document.getElementById("js-name").value = "";
-       document.getElementById("js-Quantity").value = "";
-
-       renderList()
+      if (!name || Quantity <= 0) {
+        alert("first fill both inputs");
+        return;
       }
-       function renderList() {
-        const Ul = document.getElementById("groceryList"); Ul.innerHTML = "";
-        for (let i = 0; i < groceryList.length; i++) {
-          const elementList = groceryList[i];
-          let p = document.createElement("p");
+
+      let Item = { name: name, Quantity: Quantity, isBought: false };
+
+      groceryList.push(Item);
+      localStorage.setItem("groceryList", JSON.stringify(groceryList));
+
+      document.getElementById("js-name").value = "";
+      document.getElementById("js-Quantity").value = "";
+
+      renderList();
+    }
+    function renderList() {
+      const Ul = document.getElementById("groceryList");
+      Ul.innerHTML = "";
+      for (let i = 0; i < groceryList.length; i++) {
+        const elementList = groceryList[i];
+        let p = document.createElement("p");
         p.textContent = `${elementList.name} ${elementList.Quantity}`;
 
         let dleButton = document.createElement("Button");
@@ -50,18 +50,15 @@
 
         dleButton.onclick = function () {
           deleteItem(i);
-        }
-          Ul.appendChild(p);
+        };
+        Ul.appendChild(p);
         p.appendChild(dleButton);
-      
-        }
-      
       }
-       function deleteItem(i) {
+    }
+    function deleteItem(i) {
       groceryList.splice(i, 1);
       localStorage.setItem("groceryList", JSON.stringify(groceryList));
       renderList();
     }
-  
-</script>
+  </script>
 </html>
