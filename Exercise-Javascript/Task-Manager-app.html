@@ -1,91 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Manager</title>
-</head>
-<body>
-  <h2>Task Manager App</h2>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Manager</title>
+  </head>
+  <body>
+    <h2>Task Manager App</h2>
 
-  <label>Task Name:</label>
-  <input type="text" id="taskName" placeholder="Enter task"><br><br>
+    <label>Task Name:</label>
+    <input type="text" id="taskName" placeholder="Enter task" /><br /><br />
 
-  <label>Task Description:</label>
-  <input type="text" id="taskDescription" placeholder="Enter description"><br><br>
+    <label>Task Description:</label>
+    <input
+      type="text"
+      id="taskDescription"
+      placeholder="Enter description"
+    /><br /><br />
 
-  <button onclick="addTask()">Add Task</button><br><br>
+    <button onclick="addTask()">Add Task</button><br /><br />
 
-  <ul id="taskList"></ul>
+    <ul id="taskList"></ul>
 
-<script>
-  // Load tasks from localStorage or empty array
-  let taskList = JSON.parse(localStorage.getItem("taskList")) || [];
+    <script>
+      // Load tasks from localStorage or empty array
+      let taskList = JSON.parse(localStorage.getItem("taskList")) || [];
 
-  function addTask() {
-    let taskName = document.getElementById("taskName").value.trim();
-    let description = document.getElementById("taskDescription").value.trim();
+      function addTask() {
+        let taskName = document.getElementById("taskName").value.trim();
+        let description = document
+          .getElementById("taskDescription")
+          .value.trim();
 
-    if (!taskName || !description) {
-      alert("Please fill both fields");
-      return;
-    }
+        if (!taskName || !description) {
+          alert("Please fill both fields");
+          return;
+        }
 
-    // Create task object
-    let task = {
-      name: taskName,
-      description: description,
-      isDone: false // new tasks start as not done
-    };
+        // Create task object
+        let task = {
+          name: taskName,
+          description: description,
+          isDone: false, // new tasks start as not done
+        };
 
-    // Add task to list and save
-    taskList.push(task);
-    localStorage.setItem("taskList", JSON.stringify(taskList));
-
-    // Clear inputs
-    document.getElementById("taskName").value = "";
-    document.getElementById("taskDescription").value = "";
-
-    renderTask();
-  }
-
-  function renderTask() {
-    let ul = document.getElementById("taskList");
-    ul.innerHTML = ""; // clear previous list
-
-    for (let i = 0; i < taskList.length; i++) {
-      let task = taskList[i];
-      let li = document.createElement("li");
-
-      // Task text
-      li.textContent = `${task.name} - ${task.description} `;
-
-      // Complete button
-      let completeBtn = document.createElement("button");
-      completeBtn.textContent = task.isDone ? "Compelete" : "inComplete";
-      completeBtn.onclick = function() {
-        task.isDone = !task.isDone;
+        // Add task to list and save
+        taskList.push(task);
         localStorage.setItem("taskList", JSON.stringify(taskList));
+
+        // Clear inputs
+        document.getElementById("taskName").value = "";
+        document.getElementById("taskDescription").value = "";
+
         renderTask();
-      };
+      }
 
-      // Delete button
-      let deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "Delete";
-      deleteBtn.onclick = function() {
-        taskList.splice(i, 1);
-        localStorage.setItem("taskList", JSON.stringify(taskList));
-        renderTask();
-      };
+      function renderTask() {
+        let ul = document.getElementById("taskList");
+        ul.innerHTML = ""; // clear previous list
 
-      li.appendChild(completeBtn);
-      li.appendChild(deleteBtn);
-      ul.appendChild(li);
-    }
-  }
+        for (let i = 0; i < taskList.length; i++) {
+          let task = taskList[i];
+          let li = document.createElement("li"); li.textContent = `${task.name} - ${task.description} `;
 
-  // Render tasks on page load
-  renderTask();
-</script>
-</body>
+
+          // Task text
+          
+          // Complete button
+          let completeBtn = document.createElement("button");
+          completeBtn.textContent = task.isDone ? "Completed" : "inComplete";
+          completeBtn.onclick = function () {
+            task.isDone = !task.isDone;
+            localStorage.setItem("taskList", JSON.stringify(taskList));
+            renderTask();
+          };
+
+          // Delete button
+          let deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.onclick = function () {
+            taskList.splice(i, 1);
+            localStorage.setItem("taskList", JSON.stringify(taskList));
+            renderTask();
+          };
+
+          li.appendChild(completeBtn);
+          li.appendChild(deleteBtn);
+          ul.appendChild(li);
+        }
+      }
+
+      // Render tasks on page load
+      renderTask();
+    </script>
+  </body>
 </html>
