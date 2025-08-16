@@ -23,6 +23,9 @@
     >
       Reset Score
     </button>
+    <button onclick="
+   autoPlay();
+    ">Auto Play</button>
   </body>
   <script>
     let score = JSON.parse(localStorage.getItem("score"));
@@ -33,6 +36,23 @@
         Ties: 0,
       };
     }
+
+    let auto = false;
+    let interval;
+    function autoPlay() {
+      if(!auto){
+      interval =  setInterval(() => {
+      let PlayerMove = pickComputerMove();
+      playGame(PlayerMove)
+    }, 1000);
+    auto = true;
+      } else {
+        clearInterval(interval);
+        auto = false;
+      }
+      
+    }
+
 
     scoreElement();
 
