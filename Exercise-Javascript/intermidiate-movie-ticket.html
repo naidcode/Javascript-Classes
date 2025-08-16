@@ -1,75 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Movie-Tickets-Bill</title>
-</head>
-<body>
-  <h2>Movie-Tickets-Bill</h2>
-  <label for="">Movie-Name</label>
-  <input type="text" id="Movie-name" placeholder="enter movie name"> <br><br>
-  <label for=""> Number Of Tickets</label> 
-  <input type="number"  id="totalTickets" placeholder="enter total tickets"> <br><br>
-  <label for="">Price per ticket</label>
-  <input type="number" id="priceperticket" placeholder="enter per ticket price"> <br><br>
-  <label for="memberDiscount">isMember </label>
-  <input type="checkbox" id="memberDiscount" > <br><br>
-  <button onclick="calculateTicket()">Calculator</button> <br><br>
- <button onclick="deleteDetails()">Delete</button> <!-- DELETE BUTTON --> 
-  <p id="namemovie"></p>
-  <p id="totalPrice"></p>
-  <p id="discountPrice"></p>
-  <p id="finalPrice"></p>
-</body>
-<script>
-  function calculateTicket() {
-    let movieName = document.getElementById('Movie-name').value.trim();
-    let totalTickets = Number(document.getElementById('totalTickets').value);
-    let pricePerticket = Number(document.getElementById('priceperticket').value);
-    let isMember = document.getElementById('memberDiscount').checked;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie-Tickets-Bill</title>
+  </head>
+  <body>
+    <h2>Movie-Tickets-Bill</h2>
+    <label for="">Movie-Name</label>
+    <input type="text" id="Movie-name" placeholder="enter movie name" />
+    <br /><br />
+    <label for=""> Number Of Tickets</label>
+    <input type="number" id="totalTickets" placeholder="enter total tickets" />
+    <br /><br />
+    <label for="">Price per ticket</label>
+    <input
+      type="number"
+      id="priceperticket"
+      placeholder="enter per ticket price"
+    />
+    <br /><br />
+    <label for="memberDiscount">isMember </label>
+    <input type="checkbox" id="memberDiscount" /> <br /><br />
+    <button onclick="calculateTicket()">Calculator</button> <br /><br />
+    <button onclick="deleteDetails()">Delete</button>
+    <!-- DELETE BUTTON -->
+    <p id="namemovie"></p>
+    <p id="totalPrice"></p>
+    <p id="discountPrice"></p>
+    <p id="finalPrice"></p>
+  </body>
+  <script>
+    function calculateTicket() {
+      let movieName = document.getElementById("Movie-name").value.trim();
+      let totalTickets = Number(document.getElementById("totalTickets").value);
+      let pricePerticket = Number(
+        document.getElementById("priceperticket").value
+      );
+      let isMember = document.getElementById("memberDiscount").checked;
 
-
-
-    if (!movieName || totalTickets <= 0 || pricePerticket <= 0){
-      alert(`invalid first fill every detail`)
-      return;
-    }
+      if (!movieName || totalTickets <= 0 || pricePerticket <= 0) {
+        alert(`invalid first fill every detail`);
+        return;
+      }
 
       let booking = {
-          movieName: movieName,
-          tickets: totalTickets,
+        movieName: movieName,
+        tickets: totalTickets,
         pricePerTicket: pricePerticket,
-          isMember: isMember,
+        isMember: isMember,
       };
-
 
       let totalprice = totalTickets * pricePerticket;
       let discounts = 0;
-    if(isMember){
-      discounts = totalprice * 0.1;
+      if (isMember) {
+        discounts = totalprice * 0.1;
+      }
+      let finalPrice = totalprice - discounts;
+
+      document.getElementById(
+        "namemovie"
+      ).innerText = `Movie name: ${movieName}`;
+      document.getElementById(
+        "totalPrice"
+      ).innerText = `total tickets ${totalprice}`;
+      document.getElementById(
+        "discountPrice"
+      ).innerText = `yes! he is a member ${discounts.toFixed(2)}`;
+      document.getElementById(
+        "finalPrice"
+      ).innerText = `the final price of movie tickets is ${finalPrice}`;
     }
-    let finalPrice = totalprice - discounts;
-
-
-    document.getElementById('namemovie').innerText = `Movie name: ${movieName}`;
-    document.getElementById('totalPrice').innerText = `total tickets ${totalprice}`;
-    document.getElementById('discountPrice').innerText = `yes! he is a member ${discounts.toFixed(2)}`;
-    document.getElementById('finalPrice').innerText = `the final price of movie tickets is ${finalPrice}`;
-
-  }
-   function deleteDetails() {
+    function deleteDetails() {
       // Clear the text fields
-      document.getElementById('Movie-name').value = "";
-      document.getElementById('totalTickets').value = "";
-      document.getElementById('priceperticket').value = "";
-      document.getElementById('memberDiscount').checked = false;
+      document.getElementById("Movie-name").value = "";
+      document.getElementById("totalTickets").value = "";
+      document.getElementById("priceperticket").value = "";
+      document.getElementById("memberDiscount").checked = false;
 
       // Clear the results
-      document.getElementById('namemovie').innerText = "";
-      document.getElementById('totalPrice').innerText = "";
-      document.getElementById('discountPrice').innerText = "";
-      document.getElementById('finalPrice').innerText = "";
+      document.getElementById("namemovie").innerText = "";
+      document.getElementById("totalPrice").innerText = "";
+      document.getElementById("discountPrice").innerText = "";
+      document.getElementById("finalPrice").innerText = "";
     }
-</script>
+  </script>
 </html>
