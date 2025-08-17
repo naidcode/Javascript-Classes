@@ -7,9 +7,9 @@
   </head>
   <body>
     <h3>Rock Paper Scissors</h3>
-    <button onclick="playGame('Rock');">Rock</button>
-    <button onclick="playGame('Paper');">paper</button>
-    <button onclick=" playGame('Scissors'); ">Scissors</button>
+    <button class="js-rock-button">Rock</button>
+    <button class="js-paper-button">paper</button>
+    <button class="js-scissors-button">Scissors</button>
     <p class="js-results"></p>
     <p class="js-moves"></p>
     <p class="js-para"></p>
@@ -50,11 +50,32 @@
         clearInterval(interval);
         auto = false;
       }
-      
-    }
+            localStorage.setItem("score", JSON.stringify(score));
 
+    }
+    
+
+    document.body.addEventListener("keydown" , async (event) => {
+      if (event.key === "r") {
+        playGame("Rock");
+      } else if(event.key === "p") {
+        playGame("Paper")
+      } else if (event.key === "s") {
+        playGame("Scissors")
+      }
+    })
 
     scoreElement();
+
+     document.querySelector(".js-rock-button").addEventListener("click" , () => {
+      playGame("Rock")
+    });
+    document.querySelector(".js-paper-button").addEventListener("click" , () => {
+      playGame("Paper")
+    });
+    document.querySelector(".js-scissors-button").addEventListener("click" , () => {
+      playGame("Scissors")
+    });
 
     function playGame(playerMove) {
       const computerMove = pickComputerMove();
