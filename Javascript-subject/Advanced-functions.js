@@ -11,10 +11,13 @@
 "dishes",
 'wash',
 "night"
-].forEach( function name(params) {
-  
+].forEach((value , index) => {
+  if (value === "dishes") {   // easy way to code break
+    return;
+  }
+
+  console.log(index)
 })
-
-let nahid = "";
-
-nahid.forEach()
+let nahid =  () => {   //arrow function syntax
+  
+}
