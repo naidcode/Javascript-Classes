@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Tracker App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px 0;
+      font-size: 1rem;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    button {
+      margin-left: 5px;
+      cursor: pointer;
+    }
+    #message {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    #clock {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h2>Habit Tracker</h2>
+  <div id="clock"></div>
+
+  <input type="text" id="habitInput" placeholder="Enter Habit">
+  <button id="addHabitBtn">Add Habit</button>
+  
+  <ul id="habitList"></ul>
+  <p id="message"></p>
+
+  <script>
+    const habitInput = document.getElementById("habitInput");
+    const addHabitBtn = document.getElementById("addHabitBtn");
+    const habitList = document.getElementById("habitList");
+    const message = document.getElementById("message");
+    const clock = document.getElementById("clock");
+
+    let habits = JSON.parse(localStorage.getItem("habits")) || [];
+
+    // ---------------- Live Clock ----------------
+    function updateClock() {
+      const now = new Date();
+      clock.textContent = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ---------------- Show message ----------------
+    function showMessage(text, color = "green") {
+      message.textContent = text;
+      message.style.color = color;
+      setTimeout(() => {
+        message.textContent = "";
+      }, 3000);
+    }
+
+    // ---------------- Render Habits ----------------
+    function renderHabits() {
+      habitList.innerHTML = "";
+      habits.forEach(habit => {
+        const li = document.createElement("li");
+
+        li.textContent = `${habit.text} - Streak: ${habit.streak} days`;
+
+        // Complete Button
+        const completeBtn = document.createElement("button");
+        completeBtn.textContent = habit.completedToday ? "✅ Done" : "Complete";
+        completeBtn.addEventListener("click", () => completeHabit(habit.id));
+
+        // Delete Button
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "❌ Delete";
+        deleteBtn.addEventListener("click", () => deleteHabit(habit.id));
+
+        li.appendChild(completeBtn);
+        li.appendChild(deleteBtn);
+
+        habitList.appendChild(li);
+      });
+    }
+
+    // ---------------- Add Habit ----------------
+    function addHabit() {
+      const text = habitInput.value.trim();
+      if(!text) {
+        showMessage("Please enter a habit", "red");
+        return;
+      }
+
+      const newHabit = {
+        id: Date.now(),
+        text,
+        streak: 0,
+        lastCompletedDate: null,
+        completedToday: false
+      };
+
+      habits.push(newHabit);
+      localStorage.setItem("habits", JSON.stringify(habits));
+      renderHabits();
+      habitInput.value = "";
+
+      // Reminder after 5 seconds
+      setTimeout(() => {
+        showMessage(`⏰ Don't forget: ${text}!`, "orange");
+      }, 5000);
+
+      showMessage("✅ Habit Added!");
+    }
+
+    // ---------------- Complete Habit ----------------
+    function completeHabit(id) {
+      const today = new Date().toDateString();
+      habits = habits.map(habit => {
+        if(habit.id === id) {
+          if(habit.lastCompletedDate === today) {
+            showMessage("Already completed today!", "blue");
+            return habit;
+          }
+          // Check streak continuity
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          const yesterdayStr = yesterday.toDateString();
+
+          if(habit.lastCompletedDate === yesterdayStr) {
+            habit.streak += 1; // continue streak
+          } else {
+            habit.streak = 1; // reset streak
+          }
+
+          habit.lastCompletedDate = today;
+          habit.completedToday = true;
+          showMessage(`✅ Completed: ${habit.text}`);
+        }
+        return habit;
+      });
+
+      localStorage.setItem("habits", JSON.stringify(habits));
+      renderHabits();
+    }
+
+    // ---------------- Delete Habit ----------------
+    function deleteHabit(id) {
+      habits = habits.filter(habit => habit.id !== id);
+      localStorage.setItem("habits", JSON.stringify(habits));
+      renderHabits();
+      showMessage("❌ Habit Deleted", "red");
+    }
+
+    // ---------------- Event Listeners ----------------
+    addHabitBtn.addEventListener("click", addHabit);
+    habitInput.addEventListener("keypress", (e) => {
+      if(e.key === "Enter") addHabit();
+    });
+
+    // ---------------- Initialize ----------------
+    renderHabits();
+  </script>
+</body>
+</html>
