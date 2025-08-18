@@ -10,7 +10,7 @@
     <br /><br />
     <label for="">Task Enter</label>
     <input type="text" placeholder="Enter Task" id="enterName" /> <br /><br />
-    <button id="addButton" onclick="addItem()">Add Task</button> <br /><br />
+    <button id="addButton" >Add Task</button> <br /><br />
     <ul id="displayTask"></ul>
     <br /><br />
     <p id="message"></p>
@@ -18,6 +18,9 @@
   <script>
     let Task = JSON.parse(localStorage.getItem("task")) || [];
     renderTask();
+    document.getElementById("addButton").addEventListener("click" , async () => {
+      addItem();
+    });
      document.body.addEventListener("keydown" , async (event) => {
         if(event.key === "Enter") {
           addItem();
@@ -32,8 +35,12 @@
       }
 
       let task = {
-        text: enterName,
-      };
+  id: Date.now(), // unique id
+  text: enterName, // task text
+  time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true , second: "2-digit"}) 
+  // Example: "10:35 AM"
+};
+
 
       Task.push(task);
       updateStorage();
@@ -49,13 +56,12 @@
       ul.innerHTML = "";
       Task.forEach((task, index) => {
         let li = document.createElement("li");
-        li.textContent = `${task.text}`;
+        li.textContent = `${task.text} - ${task.time}`;
 
         let DleButton = document.createElement("button");
         DleButton.textContent = "Delete";
-        DleButton.onclick = function () {
-          deleteTask(index);
-        };
+        DleButton.style.margin = "10px"
+      DleButton.addEventListener("click", () => deleteTask(index));
 
         ul.appendChild(li);
         li.appendChild(DleButton);
