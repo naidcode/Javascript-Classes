@@ -21,3 +21,19 @@ let arrr = [21,25,50,0,10];
    return h1 + h2
  })
  console.log(ar3)
+
+ let names = ["Ali", "Sam", "Zoya"];
+names.forEach((n, i) => {
+  console.log(i, n);
+});
+
+
+let expenses = [200, 600, 150, 800];
+for (let i = 0; i < expenses.length; i++) {
+  if (expenses[i] > 500) break; // stop early
+  console.log(expenses[i]);
+}
+expenses.forEach(e => console.log("Expense:", e));
+
+let doubled = expenses.map(e => e * 2);
+console.log(doubled); // [400, 1200, 300, 1600]
