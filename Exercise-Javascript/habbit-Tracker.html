@@ -1,110 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Habbit-Tracker</title>
-  </head>
-  <body>
-    <h2>Habbit Tracker</h2>
-    <br />
-    <label for="">Enter Habbit</label>
-    <input type="text" placeholder="enter Habbit" id="enterHabbit" />
-    <br /><br />
-    <button id="addButton">Add habbit</button> <br />
-    <ul id="habbitList"></ul>
-    <p id="message"></p>
-  </body>
-  <script>
-    let Habbit = JSON.parse(localStorage.getItem("Habbit")) || [];
-    document.getElementById("addButton").addEventListener("click", async () => {
-      AddHabbit();
-    });
-    document.body.addEventListener("keypress", async (event) => {
-      if (event.key === "Enter") {
-        // this is for direct key enter
-        AddHabbit();
-      }
-    });
-    function AddHabbit() {
-      let enterHabbit = document.getElementById("enterHabbit").value.trim();
-
-      if (!enterHabbit) {
-        message(`first enter habbit!`, "red");
-        return;
-      }
-      let habbitList = {
-        name: enterHabbit,
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-          second: "2-digit",
-        }),
-        streak: 0,
-        completedToday: false,
-      };
-
-      Habbit.push(habbitList);
-      document.getElementById("enterHabbit").value = "";
-      renderTask();
-      updateStorage();
-      message("Add habbit!", "green")
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
     }
+    h2 {
+      color: #333;
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: white;
+      margin: 5px 0;
+      padding: 8px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .deleteBtn {
+      background: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #summary {
+      margin-top: 15px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h2>💰 Expense Tracker</h2>
 
-    function renderTask() {
-      let ul = document.getElementById("habbitList");
-      ul.textContent = "";
-      Habbit.forEach( (habbitList, index) => {
-        let li = document.createElement("li");
-        li.textContent = `${habbitList.name} - ${habbitList.time} ${habbitList.streak}`;
+  <input type="text" id="expenseText" placeholder="Enter expense">
+  <input type="number" id="expenseAmount" placeholder="Enter amount">
+  <button id="addBtn">Add Expense</button>
 
-         const completeBtn = document.createElement("button");
-        completeBtn.textContent =habbitList.completedToday  ? "✅ Done" : "Complete";
-        completeBtn.addEventListener("click", () => completeHabit());
+  <ul id="expenseList"></ul>
+  <p id="summary"></p>
 
-      let deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete";
-      deleteButton.style.margin = "10px"
-      deleteButton.addEventListener("click" , () => Deleted(index));
+<script>
+  // 🔹 Main array
+  let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 
+  // 🔹 Add Expense
+  function addExpense() {
+    let text = document.getElementById("expenseText").value.trim();
+    let amount = parseFloat(document.getElementById("expenseAmount").value);
 
+    if (text && amount) {
+      expenses.push({ id: Date.now(), text, amount });
+      updateStorage();
+      renderExpenses();
+      document.getElementById("expenseText").value = "";
+      document.getElementById("expenseAmount").value = "";
+    } else {
+      alert("Please enter valid expense and amount!");
+    }
+  }
+
+  // 🔹 Save in localStorage
+  function updateStorage() {
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+  }
+
+  // 🔹 Render Expenses with map, filter, reduce
+  function renderExpenses() {
+    let ul = document.getElementById("expenseList");
+    ul.textContent = "";
+
+    // ✅ map → display list
+    expenses.map((exp, index) => {
+      let li = document.createElement("li");
+      li.textContent = `${exp.text} - ₹${exp.amount}`;
+
+      let deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "❌";
+      deleteBtn.className = "deleteBtn";
+      deleteBtn.addEventListener("click", () => {
+        expenses.splice(index, 1);
+        updateStorage();
+        renderExpenses();
+      });
+
+      li.appendChild(deleteBtn);
       ul.appendChild(li);
-      li.appendChild(deleteButton);
-        
-      })
+    });
 
-      }
-      let streaks = habbitList.streak;
-      function habbitCompelete() {
-        if(compLete.textContent === "Completed") {
-          streaks++;
-        } else {
-          compLete.textContent === "incompelete"
-        }
-      }
+    // ✅ filter → expenses above 500
+    let bigExpenses = expenses.filter(exp => exp.amount > 500);
 
-      function message(text , color) {
-    let msg = document.getElementById("message");
-        msg.textContent = text;
-        msg.style.color = color;
+    // ✅ reduce → total spent
+    let total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
+    // ✅ summary
+    document.getElementById("summary").innerHTML = `
+      📋 All Expenses: ${expenses.map(e => e.text).join(", ") || "None"} <br>
+      💸 Total Spent: ₹${total} <br>
+      🔎 Expenses > 500: ${bigExpenses.length}
+    `;
+  }
 
-        setTimeout(() => {
-          msg.textContent = "";
-        }, 3000);
-      }
+  // 🔹 Event Listener for Add Button
+  document.getElementById("addBtn").addEventListener("click", addExpense);
 
-
-    function Deleted(index) {
-      Habbit.splice(index , 1);
-      renderTask();
-      updateStorage();
-      message("Habbit Deleted!" , "red")
-    }
-
-    function updateStorage() {
-      localStorage.setItem("Habbit", JSON.stringify(Habbit));
-    }
-  </script>
+  // 🔹 Initial render
+  renderExpenses();
+</script>
+</body>
 </html>
