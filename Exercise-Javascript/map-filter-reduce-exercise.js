@@ -32,3 +32,33 @@ console.log(name);
 
 let final = cal.reduce((acc , product) => acc + product.price,0)
 console.log(final);
+
+const students = [
+  { name: "Ali", marks: 45 },
+  { name: "Sara", marks: 72 },
+  { name: "John", marks: 88 },
+];
+
+
+let studentName = students.map(names => (names.marks))
+
+students.forEach(std=> {
+console.log( std.marks)
+})
+
+// Returns an array of student names
+function getNames(arr) {
+  return arr.map(student => student.name);
+}
+
+// Returns an array of student marks
+function getMarks(arr) {
+  return arr.map(student => student.marks);
+}
+console.log(getMarks(students));
+console.log(getNames(students));
+
+
+
+
+
