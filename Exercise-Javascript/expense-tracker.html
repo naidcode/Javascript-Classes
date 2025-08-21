@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>expenses-tracker</title>
+  </head>
+  <body>
+    <h2>Expenses Tracker</h2>
+    <label for="">Name</label>
+    <input type="text" placeholder="enter name" id="Name" /> <br /><br />
+    <label for="">Amount</label>
+    <input type="number" placeholder="enter amount" id="Amount" /> <br /><br />
+    <button id="addexpenses">Add</button> <br />
+    <ul id="expenseList"></ul>
+    <p id="results"></p>
+    <p id="message"></p>
+    <p id="summary"></p>
+  </body>
+  <script>
+    let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+    renderList();
+
+    document.getElementById("addexpenses").addEventListener("click", () => {
+      addExpense();
+    });
+
+    document.body.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        addExpense();
+      }
+    });
+
+    function addExpense() {
+      let enterName = document.getElementById("Name").value.trim();
+      let enterAmount = Number(document.getElementById("Amount").value);
+
+      if (!enterName || enterAmount <= 0) {
+        Message(`first enter both input`, "blue");
+        return;
+      }
+
+      let task = {
+        id: new Date().toLocaleString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        }),
+        name: enterName,
+        amount: enterAmount,
+      };
+      expenses.push(task);
+      updateStorage();
+      renderList();
+      Message("Expenses added!", "green");
+
+      document.getElementById("Name").value = "";
+      document.getElementById("Amount").value = "";
+    }
+
+    function renderList() {
+      let ul = document.getElementById("expenseList");
+      ul.textContent = "";
+
+      expenses.forEach((task , index) => {
+        let li = document.createElement("li");
+        li.textContent = `${task.name} - $${task.amount} - ${task.id}`;
+
+        let deleteBtn = document.createElement("Button");
+        deleteBtn.textContent = "❌";
+        deleteBtn.style.margin = "10px"
+        deleteBtn.addEventListener("click",  () => deleteButton(task.id));
+
+         ul.appendChild(li);
+      li.appendChild(deleteBtn);
+      });
+
+      let bigExpenses = expenses.filter(exp => exp.amount > 500);
+
+      
+        let total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+    document.getElementById("summary").innerHTML = `all expenses: ${expenses.map((e) => e.name).join(" , ")} <br>
+total spends: ${total} <br> Expenses > 500: ${bigExpenses.length}`;
+
+    }
+
+    function deleteButton(index) {
+      expenses.splice(index, 1);
+      updateStorage();
+      renderList();
+      Message("Expenses Deleted", "red");
+    }
+
+    function Message(text, color) {
+      let msg = document.getElementById("message");
+      msg.textContent = text;
+      msg.style.color = color;
+
+      setTimeout(() => {
+        msg.textContent = "";
+      }, 2500);
+    }
+
+    function updateStorage() {
+      localStorage.setItem("expenses", JSON.stringify(expenses));
+    }
+
+    renderList()
+  </script>
+</html>
