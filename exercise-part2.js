@@ -37,18 +37,44 @@
  
 // example();
 
-nameHi()
-function nameHi() {
-   var a = 11;
-  console.log(a)
-}
+// nameHi()
+// function nameHi() {
+//    var a = 11;          //declaration function
+//   console.log(a)
+// }
 
-nameHi();
+// nameHi();
 
-var nam  = function () {
-  console.log("hello")
+// var nam  = function () {     //function expression 
+//   console.log("hello")
+// }
+// nam()
+
+// console.log(c)     //undefined because you runcode before the variable.
+// var c = 122;
+
+
+function a() {
+  console.log("Inside A");
+  b();
 }
-nam()
+function b() {
+  console.log("Inside B");
+}
+a();
+
+const person = {
+  name: "Nahid",
+  sayName: function() {
+    console.log(this.name); // "Nahid"
+  },
+  arrow: () => {
+    console.log(this.name); // ❌ undefined (lexical this)
+  }
+};
+
+person.sayName();
+person.arrow();
 
 
 
