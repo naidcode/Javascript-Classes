@@ -1,4 +1,1 @@
-sayHello();
-// function sayHello() {
-//   console.log("Hello!");
-// }
+  // let name = "fouzi";
