@@ -41,8 +41,18 @@
 
 let number = [1, 2, 3, 45, 6, 34, 35, 35];
 let number2 = [11, 12, 13, 14, 15, 16, 17];
-let number3 = [1, 2, 3, 4, 56, 7, 9, 10, 20, 30, 40];
+let number3 = [1, 21, 3, 4, 56, 7, 9, 10, 20, 30, 40];
 let letter = ["b", "a", "d", "c"];
+let obj = [
+  { name: "fazil", id: -1 },
+  { name: "nahid", id: 2 },
+  { name: "nahid", id: 3 },
+  { name: "nahid", id: 4 },
+  { name: "nahid", id: 5 },
+];
+let obj2 = ["apple", "banana", "cat"];
+let obj3 = [1,2,3,4,5,6,7,8,9];
+
 
 let a = number.toString(); //make array element into string
 console.log(a);
@@ -50,15 +60,16 @@ console.log(a);
 let b = number.join("-"); // join anything between the array element
 console.log(b);
 
-number.push(20); //push return new element in array  at last
-console.log(number);
+let bb= number.push(20); //push return new element in array  at last
+console.log(bb);
+console.log(number)
 
 let c = number.shift(); //shift remove first element from array  from start
 console.log(c);
 console.log(number);
 
 let e = number.unshift(100); //add element inthe starting of the array  from start
-console.log(e);
+console.log(e);  //this just counter the element from the array
 console.log(number);
 
 // delete number[0];   //delete the element from array by using index [];
@@ -74,23 +85,25 @@ let h = number2.reverse(); //reverse the element of the array.
 console.log(h);
 
 //splice we can use to add new element in the array.
-let i = number3.splice(1, 3, 100, "added");
-console.log(number3);
-console.log(i);
+let i = number3.splice(1, 0, 100, "added");
+console.log(number3);  
 
-let j = number3.slice(3, 6 ); //slice out a piece from an array and create a new array.
+
+let j = number3.slice(3, 7); //slice out a piece from an array and create a new array.
 console.log(j);
 
-let obj =[ 
-{ name: "fazil", id: 1 },
-{ name: "nahid", id: 2 },
-{ name: "nahid", id: 3},
-{ name: "nahid", id: 4 },
-{ name: "nahid", id: 5 },]
 
-let k = obj.filter((item) => item.name == "nahid");
-console.log(k[0].name),
- console.log(k.length);
+let k = obj.find((item) => item.name === "nahid");  //find() fond element from array from start position 
+console.log(k.name), 
+console.log(k.id);
+
+   //some() array method show value is true or false. atleast one element pass the test.
+let l = obj3.some((item) => item > 1);
+console.log(l);
+
+
+let m = obj3.every( (i) => i < 10);  //in  this array method every element should match. it shows true other vise shows false.
+console.log(m)
 
 let z = number.pop();
 console.log(number);
