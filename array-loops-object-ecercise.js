@@ -52,14 +52,11 @@
 //   student.push({ name, score });
 // }
 
-
 // function viewStudents() {
 //   student.forEach((students,index) => {
 //     console.log(`${index + 1}. ${students.name} ${students.score}`);
 //   });
 // }
-
-
 
 // function findTopper() {
 //   if(student.score === 0){
@@ -73,8 +70,6 @@
 // },)
 //  console.log( `${topper.name} ${topper.score}`)
 // }
-  
-  
 
 //   function removeStudent(name) {
 //     student.filter((student) => {
@@ -84,7 +79,6 @@
 //     })
 //   };
 
-  
 //      function avgStudent() {
 //       if(student.score >= 90) {
 //         console.log("A grade")
@@ -101,8 +95,6 @@
 //     removeStudent("ali")
 //     avgStudent()
 
- 
-
 //   let students = [
 //   { name: "Nahid", score: 95 },
 //   { name: "Ali", score: 60 },
@@ -112,7 +104,7 @@
 
 // function findStudent(name) {
 // return  students.find(item =>  item.name === name )
-  
+
 // };
 // console.log(findStudent("Nahid"));
 
@@ -126,7 +118,6 @@
 //   return students.sort((item , a) => item.score - a.score );
 // }
 // console.log(sortStudents())
-    
 
 let students = [];
 
@@ -160,7 +151,8 @@ function averageScore() {
     console.log("No students available");
     return;
   }
-  let avg = students.reduce((sum, student) => sum + student.score, 0) / students.length;
+  let avg =
+    students.reduce((sum, student) => sum + student.score, 0) / students.length;
   console.log(`Average Score: ${avg}`);
 }
 
