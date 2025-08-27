@@ -116,18 +116,18 @@ let o = number5.filter((item) => {
 console.log(o);
 // reduce method. reduce an array from diffrent value
 let number6 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-let p = number6.reduce((a, b , c) => {
+let p = number6.reduce((a, b, c) => {
   return a + b + c;
 });
 console.log(p);
 
 //we can send function into variable. reduce() we use like this also.
 let number7 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-let func = (a, b , c) => {
+let func = (a, b, c) => {
   return a + b + c;
-}
+};
 let q = number7.reduce(func);
-console.log(q)
+console.log(q);
 
 // let z = number.pop();
 // console.log(number);
