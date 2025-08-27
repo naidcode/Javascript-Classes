@@ -72,3 +72,26 @@ let shallowC = {...dot};
 shallowC.name = "fouzi"
 
 console.log(shallowC.name , dot.name)
+
+
+
+let person = {
+  name: "nahid",
+  age: 20,
+  address: {
+    city: 'bangalore',
+    pincode: 560026
+  }
+}
+
+let shallow = {...person};
+shallow.address.city = "los angeles";
+
+console.log(person.address.city);
+
+let deep = JSON.parse(JSON.stringify(person));
+
+deep.age = 19;
+console.log(person.age);
+
+
