@@ -103,27 +103,74 @@
 
  
 
-  let students = [
-  { name: "Nahid", score: 95 },
-  { name: "Ali", score: 60 },
-  { name: "Sara", score: 78 },
-  { name: "Imran", score: 40 }
-];
+//   let students = [
+//   { name: "Nahid", score: 95 },
+//   { name: "Ali", score: 60 },
+//   { name: "Sara", score: 78 },
+//   { name: "Imran", score: 40 }
+// ];
+
+// function findStudent(name) {
+// return  students.find(item =>  item.name === name )
+  
+// };
+// console.log(findStudent("Nahid"));
+
+// function findTopper() {
+//   let topper = students.reduce( (a,b) => (a.score > b.score? a : b));
+//    console.log(`${topper.name} ${topper.score}`)
+// }
+// findTopper();
+
+// function sortStudents() {
+//   return students.sort((item , a) => item.score - a.score );
+// }
+// console.log(sortStudents())
+    
+
+let students = [];
+
+// 1. Add student
+function addStudent(name, score) {
+  students.push({ name, score });
+}
+
+function viewStudents() {
+  students.forEach((student, index) => {
+    console.log(`${index + 1}. ${student.name} - ${student.score}`);
+  });
+}
 
 function findStudent(name) {
-return  students.find(item =>  item.name === name )
-  
-};
-console.log(findStudent("Nahid"));
+  return students.find((student) => student.name === name);
+}
 
 function findTopper() {
-  let topper = students.reduce( (a,b) => (a.score > b.score? a : b));
-   console.log(`${topper.name} ${topper.score}`)
+  let topper = students.reduce((a, b) => (a.score > b.score ? a : b));
+  console.log(`Topper: ${topper.name} with score ${topper.score}`);
 }
-findTopper();
 
 function sortStudents() {
-  return students.sort((item , a) => item.score - a.score );
+  let sorted = students.sort((a, b) => a.score - b.score);
+  console.log("Sorted Students:", sorted);
 }
-console.log(sortStudents())
-    
+
+function averageScore() {
+  if (students.length === 0) {
+    console.log("No students available");
+    return;
+  }
+  let avg = students.reduce((sum, student) => sum + student.score, 0) / students.length;
+  console.log(`Average Score: ${avg}`);
+}
+
+// ---- Execution ----
+addStudent("Nahid", 95);
+addStudent("Ali", 60);
+addStudent("Sara", 78);
+
+viewStudents();
+console.log("Found:", findStudent("Nahid"));
+findTopper();
+sortStudents();
+averageScore();
