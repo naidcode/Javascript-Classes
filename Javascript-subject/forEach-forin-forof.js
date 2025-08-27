@@ -19,7 +19,7 @@ for (const i of num) {
   console.log(i);
 }
 
-//for...in
+// for...in
 for (const i in num) {
   if (Object.prototype.hasOwnProperty.call(num, i)) {
     const element = num[i];
