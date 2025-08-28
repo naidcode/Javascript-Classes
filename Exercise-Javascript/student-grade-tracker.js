@@ -83,3 +83,68 @@
 
 // let totals = student.reduce((a,b) => a + b.marks , 0);
 // console.log(totals)
+
+
+
+let movies = [] ;
+
+function addMovies(title , rating , year) {
+  movies.push({title , rating , year})
+}
+
+function viewMovies() {
+  movies.forEach((movie , index) => {
+    console.log(`${index + 1} - ${movie.title} - ${movie.rating} - ${movie.year}`)
+  })
+}
+
+function findMovie(title) {
+let find =   movies.find(movie =>  movie.title === title);
+console.log(find);
+}
+
+function sortMovie() {
+let sort = movies.sort(( a , b) => a.rating - b.rating);
+console.log(sort);
+}
+
+function highRated() {
+  let high = movies[0];
+  movies.forEach(movie => {
+    if(movie.rating > high.rating)
+    high = movie;
+  });
+  console.log(`${high.title} ${high.rating}`)
+};
+
+function olderMovie() {
+let older =   movies.some(movie => movie.year > 2000)
+console.log(older);
+}
+
+function above5Rating() {
+  let above5Rating = movies.every(movie => movie.rating >= 5);
+  console.log(above5Rating)
+}
+function averageRating() {
+  let avg = movies.reduce((a,b) => a + b.rating , 0) / movies.length;
+console.log(avg);
+}
+
+
+
+addMovies("AOT" , 9.5 , 2014);
+addMovies("money heist" , 9 , 2015);
+addMovies("stranger thing" , 8 , 2020);
+addMovies("sex education" , 8.5 , 2023);
+addMovies("96" , 7.5 , 2024);
+addMovies("life beautiful" , 5 , 2025);
+addMovies("pursuit of happyness" , 7.5 , 2021);
+
+viewMovies()
+findMovie("96");
+sortMovie();
+highRated();
+olderMovie();
+above5Rating();
+averageRating();
