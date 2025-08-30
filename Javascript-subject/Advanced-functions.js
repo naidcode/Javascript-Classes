@@ -26,13 +26,13 @@
 // console.log("hello")
 // };
 
-// function hell(name = "hi nahid!") {   //declaration function  
-// console.log( name)
-// }
+function hell(name , hello = "hi!") {   //declaration function  
+console.log( name , hello)
+}
 
-// hell();
+hell("fazil");
 // nahid()
-// hello()
+hell("fouzi")
 
 
 // function Name(a,b) {   // this how we return the values in functions
@@ -91,19 +91,26 @@
 
 // outer();
 
-function hello(a,b,call) {    //higher oreder function and callback
-  let result = a+b;
-  call(result );
+// function hello(a,b,call) {    //higher oreder function and callback
+//   let result = a+b;
+//   call(result );
 
-  return () => {
-    console.log(result);
-  }
-};
+//   return () => {
+//     console.log(result);
+//   }
+// };
 
-let everything = hello(10 , 20 ,() => {
-  // console.log((val));
-});
-everything();
+// let everything = hello(10 , 20 ,() => {
+//   // console.log((val));
+// });
+// everything();
+
+function NAme(name , hello = "hello") {
+  console.log(name , hello)
+}
+
+NAme("nahid");
+NAme("hi! nahid")
 
 
 
