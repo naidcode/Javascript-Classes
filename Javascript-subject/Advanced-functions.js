@@ -75,7 +75,21 @@
 //   console.log(c)
 
 // }
-//   // console.log(c)
+//   // console.log(c);
+
+
+// closure
+
+function outer() {
+  let message = 10;
+  
+  function inner() {
+    console.log(message)
+  }
+  inner()
+}
+
+outer()
 
 
 
