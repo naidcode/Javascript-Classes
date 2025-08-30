@@ -7,17 +7,17 @@
 // console.log("Next line")  //this line will run first because he will never wait 3s for run.
 
 
-[
-"dishes",
-'wash',
-"night"
-].forEach((value , index) => {
-  if (value === "dishes") {   // easy way to code break
-    return;
-  }
+// [
+// "dishes",
+// 'wash',
+// "night"
+// ].forEach((value , index) => {
+//   if (value === "dishes") {   // easy way to code break
+//     return;
+//   }
 
-  console.log(value)
-})
+//   console.log(value)
+// })
 // let nahid =  () => {   //arrow function syntax
 //   console.log("hello")
 // }
@@ -43,10 +43,40 @@
 // console.log(add);
 
 // function composition
-let add = (x) => x + 10;
-let multi = (a) => a * 5;
+// let add = (x) => x + 10;
+// let multi = (a) => a * 5;
 
-let combine = (b) => multi(add(b));
-console.log(combine(5));
+// let combine = (b) => multi(add(b));
+// console.log(combine(5));
+// console.log(a);
+add("fazil")
+function add(name){
+let a = "hi";
+console.log(a , name);   // function is a function scope.
+}
+
+let a = "hello";
+console.log(a)
+
+add("nahid");
+
+// console.log(b)
+{
+  var b = 20;   //var is global function.
+}
+console.log(b);
+
+// let and const this two are block scope.
+{
+  const c = 15;
+  console.log(c)
+
+}
+  // console.log(c)
+
+
+
+
+
  
 
