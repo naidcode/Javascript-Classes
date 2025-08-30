@@ -18,27 +18,35 @@
 
   console.log(value)
 })
-let nahid =  () => {   //arrow function syntax
-  console.log("hello")
-}
+// let nahid =  () => {   //arrow function syntax
+//   console.log("hello")
+// }
 
-let hello = function() {    //expression function
-console.log("hello")
-};
+// let hello = function() {    //expression function
+// console.log("hello")
+// };
 
-function hell(name = "hi nahid!") {   //declaration function  
-console.log( name)
-}
+// function hell(name = "hi nahid!") {   //declaration function  
+// console.log( name)
+// }
 
-hell();
-nahid()
-hello()
+// hell();
+// nahid()
+// hello()
 
 
-function Name(a,b) {   // this how we return the values in functions
-  return a+b;
-}
+// function Name(a,b) {   // this how we return the values in functions
+//   return a+b;
+// }
 
-let add = Name(2 ,4);
-console.log(add)
+// let add = Name(2 ,4);
+// console.log(add);
+
+// function composition
+let add = (x) => x + 10;
+let multi = (a) => a * 5;
+
+let combine = (b) => multi(add(b));
+console.log(combine(5));
+ 
 
