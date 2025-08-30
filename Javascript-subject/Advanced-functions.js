@@ -16,8 +16,29 @@
     return;
   }
 
-  console.log(index)
+  console.log(value)
 })
 let nahid =  () => {   //arrow function syntax
-  
+  console.log("hello")
 }
+
+let hello = function() {    //expression function
+console.log("hello")
+};
+
+function hell(name = "hi nahid!") {   //declaration function  
+console.log( name)
+}
+
+hell();
+nahid()
+hello()
+
+
+function Name(a,b) {   // this how we return the values in functions
+  return a+b;
+}
+
+let add = Name(2 ,4);
+console.log(add)
+
