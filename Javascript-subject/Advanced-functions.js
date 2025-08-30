@@ -48,31 +48,34 @@
 
 // let combine = (b) => multi(add(b));
 // console.log(combine(5));
+
+
+
 // console.log(a);
-add("fazil")
-function add(name){
-let a = "hi";
-console.log(a , name);   // function is a function scope.
-}
+// add("fazil")
+// function add(name){
+// let a = "hi";
+// console.log(a , name);   // function is a function scope.
+// }
 
-let a = "hello";
-console.log(a)
+// let a = "hello";
+// console.log(a)
 
-add("nahid");
+// add("nahid");
 
-// console.log(b)
-{
-  var b = 20;   //var is global function.
-}
-console.log(b);
+// // console.log(b)
+// {
+//   var b = 20;   //var is global function.
+// }
+// console.log(b);
 
-// let and const this two are block scope.
-{
-  const c = 15;
-  console.log(c)
+// // let and const this two are block scope.
+// {
+//   const c = 15;
+//   console.log(c)
 
-}
-  // console.log(c)
+// }
+//   // console.log(c)
 
 
 
