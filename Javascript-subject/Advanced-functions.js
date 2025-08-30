@@ -80,16 +80,31 @@
 
 // closure
 
-function outer() {
-  let message = 10;
+// function outer() {
+//   let message = 10;
   
-  function inner() {
-    console.log(message)
-  }
-  inner()
-}
+//   function inner() {
+//     console.log(message)
+//   }
+//   inner()
+// }
 
-outer()
+// outer();
+
+function hello(a,b,call) {    //higher oreder function and callback
+  let result = a+b;
+  call(result );
+
+  return () => {
+    console.log(result);
+  }
+};
+
+let everything = hello(10 , 20 ,() => {
+  // console.log((val));
+});
+everything();
+
 
 
 
