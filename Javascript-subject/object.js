@@ -119,4 +119,22 @@ let person4 = {
 };
 
 
-displayPerson(person4)
+displayPerson(person4);
+
+
+// SPREAD OPERATOR
+
+let numbers = [1,2,3,4,5,6];
+let min = Math.min(...numbers)
+let max = Math.max(...numbers)
+
+console.log(min)
+console.log(max);
+
+let names = ["nahid" , "fazil" ,"shahid" , "sahil"];
+let lastname = ["pasha" , "khan" , "syed" , "md"];
+
+let everything = [...names , ...lastname , "fouzi" , "nasreen"];
+
+console.log(everything);
+
