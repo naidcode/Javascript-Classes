@@ -70,5 +70,53 @@ console.log(b)
 console.log(c)
 console.log(d)
 
+//------- EXAMPLE 3 ------
+// EXTRACT VALUES FROM OBJECTS
+
+let person1 = {
+  firstName: "Nahid",
+  lastName: "pasha",
+  age: 20,
+  
+}
+let person2 = {
+  firstName: "fazil",
+  lastName: "pasha",
+  age: 23,
+  job: "sales man"
+};
+
+let {firstName , lastName , age , job } = person2;
+
+console.log(firstName)
+console.log(lastName)
+console.log(age)
+console.log(job)
 
 
+
+//------- EXAMPLE 4 ------
+// DESTRUCTURE FUNCTION PARAMETERS
+function displayPerson({firstName , lastName, age ,job = "unemploed"}) {
+  console.log(`name: ${firstName} ${lastName}`)
+    console.log(`age: ${age}`)
+      console.log(`job: ${job}`)
+
+}
+
+
+let person3 = {
+  firstName: "Nahid",
+  lastName: "pasha",
+  age: 20,
+  
+}
+let person4 = {
+  firstName: "fazil",
+  lastName: "pasha",
+  age: 23,
+  job: "sales man"
+};
+
+
+displayPerson(person4)
