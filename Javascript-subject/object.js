@@ -34,6 +34,12 @@
 //     console.log("nahid pasha ")  //function inside object
 //   }
 // }
+let car = {
+  brand: "Toyota"
+};
+
+console.log(car.brand); // "Toyota"
+console.log(car.year= 2025);  // undefined  (not set → default)
 
 // console.log(product2);
 // console.log(product2['name'])
