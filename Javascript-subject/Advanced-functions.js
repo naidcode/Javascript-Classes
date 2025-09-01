@@ -26,13 +26,13 @@
 // console.log("hello")
 // };
 
-function hell(name , hello = "hi!") {   //declaration function  
-console.log( name , hello)
-}
+// function hell(name , hello = "hi!") {   //declaration function  
+// console.log( name , hello)
+// }
 
-hell("fazil");
-// nahid()
-hell("fouzi")
+// hell("fazil");
+// // nahid()
+// hell("fouzi")
 
 
 // function Name(a,b) {   // this how we return the values in functions
@@ -43,11 +43,11 @@ hell("fouzi")
 // console.log(add);
 
 // function composition
-// let add = (x) => x + 10;
-// let multi = (a) => a * 5;
+let add = (x) => x + 10;
+let multi = (a) => a * 5;   //combining multiple function is called composition.
 
-// let combine = (b) => multi(add(b));
-// console.log(combine(5));
+let combine = (b) => multi(add(b));
+console.log(combine(5));
 
 
 
@@ -105,12 +105,12 @@ hell("fouzi")
 // });
 // everything();
 
-function NAme(name , hello = "hello") {
-  console.log(name , hello)
-}
+// function NAme(name , hello = "hello") {
+//   console.log(name , hello)
+// }
 
-NAme("nahid");
-NAme("hi! nahid")
+// NAme("nahid");
+// NAme("hi! nahid")
 
 
 
