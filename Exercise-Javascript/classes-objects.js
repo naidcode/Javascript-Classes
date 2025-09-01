@@ -23,3 +23,38 @@ shahid.present();
 sahil.absent();
 fazil.present();
 
+// Methods = functions inside a class (define behavior).
+class Person {
+  constructor(name, age) {
+    this.name = name; // property
+    this.age = age;   // property
+  }
+
+  // Method
+  greet() {
+    console.log(`Hello, my name is ${this.name} and I'm ${this.age} years old.`);
+  }
+
+  // Another method
+  birthday() {
+    // this.age += 1;
+    console.log(`${this.name} is now ${this.age}!`);
+  }
+}
+
+let nahid01 = new Person("nahid" , 20);
+
+nahid01.greet()
+nahid01.birthday();
+
+// Static = belongs to class itself, not objects.
+class MathHelper {
+  static pi = 3.14159; // static property
+
+  static add(a, b) {   // static method
+    return a + b;
+  }
+}
+
+console.log(MathHelper.pi);      // 3.14159
+console.log(MathHelper.add(5,2)); // 7
