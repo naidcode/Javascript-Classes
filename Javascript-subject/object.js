@@ -82,7 +82,6 @@ let person2 = {
   age: 23,
   job: "sales man",
 };
-
 let { firstName, lastName, age, job } = person2;
 
 console.log(firstName);
