@@ -41,6 +41,15 @@ let car = {
 console.log(car.brand); // "Toyota"
 console.log(car.year= 2025);  // undefined  (not set → default)
 
+
+const defaults = { role: "guest", active: true };
+const userData = { name: "Nahid" };
+const finalUser = {...defaults , ...userData}  //this the spread method modern method.
+const finalUser2 = Object.assign({} , defaults , userData)  // this object assign method to combined variables
+console.log(finalUser);
+console.log(finalUser2)
+// { role: "guest", active: true, name: "Nahid" }
+
 // console.log(product2);
 // console.log(product2['name'])
 // console.log(product2['Delivery-time']);
