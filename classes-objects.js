@@ -58,3 +58,37 @@ class MathHelper {
 
 console.log(MathHelper.pi);      // 3.14159
 console.log(MathHelper.add(5,2)); // 7
+
+
+// Inheritance and extend 
+
+class Animal {
+constructor(name , age) {
+this.name = name;
+this.age = age;
+}
+
+aniName() {
+  console.log(`this animal name is ${this.name}`)
+}
+aniAge() {
+  console.log(`and his age is ${this.age}`)
+}
+};
+
+class monkey extends Animal {
+  eatBanana() {
+    console.log("eat Banana")
+  }
+}
+
+let tiger = new Animal("Tiger" , 15);
+let cat = new monkey("Dolly" , "6 Months");
+
+tiger.aniName();
+tiger.aniAge();
+cat.aniName();
+cat.aniAge();
+cat.eatBanana()
+
+
