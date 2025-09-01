@@ -129,6 +129,8 @@ let func = (a, b, c) => {
 let q = number7.reduce(func);
 console.log(q);
 
+console.log(number.includes(2))   //includes check arrays element is their or not in tell in true and flase.
+
 // let z = number.pop();
 // console.log(number);
 // console.log(z); //remove last element from the array
