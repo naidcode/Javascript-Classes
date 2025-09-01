@@ -102,3 +102,21 @@ lion.aniAge()
 lion.eatMeat("Deer");
 
 
+class programmer {
+  leaveRequest(days){
+    console.log(`i wnat ${days} days leave `)
+  }
+}
+
+class employee extends programmer{
+  leaveRequest(days){
+    super.leaveRequest(4)
+    // console.log(`i wnat ${days - 1} days leave`)
+  }
+}
+
+let e = new employee();
+
+e.leaveRequest();
+
+
