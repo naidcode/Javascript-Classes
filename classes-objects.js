@@ -9,7 +9,7 @@ class attandence {
   }
   absent() {
     console.log(this.name + "absent" + " and his roll no is " + this.roll);
-  }
+  }ii
   
 
 }
@@ -103,6 +103,9 @@ lion.eatMeat("Deer");
 
 
 class programmer {
+  constructor(){
+    console.log("hello employee")
+  }
   leaveRequest(days){
     console.log(`i wnat ${days} days leave `)
   }
