@@ -82,13 +82,23 @@ class monkey extends Animal {
   }
 }
 
-let tiger = new Animal("Tiger" , 15);
+class Lion extends Animal {
+  eatMeat(animal) {
+    console.log(`eat the ${animal} meat`)
+  }
+}
+
+let tiger = new Animal("Tiger" , 16);
 let cat = new monkey("Dolly" , "6 Months");
+let lion = new Lion("Lion" , 80);
 
 tiger.aniName();
 tiger.aniAge();
 cat.aniName();
 cat.aniAge();
-cat.eatBanana()
+cat.eatBanana();
+lion.aniName();
+lion.aniAge()
+lion.eatMeat("Deer");
 
 
