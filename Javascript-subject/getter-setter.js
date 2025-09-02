@@ -61,9 +61,9 @@ class Namenaam{
     }
   };
 
-  get firstName(){
-    return this._firstName
-  }
+  // get firstName(){
+  //   return this._firstName
+  // }
 
     get lastName(){
     return this._lastName
