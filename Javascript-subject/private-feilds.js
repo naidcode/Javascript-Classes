@@ -42,11 +42,8 @@ console.log(bal.balance);
 5. Key Rules about #privateField
 
 1: Must be declared in the class with # before using.
-
 2: Only accessible inside class methods.
-
 3: Not inherited by objects outside.
-
 4: Cannot be accessed via this["#field"] (no hacks). 
 */
 
