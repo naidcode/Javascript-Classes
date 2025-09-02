@@ -38,9 +38,9 @@ class Namenaam{
   };
 
   
-  set firstname(newFirstName){
+  set name(newFirstName){
     if(typeof newFirstName === "string" && newFirstName.length > 0){
-       this._firstName = newFirstName;
+       this._name = newFirstName;
     }else{
       console.log("name must be in string")
     }
@@ -61,9 +61,9 @@ class Namenaam{
     }
   };
 
-  // get firstName(){
-  //   return this._firstName
-  // }
+  get firstName(){
+    return this._firstName
+  }
 
     get lastName(){
     return this._lastName
