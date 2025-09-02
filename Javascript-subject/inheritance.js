@@ -19,7 +19,11 @@ class monkey extends Animal {
     console.log(" monkey eat Banana")
   }
 }
-
+class Cat extends Animal {
+  eatBanana() {
+    console.log(" cat eat fish")
+  }
+}
 class Lion extends Animal {
   eatMeat(animal) {
     console.log(`eat the ${animal} meat`)
@@ -27,7 +31,7 @@ class Lion extends Animal {
 }
 
 let tiger = new Animal("Tiger" , 16);
-let cat = new monkey("Dolly" , "6 Months");
+let cat = new Cat("Dolly" , "6 Months");
 let lion = new Lion("Lion" , 80);
 
 tiger.aniName();
