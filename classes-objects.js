@@ -60,68 +60,7 @@ console.log(MathHelper.pi);      // 3.14159
 console.log(MathHelper.add(5,2)); // 7
 
 
-// Inheritance and extend 
 
-class Animal {
-constructor(name , age) {
-this.name = name;
-this.age = age;
-}
-
-aniName() {
-  console.log(`this animal name is ${this.name}`)
-}
-aniAge() {
-  console.log(`and his age is ${this.age}`)
-}
-};
-
-class monkey extends Animal {
-  eatBanana() {
-    console.log("eat Banana")
-  }
-}
-
-class Lion extends Animal {
-  eatMeat(animal) {
-    console.log(`eat the ${animal} meat`)
-  }
-}
-
-let tiger = new Animal("Tiger" , 16);
-let cat = new monkey("Dolly" , "6 Months");
-let lion = new Lion("Lion" , 80);
-
-tiger.aniName();
-tiger.aniAge();
-cat.aniName();
-cat.aniAge();
-cat.eatBanana();
-lion.aniName();
-lion.aniAge()
-lion.eatMeat("Deer");
-
-
-class programmer {
-  constructor(){
-    console.log("hello employee")
-  }
-  leaveRequest(days){
-    console.log(`i wnat ${days} days leave `)
-  }
-}
-
-class employee extends programmer{
-  leaveRequest(days){
-    super.leaveRequest(4)
-    // console.log(`i wnat ${days - 1} days leave`)
-  }
-};
-
-
-let e = new employee();
-
-e.leaveRequest();
 
 //getter and setter
 
