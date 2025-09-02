@@ -116,10 +116,10 @@ class Cart {
       if(total) {
         console.log(`total price before discount ₹${total}`);
       } else if(!total) {
-        console.log("Cart is empty nothing to calculate")
+        console.log("Cart is empty nothing to calculate");
+        return;
       }
     
-
     let discount = 0;
     if (total > 10000) {
       discount = total * 0.2;
