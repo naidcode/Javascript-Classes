@@ -26,6 +26,7 @@ let nahid = new attandence("nahid is ", 10)
 let shahid = new attandence("shahid is ", 12);
 let sahil = new attandence("sahil is ", 35);
 let fazil = new attandence("fazil is ", 13);
+
 nahid.absent();
 shahid.present();
 sahil.absent();
@@ -55,19 +56,6 @@ let nahid01 = new Person("nahid" , 20);
 nahid01.greet()
 nahid01.birthday();
 
-// Static = belongs to class itself, not objects.
-class MathHelper {
-  static pi = 3.14159; // static property
-
-  static add(a, b) {   // static method
-    return a + b;
-  }
-}
-
-console.log(MathHelper.pi);      // 3.14159
-console.log(MathHelper.add(5,2)); // 7
-
-
 /* 
 Prototype
 
@@ -75,10 +63,10 @@ Prototype
 2: Every object has a prototype from which it can inherit properties and methods.
 3: Methods added to ConstructorFunction.prototype are shared by all instances.
 */
-function Person(name) {
+function Personss(name) {
   this.name = name;
 }
-Person.prototype.greet = function() {
+Personss.prototype.greet = function() {
   console.log(`Hello, ${this.name}`);
 };
 
@@ -91,7 +79,7 @@ Class
 3: Supports constructor, methods, inheritance (extends), and private fields (#).
 */
 
-class Person {
+class Persons {
   constructor(name) {
     this.name = name;
   }
