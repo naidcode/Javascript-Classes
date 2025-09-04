@@ -63,11 +63,11 @@ class Product {
 }
 
 console.log(Product.toCurrency(100)); 
-// $100.00 ✅
+// $100.00
 
 const p = new Product("Phone", 999);
 console.log(p.toCurrency); 
-// ❌ Error (not available on instances)
+//  Error (not available on instances)
 
 
 /*
