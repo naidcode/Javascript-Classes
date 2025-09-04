@@ -386,7 +386,7 @@ function addStudent(name, score) {
   students.push({ name, score });
 }
 
-function viewStudent() {
+export function viewStudent() {
   students.forEach((student, index) => {
     console.log(`${index + 1}. ${student.name} - ${student.score}`);
   });
