@@ -19,10 +19,10 @@
 //   console.log("product remove",name)
 // }
 
-// function sortProducts() {
-// let sort = products.sort((a , b) => a.price - b.price);
-// console.log(sort)
-// }
+export function sortProducts() {
+let sort = products.sort((a , b) => a.price - b.price);
+console.log(sort)
+}
 
 // function affortableProduct() {
 //   let affortable = products.every(product => product.price < 1000);
@@ -152,3 +152,10 @@ addProducts("football" , 850, 1);
 viewProducts();
 calculateTotal();
 cartReport();
+
+
+export function Math(a,b) {
+  return a + b
+}
+
+console.log(Math(10,20))
