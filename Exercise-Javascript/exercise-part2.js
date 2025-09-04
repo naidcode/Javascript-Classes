@@ -488,81 +488,81 @@ let double = (n) => n * 2;
 console.log(double(4));
 
 
-// class Product {
-//   static currency = "USD"; // ✅ class-level property
+class Product {
+  static currency = "USD"; // ✅ class-level property
 
-//   constructor(name, price, quantity) {
-//     this.name = name;
-//     this.price = price;
-//     this.quantity = quantity; // uses setter
-//   }
+  constructor(name, price, quantity) {
+    this.name = name;
+    this.price = price;
+    this.quantity = quantity; // uses setter
+  }
 
-//   discount() {
-//     return this.totalPrice;
-//   }
+  discount() {
+    return this.totalPrice;
+  }
 
-//   set quantity(newQuantity) {
-//     if (newQuantity < 0) {
-//       console.log("Select quantity first");
-//       return;
-//     }
-//     this._quantity = newQuantity;
-//   }
+  set quantity(newQuantity) {
+    if (newQuantity < 0) {
+      console.log("Select quantity first");
+      return;
+    }
+    this._quantity = newQuantity;
+  }
 
-//   get quantity() {
-//     return this._quantity;
-//   }
+  get quantity() {
+    return this._quantity;
+  }
 
-//   get totalPrice() {
-//     return this.price * this.quantity;
-//   }
+  get totalPrice() {
+    return this.price * this.quantity;
+  }
 
-//   // ✅ Now uses static currency property
-//   static toCurrency(amount) {
-//     return `${Product.currency} ${amount.toFixed(2)}`;
-//   }
+  // ✅ Now uses static currency property
+  static toCurrency(amount) {
+    return `${Product.currency} ${amount.toFixed(2)}`;
+  }
 
-//   static from(obj) {
-//     return new Product(obj.name, obj.price, obj.quantity);
-//   }
+  static from(obj) {
+    return new Product(obj.name, obj.price, obj.quantity);
+  }
 
-//   static totalOf(products) {
-//     return products.reduce((sum, item) => sum + item.totalPrice, 0);
-//   }
+  static totalOf(products) {
+    return products.reduce((sum, item) => sum + item.totalPrice, 0);
+  }
 
-//   static totalOfDiscounted(products) {
-//     return products.reduce((sum, item) => sum + item.discount(), 0);
-//   }
-// }
+  static totalOfDiscounted(products) {
+    return products.reduce((sum, item) => sum + item.discount(), 0);
+  }
+}
 
-// class Grocery extends Product {
-//   discount() {
-//     return this.totalPrice * 0.90; // 10% off
-//   }
-// }
+class Grocery extends Product {
+  discount() {
+    return this.totalPrice * 0.90; // 10% off
+  }
+}
 
-// class Electronic extends Product {
-//   discount() {
-//     return this.totalPrice * 0.80; // 20% off
-//   }
-// }
+class Electronic extends Product {
+  discount() {
+    return this.totalPrice * 0.80; // 20% off
+  }
+}
 
-// // --------------------
-// // Usage
-// // --------------------
-// let tv = new Electronic("TV", 50000, 1);
-// let soaps = new Grocery("Soaps", 150, 15);
-// let apple = Product.from({ name: "Apple", price: 10, quantity: 5 });
+// --------------------
+// Usage
+// --------------------
+let tv = new Electronic("TV", 50000, 1);
+let soaps = new Grocery("Soaps", 150, 15);
+let apple = Product.from({ name: "Apple", price: 10, quantity: 5 });
 
-// const products = [tv, soaps, apple];
+const products = [tv, soaps, apple];
 
-// console.log("Total (No Discount):", Product.toCurrency(Product.totalOf(products)));
-// console.log("Total (With Discount):", Product.toCurrency(Product.totalOfDiscounted(products)));
+console.log("Total (No Discount):", Product.toCurrency(Product.totalOf(products)));
+console.log("Total (With Discount):", Product.toCurrency(Product.totalOfDiscounted(products)));
 
-// // ✅ Change currency globally
-// Product.currency = "USD";
-// console.log("\nAfter changing currency:");
-// console.log("Total (No Discount):", Product.toCurrency(Product.totalOf(products)));
-// console.log("Total (With Discount):", Product.toCurrency(Product.totalOfDiscounted(products)));
+// ✅ Change currency globally
+Product.currency = "USD";
+console.log("\nAfter changing currency:");
+console.log("Total (No Discount):", Product.toCurrency(Product.totalOf(products)));
+console.log("Total (With Discount):", Product.toCurrency(Product.totalOfDiscounted(products)));
 
 
