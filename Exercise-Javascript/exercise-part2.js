@@ -566,3 +566,23 @@ console.log("Total (No Discount):", Product.toCurrency(Product.totalOf(products)
 console.log("Total (With Discount):", Product.toCurrency(Product.totalOfDiscounted(products)));
 
 
+class Math{
+  static min = (1,2,3)
+};
+
+console.log(Math.min);
+
+class NAhid{
+  constructor(name,price){
+    this.name = name,
+    this.price = price;
+  }
+
+  static from(ob){
+    return new NAhid(ob.name , ob.price);
+  }
+}
+
+let Pasha = NAhid.from({name: "Nahid pasha" , price: "infinite"})
+
+console.log(Pasha)
