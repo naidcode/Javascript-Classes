@@ -519,9 +519,18 @@ return this._quantity;
   };
 
   static from(obj){
-    return new Product(obj.name, obj.price, obj.quantity);
+    return Product(obj.name, obj.price, obj.quantity);
+  }
+
+  static TotalOf(Products){
+    return  Products.reduce((acc , product) => acc + product.price,0);
+  }
+  static totalDiscount(Products){
+    return new Products.reduce((acc , product) => acc + product.discount(),0);
   }
 }
+
+
 
 class Grocery extends Product{
     discount(){
@@ -548,6 +557,11 @@ console.log(`soaps price after discount: $${soaps.discount()}`)
 const apple = Product.from({ name: "Apple", price: 10, quantity: 5 });
 console.log("Apple Total Price: $",apple.totalPrice);
 
+
 Product.toCurrency(tv.discount())
 Product.toCurrency(soaps.discount())
 Product.toCurrency(apple.discount())
+
+const item = [tv , soaps , apple];
+console.log("total price before discount:",Product.toCurrency(Product.TotalOf(Product)))
+console.log("total price after discount:",Product.toCurrency(Product.totalDiscount(Product)))
