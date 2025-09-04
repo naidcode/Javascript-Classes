@@ -50,5 +50,28 @@ user2.usernames()
 User.usercounts();
 
 
+class Product {
+  constructor(name, price) {
+    this.name = name;
+    this.price = price;
+  }
+
+  // Static utility method
+  static toCurrency(amount) {
+    return `$${amount.toFixed(2)}`;
+  }
+}
+
+console.log(Product.toCurrency(100)); 
+// $100.00 ✅
+
+const p = new Product("Phone", 999);
+console.log(p.toCurrency); 
+// ❌ Error (not available on instances)
 
 
+/*
+!: Static methods → For utilities/helpers (don’t depend on an instance).
+2: Static properties → For constants or shared class-level data.
+#: Factory methods → A special kind of static method that returns a new instance.
+*/
