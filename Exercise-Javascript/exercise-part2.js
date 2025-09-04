@@ -488,80 +488,81 @@ let double = (n) => n * 2;
 console.log(double(4));
 
 
+// class Product {
+//   static currency = "USD"; // ✅ class-level property
 
-class Product{
-  constructor(name , price ,quantity){
-    this.name = name,
-    this.price = price,
-    this.quantity = quantity
-  }
-  discount(){
-    return this.totalPrice;
-  }
+//   constructor(name, price, quantity) {
+//     this.name = name;
+//     this.price = price;
+//     this.quantity = quantity; // uses setter
+//   }
 
-  set quantity(newquantity){
-    if(newquantity < 0){
-      console.log(`select quantity first`);
-    } 
-    this._quantity = newquantity;
-  }
+//   discount() {
+//     return this.totalPrice;
+//   }
 
-  get totalPrice(){
-return this._quantity;
-  }
+//   set quantity(newQuantity) {
+//     if (newQuantity < 0) {
+//       console.log("Select quantity first");
+//       return;
+//     }
+//     this._quantity = newQuantity;
+//   }
 
-  get totalPrice() {
-    return this.price * this._quantity;
-  }
+//   get quantity() {
+//     return this._quantity;
+//   }
 
-  static toCurrency(amount){
-    console.log(`$${amount.toFixed(2)}`)
-  };
+//   get totalPrice() {
+//     return this.price * this.quantity;
+//   }
 
-  static from(obj){
-    return Product(obj.name, obj.price, obj.quantity);
-  }
+//   // ✅ Now uses static currency property
+//   static toCurrency(amount) {
+//     return `${Product.currency} ${amount.toFixed(2)}`;
+//   }
 
-  static TotalOf(Products){
-    return  Products.reduce((acc , product) => acc + product.price,0);
-  }
-  static totalDiscount(Products){
-    return new Products.reduce((acc , product) => acc + product.discount(),0);
-  }
-}
+//   static from(obj) {
+//     return new Product(obj.name, obj.price, obj.quantity);
+//   }
+
+//   static totalOf(products) {
+//     return products.reduce((sum, item) => sum + item.totalPrice, 0);
+//   }
+
+//   static totalOfDiscounted(products) {
+//     return products.reduce((sum, item) => sum + item.discount(), 0);
+//   }
+// }
+
+// class Grocery extends Product {
+//   discount() {
+//     return this.totalPrice * 0.90; // 10% off
+//   }
+// }
+
+// class Electronic extends Product {
+//   discount() {
+//     return this.totalPrice * 0.80; // 20% off
+//   }
+// }
+
+// // --------------------
+// // Usage
+// // --------------------
+// let tv = new Electronic("TV", 50000, 1);
+// let soaps = new Grocery("Soaps", 150, 15);
+// let apple = Product.from({ name: "Apple", price: 10, quantity: 5 });
+
+// const products = [tv, soaps, apple];
+
+// console.log("Total (No Discount):", Product.toCurrency(Product.totalOf(products)));
+// console.log("Total (With Discount):", Product.toCurrency(Product.totalOfDiscounted(products)));
+
+// // ✅ Change currency globally
+// Product.currency = "USD";
+// console.log("\nAfter changing currency:");
+// console.log("Total (No Discount):", Product.toCurrency(Product.totalOf(products)));
+// console.log("Total (With Discount):", Product.toCurrency(Product.totalOfDiscounted(products)));
 
 
-
-class Grocery extends Product{
-    discount(){
-     return this.totalPrice * 0.90
-    }
-}
-
-class Electronic extends Product{
-   discount(){
-      return this.totalPrice * 0.80
-    }
-}
-
-let tv = new Electronic("TV" , 50000, 1);
-console.log(`tv price is: $${tv.totalPrice}`);
-console.log(`tv price after discount: $${tv.discount()}`)
-
-let soaps = new Grocery("Soaps" , 150, 15);
-console.log(`soaps price is: $${soaps.totalPrice}`);
-console.log(`soaps price after discount: $${soaps.discount()}`)
-
-
-// Product from factory method
-const apple = Product.from({ name: "Apple", price: 10, quantity: 5 });
-console.log("Apple Total Price: $",apple.totalPrice);
-
-
-Product.toCurrency(tv.discount())
-Product.toCurrency(soaps.discount())
-Product.toCurrency(apple.discount())
-
-const item = [tv , soaps , apple];
-console.log("total price before discount:",Product.toCurrency(Product.TotalOf(Product)))
-console.log("total price after discount:",Product.toCurrency(Product.totalDiscount(Product)))
