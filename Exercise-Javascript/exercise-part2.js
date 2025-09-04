@@ -486,3 +486,68 @@ greet("Nahid");
 
 let double = (n) => n * 2;
 console.log(double(4));
+
+
+
+class Product{
+  constructor(name , price ,quantity){
+    this.name = name,
+    this.price = price,
+    this.quantity = quantity
+  }
+  discount(){
+    return this.totalPrice;
+  }
+
+  set quantity(newquantity){
+    if(newquantity < 0){
+      console.log(`select quantity first`);
+    } 
+    this._quantity = newquantity;
+  }
+
+  get totalPrice(){
+return this._quantity;
+  }
+
+  get totalPrice() {
+    return this.price * this._quantity;
+  }
+
+  static toCurrency(amount){
+    console.log(`$${amount.toFixed(2)}`)
+  };
+
+  static from(obj){
+    return new Product(obj.name, obj.price, obj.quantity);
+  }
+}
+
+class Grocery extends Product{
+    discount(){
+     return this.totalPrice * 0.90
+    }
+}
+
+class Electronic extends Product{
+   discount(){
+      return this.totalPrice * 0.80
+    }
+}
+
+let tv = new Electronic("TV" , 50000, 1);
+console.log(`tv price is: $${tv.totalPrice}`);
+console.log(`tv price after discount: $${tv.discount()}`)
+
+let soaps = new Grocery("Soaps" , 150, 15);
+console.log(`soaps price is: $${soaps.totalPrice}`);
+console.log(`soaps price after discount: $${soaps.discount()}`)
+
+
+// Product from factory method
+const apple = Product.from({ name: "Apple", price: 10, quantity: 5 });
+console.log("Apple Total Price: $",apple.totalPrice);
+
+Product.toCurrency(tv.discount())
+Product.toCurrency(soaps.discount())
+Product.toCurrency(apple.discount())
