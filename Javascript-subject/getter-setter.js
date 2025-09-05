@@ -85,3 +85,6 @@ console.log(n.firstName)
 console.log(n.lastName);
 console.log(n.fullName);
 console.log(n.age)
+
+
+
