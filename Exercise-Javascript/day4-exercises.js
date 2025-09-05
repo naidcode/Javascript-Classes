@@ -82,8 +82,8 @@ discount(){
 };
 
 class Grocery extends Product{
-constructor(name , price , quantity,Expiry){
-  super(name, price , quantity)
+constructor(name , price , quantity,Expiry, category){
+  super(name, price , quantity,category)
   this.Expiry = Expiry
 };
 
@@ -127,7 +127,7 @@ console.log(`Product remove Succesfully` , remove[0]);
 };
 
 findProduct(name){
-  this.Item.find(product => product.name === name);
+ this.Item.find(product => product.name === name);
   console.log("founded the product", name);
 };
 
