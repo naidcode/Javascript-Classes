@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+<script>
+  try{
+  console.log("hello");
+}
+catch(e){
+console.error(e);
+}
+finally{
+  console.log("always executes ")
+}
+console.log("nahid pasha ");
+console.log("fazil pasha")
+try{
+let d = window.prompt("enter number")
+let di = window.prompt("enter number")
+
+if(d === 0){
+  throw new Error("invalid number");
+}
+
+let r = d / di;
+console.log(r)
+} 
+catch(e){
+  console.log(e);
+
+} 
+
+console.log("we also reach the end");
+
+
+</script>
+</html>
