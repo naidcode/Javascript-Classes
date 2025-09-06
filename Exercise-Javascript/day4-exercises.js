@@ -191,3 +191,126 @@
 // console.log("total price after discount:",cart.totalAfterDiscount);
 
 
+// class Book{
+//   constructor(title, author , price , quantity , category){
+//     this.title = title,
+//     this.author = author,
+//     this.price = price,
+//     this.quantity = quantity,
+//     this.category = category;
+//   };
+
+//   get totalValue(){
+//     return this.price * this.quantity;
+//   };
+//   discount(){
+//     if(this.category === "Education"){
+//       return this.totalValue * 0.90;
+//     }
+//     return this.totalValue;
+//   }
+// };
+// class Ebook extends Book{
+//   constructor(title, author , price , quantity , category , fileSizemb){
+// super(title, author , price,quantity,category);
+// this.fileSizemb = fileSizemb;
+//   };
+
+//   discount(){
+//     return this.totalValue * 0.80;
+//   };
+// };
+
+// class Library{
+//   #book = [];
+
+// static  fromSeed(seedArray){
+//     let library =  new Library()
+//     seedArray.forEach(b => library.addBook(b));
+//     return library
+//   };
+
+//   addBook(book){
+//     this.#book.push(book)
+//   };
+
+//   listBook(){
+//     this.#book.forEach((book, index) => {
+//       console.log(`${index +1} - ${book.title} ${book.author} ${book.price} ${book.quantity} ${book.category}`)
+//     })
+//   };
+
+//   findBook(title){
+//     return this.#book.find(book => book.title === title);
+//   }
+
+//   removeTitle(title){
+//     let index = this.#book.findIndex(book => book.title === title)
+//     if(index !== -1){
+//       let remove = this.#book.splice(index ,1 );
+//       console.log(`remove product succesfully ${title}`);
+//     } else{
+//       console.log(`not found product to remove`)
+//     }
+//   };
+
+
+
+//   borrowBook(title, member){
+//     let book = this.findBook(title);
+//     if(!book) throw new Error (`book ${title} not found`);
+//     if(book.quantity <= 0) throw new Error("first add book");
+//     if(member.borrowedcount >= member.getmax()){
+//       throw new Error("${member.name} reached limit");
+      
+//     }
+//     book.quantity -=1;
+//     member.borrowedcount++;
+//     console.log(`${member.name} borrowed ${title}`);
+//   }
+
+//   report(){
+//     let totalBefore = this.#book.reduce((acc , book) => acc + book.totalValue,0);
+//     let totalAfter = this.#book.reduce((acc, book) => acc + book.discount(),0);
+
+//     console.log(`total price before discount: ${totalBefore}`)
+//     console.log(`total price after discount: ${totalAfter}`);
+
+//   }
+// };
+
+// class Member{
+//   constructor(name , membershipType = "regular"){
+//     this.name = name,
+//     this.membershipType = membershipType
+//     this.borrowedcount = 0
+//   };
+
+//   getmax(){
+//     return this.membershipType === "premium" ? 5:2;
+//   };
+
+// }
+
+// let seedBooks = [
+//   new Book("Maths 101", "John Doe", 200, 3, "Education"),
+//   new Book("Laptop Basics", "Tech Guru", 50000, 2, "Electronics"),
+//   new Ebook("Learn JS", "Code Master", 300, 5, "Education", 5)
+// ];
+
+// let library = Library.fromSeed(seedBooks);
+
+// let member1 = new Member("Alice", "regular");  // Can borrow max 2
+// let member2 = new Member("Bob", "premium");   // Can borrow max 5
+
+// library.borrowBook("Maths 101", member1);   // ✅ Alice borrows
+// library.borrowBook("Learn JS", member1);    // ✅ Alice borrows second
+// // library.borrowBook("Laptop Basics", member1);  // ❌ Alice exceeds limit (error)
+
+// library.borrowBook("Laptop Basics", member2); // ✅ Bob borrows
+// library.borrowBook("Maths 101", member2);     // ✅ Bob borrows
+
+// library.listBook();  // Shows remaining stock
+// library.report();    // Shows totals before/after discount
+// console.log(member1, member2); // Shows borrow counts
+
