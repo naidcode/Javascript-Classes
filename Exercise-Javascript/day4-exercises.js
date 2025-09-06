@@ -314,3 +314,115 @@
 // library.report();    // Shows totals before/after discount
 // console.log(member1, member2); // Shows borrow counts
 
+class Book{
+  constructor(title, author ,price,quantity,category){
+    this.title = title,
+    this.author = author,
+    this.price = price,
+    this.quantity = quantity,
+    this.category = category;
+  }
+
+get totalvalue(){
+  return this.price * this.quantity;
+};
+
+discount(){
+  if(this.category === "Education"){
+    return this.totalvalue * 0.90
+  }
+  return this.totalvalue
+};
+}
+
+class Ebook extends Book{
+  constructor(title , author, price ,quantity,category,fileSizeMB){
+    super(title,author,price, quantity,category);
+    this.fileSizeMB = fileSizeMB
+  };
+
+  discount(){
+    return this.totalvalue * 0.80
+  };
+};
+
+class Library{
+  #book = [];
+
+
+addBook(book){
+    this.#book.push(book);
+  };
+
+  static fromSeed(seedArray){
+    let library = new Library();
+    seedArray.forEach(b => library.addBook(b));
+    return library;
+  }
+
+  
+  findBook(title){
+    return this.#book.find(book => book.title === title);
+  };
+
+  listBook(){
+    this.#book.forEach((book, index) => {
+      console.log(`${index +1} ${book.title} ${book.author} ${book.price} ${book.quantity} ${book.category}`)
+    })
+  }
+
+  borrowBook(title , member){
+    let book = this.findBook(title);
+    if(!book) throw new Error("book not founded");
+    if(book.quantity <= 0) throw new Error("first add books");
+    if(member.borrowCount >= member.getMax()) throw new Error("member reached the borrow limit")
+
+      book.quantity -=1;
+      member.borrowCount +=1;
+      console.log(`${title} name ${member.name}`);
+  };
+
+  report(){
+    let totalBefore = this.#book.reduce((acc, book) => acc + book.totalvalue,0);
+    let totalAfter = this.#book.reduce((acc, book) => acc + book.discount(),0);
+
+    console.log(`total price before discount: $${totalBefore}`)
+    console.log(`total price after discount: $${totalAfter}`)
+
+  }
+
+};
+
+class Member{
+  constructor(name,membershipType = "regular"){
+    this.name = name,
+    this.membershipType = membershipType,
+    this.borrowCount = 0;
+  };
+
+  getMax(){
+   return  this.membershipType === "premium" ? 5:2;
+  }
+};
+
+let seedBooks = [
+  new Book("Maths 101", "John Doe", 200, 3, "Education"),
+  new Book("Laptop Basics", "Tech Guru", 50000, 2, "Electronics"),
+  new Ebook("Learn JS", "Code Master", 300, 5, "Education", 5)
+];
+
+let library = Library.fromSeed(seedBooks);
+
+let member1 = new Member("Alice", "regular");  
+let member2 = new Member("Bob", "premium");  
+
+library.borrowBook("Maths 101", member1);  
+library.borrowBook("Learn JS", member1);    
+library.borrowBook("Laptop Basics", member2);  
+
+library.borrowBook("Laptop Basics", member2); 
+library.borrowBook("Maths 101", member2);     
+
+library.listBook(); 
+library.report();    
+console.log(member1, member2); 
