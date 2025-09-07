@@ -208,5 +208,19 @@ payments.pay(cart.TotalAfterDiscount)
 
 let arr = [10,20,5,20,10];
 
+function unique(number){
+let uni = [...new Set(number)];
 
-let unique = arr.
+uni.sort((a,b) => b-a);
+
+if(uni.length < 2){
+  return "not valid"
+};
+return uni[1]
+};
+
+console.log(unique(arr))
+
+
+
+
