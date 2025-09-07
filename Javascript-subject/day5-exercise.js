@@ -143,6 +143,11 @@ class Cart{
     this.#item.push(product);
   };
 
+  listProduct(){
+    this.#item.forEach((p,i) => {
+      console.log(`${i +1}) ${p.name} - $${p.price} - qty${p.quantity} - ${p.category}`)
+    })
+  }
   removeProduct(name){
     let index = this.#item.findIndex(product => product.name === name);
     if(index !== -1){
@@ -190,19 +195,23 @@ class Wallet extends Payment{
 
 
 let product1 = new Electronic("Tv" , 50000, 1, "Electronic");
-let product2 = new Grocery("rice" , 10000, 5 , Grocery);
+let product2 = new Grocery("rice" , 10000, 5 , "Grocery");
 let product3 = new Clothing("full outfit" , 20000, 2, "clothing");
 
 let cart = new Cart();
+
 cart.addProduct(product1)
 cart.addProduct(product2)
 cart.addProduct(product3);
 
-console.log(`total price before discount: ${cart.TotalBeforeDiscount}`)
-console.log(`total price after discount: ${cart.TotalAfterDiscount}`)
+cart.listProduct()
+console.log(`total price before discount: $${cart.TotalBeforeDiscount}`)
+console.log(`total price after discount: $${cart.TotalAfterDiscount}`)
 
 let payments = new Credit();
 payments.pay(cart.TotalAfterDiscount)
+
+
 
 // logic question 
 
