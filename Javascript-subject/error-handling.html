@@ -10,45 +10,56 @@
   
 </body>
 <script>
-  try{
-  console.log("hello");
+//   try{
+//   console.log("hello");
+// }
+// catch(e){
+// console.error(e);
+// }
+// finally{
+//   console.log("always executes ")
+// }
+// console.log("nahid pasha ");
+// console.log("fazil pasha")
+// try{
+// let d = window.prompt("enter number")
+// let di = window.prompt("enter number")
+
+// if(d === 0){
+//   throw new Error("invalid number");
+// }
+
+// let r = d / di;
+// console.log(r)
+// } 
+// catch(e){
+//   console.log(e);
+
+// } 
+
+// console.log("we also reach the end");
+
+// let date = new Date();
+// console.log(date)
+
+// let year = date.getFullYear();
+// let months = date.getMonth(1);
+// let days = date.getDay();
+// let dates = date.getDate();
+// let hour = date.getHours();
+// let min = date.getMinutes();
+
+// console.log(year , months, days, dates,hour,min);
+
+
+let a = prompt("enter number")
+let b = prompt("enter number");
+if(isNaN(a) || isNaN(b)){
+  throw new TypeError("not allowed");
+  
 }
-catch(e){
-console.error(e);
-}
-finally{
-  console.log("always executes ")
-}
-console.log("nahid pasha ");
-console.log("fazil pasha")
-try{
-let d = window.prompt("enter number")
-let di = window.prompt("enter number")
+let sum = parseInt(a) + Number(b);
 
-if(d === 0){
-  throw new Error("invalid number");
-}
-
-let r = d / di;
-console.log(r)
-} 
-catch(e){
-  console.log(e);
-
-} 
-
-console.log("we also reach the end");
-
-let date = new Date();
-console.log(date)
-
-let year = date.getFullYear();
-let months = date.getMonth(1);
-let days = date.getDay();
-let dates = date.getDate();
-let hour = date.getHours();
-let min = date.getMinutes();
-
-console.log(year , months, days, dates,hour,min)
+console.log(`the answer is ${sum}`)
 </script>
 </html>
