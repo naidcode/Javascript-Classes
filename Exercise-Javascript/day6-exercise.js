@@ -117,5 +117,146 @@
 // }
 // };
 
+// Another library management.
+
+class Book{
+  constructor(title, author , price , quantity, category){
+    if(price <= 0 || quantity <= 0) throw new Error("invalid");
+    this.title = title,
+    this.author  = author,
+    this.price =  price ,
+    this.quantity = quantity,
+    this.category = category
+  };
+
+  get totalvalue(){
+    return this.price * this.quantity
+  };
+
+  discount(){
+    if(this.category === "Education"){
+      return this.totalvalue * 0.90
+    } else if (this.category === "fiction"){
+      return this.totalvalue * 0.95
+    } else if (this.category === "dicipline"){
+      return this.totalvalue * 0.85
+    } else{
+      console.log("no discount applied");
+      return this.totalvalue
+    }
+  }
+  
+}
+
+class Member{
+  constructor(name , memberShipType = "regular"){
+    this.name = name;
+    this.memberShipType = memberShipType,
+    this.borrowBook = 0;
+  };
+
+  getMaxBorrow(){
+    return this.memberShipType === "primium" ? 5: 2 
+    }
+  }
+class Library {
+  #books = [];
+
+  static fromSeed(arrayseed){
+    let library = new Library()
+    arrayseed.forEach(b => library.addBooks(b));
+    return library;
+  }
+
+  addBooks(book){
+    this.#books.push(book)
+  };
+
+  listBooks(){
+    this.#books.forEach((book , index) => {
+      console.log(`${index + 1} - ${book.title} ${book.author} ${book.price} ${book.quantity} ${book.category}`)
+    })
+  }
+  searchBooks(title){
+    return this.#books.filter(book => book.title === title);
+  };
+get TotalBeforeDiscount(){
+    return this.#books.reduce((acc , book) => acc + book.totalvalue,0);
+  }
+
+  get TotalAfterDiscount(){
+    return this.#books.reduce((acc, book) => acc + book.discount(),0);
+  }
 
 
+MemberBorrow(title , Member){
+  let book = this.searchBooks();
+  if(!book) {
+    throw new Error("invalid book")
+  } 
+  if(book.quantity <= 0){
+    throw new Error("invaid quantity");
+  }
+  if(Member.borrowBook >= Member.getMaxBorrow()){
+    throw new Error("you reached the books limit");
+  }
+
+  book.quantity = -1;
+  Member.borrowBook = +1
+  console.log(`${title} - ${Member.name}`);
+}
+}
+
+class Payment{
+  pay(amount) {
+    throw new Error("invalid payment method");
+  }
+};
+
+class Credit extends Payment{
+
+  pay(amount){
+    console.log(`use Credit card for payment is ${amount}`)
+  }
+} 
+
+class UPI extends Payment{
+
+  pay(amount){
+    console.log(`use UPI for payment is ${amount}`)
+  }
+} 
+
+class Wallet extends Payment{
+
+  pay(amount){
+    console.log(`use Cash for payment is ${amount}`)
+  }
+};
+
+
+let seedBooks = [
+  new Book("Maths 101", "John Doe", 200, 3, "Education"),
+  new Book("Laptop Basics", "Tech Guru", 50000, 2, "fiction"),
+  new Book("Learn JS", "Code Master", 300, 5, "Education")
+];
+
+let library = Library.fromSeed(seedBooks);
+
+let member1 = new Member("Alice", "regular");  
+let member2 = new Member("Bob", "premium");  
+
+library.MemberBorrow("Maths 101", member1);  
+library.MemberBorrow("Learn JS", member1);    
+library.MemberBorrow("Laptop Basics", member2);  
+
+library.MemberBorrow("Laptop Basics", member2); 
+library.MemberBorrow("Maths 101", member2);     
+
+library.listBooks(); 
+console.log(`total price before discount: $${library.TotalBeforeDiscount}`)
+console.log(`total price after discount: $${library.TotalAfterDiscount}`)  
+
+let payments = new Credit();
+payments.pay(library.TotalAfterDiscount)
+console.log(member1, member2);
