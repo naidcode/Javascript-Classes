@@ -113,3 +113,18 @@ for (const key in studentz[0]) {
     
   }
 }
+
+for (let index = 1; index <= 20; index++) {
+  if(index % 2 ===0)
+  console.log(index)
+};
+
+let num2 = [3, 7, 2, 9, 4];
+let sum1  = 0;
+for (let index = 0; index < num2.length; index++) {
+sum1 += num2[index]
+}
+
+console.log(sum1)
+
+
