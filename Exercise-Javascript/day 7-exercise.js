@@ -304,3 +304,81 @@ const paypal = new PayPalPayment();
 
 checkout(credit, 100);
 checkout(paypal, 200);
+
+
+class Vehicle {
+  #fuel;
+
+  constructor(speed, fuel){
+    this.speed = speed;
+    this.#fuel = fuel;
+  }
+
+  start(){
+    console.log("Vehicle started!");
+  }
+
+  stop(){
+    console.log("Vehicle stopped!");
+  }
+
+  set fuel(value){
+    if(value < 0){
+      throw new Error("Low fuel!");
+    }
+    this.#fuel = value;
+  }
+
+  get fuel(){
+    return this.#fuel;
+  }
+}
+
+class Car extends Vehicle {
+  start(str){
+    console.log(`Car is started with ${str}`);
+  }
+
+  stop(){
+    console.log("Car stopped");
+  }
+}
+
+class Bike extends Vehicle {
+  start(str){
+    console.log(`Bike is started with ${str}`);
+  }
+
+  stop(){
+    console.log("Bike stopped");
+  }
+}
+
+class Truck extends Vehicle {
+  start(str){
+    console.log(`Truck is started with ${str}`);
+  }
+
+  stop(){
+    console.log("Truck stopped");
+  }
+}
+
+function vehicleMethod(vehicle, str){
+  vehicle.start(str);
+}
+
+// Creating instances
+let car = new Car(50, 100);
+let bike = new Bike(40, 50);
+let truck = new Truck(30, 200);
+
+// Using the methods
+vehicleMethod(car, "50 km/h");
+car.stop();
+
+vehicleMethod(bike, "40 km/h");
+bike.stop();
+
+vehicleMethod(truck, "30 km/h");
+truck.stop();
