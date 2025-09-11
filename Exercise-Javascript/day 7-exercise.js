@@ -273,3 +273,34 @@ console.log(person.name) // 30
 person.age = 35;
  // works fine
 // person.age = -5; // Error: Invalid age
+
+
+//polymorphism exercise 
+
+class Payment {
+  process(amount) {
+    throw new Error("Method not implemented");
+  }
+}
+
+class CreditCardPayment extends Payment {
+  process(amount) {
+    console.log(`Processing credit card payment of $${amount}`);
+  }
+}
+
+class PayPalPayment extends Payment {
+  process(amount) {
+    console.log(`Processing PayPal payment of $${amount}`);
+  }
+}
+
+function checkout(paymentMethod, amount) {
+  paymentMethod.process(amount);
+}
+
+const credit = new CreditCardPayment();
+const paypal = new PayPalPayment();
+
+checkout(credit, 100);
+checkout(paypal, 200);
