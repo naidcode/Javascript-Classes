@@ -166,113 +166,116 @@ console.log(calc.divide(10, 10));
 
 
 
-class Transaction{
-  #title
-  #description
-  #status
-  #createdDate
-  #dueDate
-  #type
-  #amount
-  constructor(title, description,amount,type,status = "Pending",createdDate,dueDate){
-    this.#title = title,
-    this.#description = description,
-    this.#status = status,
-    this.#createdDate = createdDate,
-    this.#dueDate = dueDate,
-    this.#amount = amount,
-    this.settype(type);
+class Transaction {
+  #title;
+  #description;
+  #status;
+  #createdDate;
+  #dueDate;
+  #type;
+  #amount;
 
+  constructor(title, description, amount, type, status = "Pending", createdDate, dueDate) {
+    this.setTitle(title);
+    this.setDescription(description);
+    this.setAmount(amount);
+    this.setType(type);
+    this.setStatus(status);
+    this.setCreatedDate(createdDate);
+    this.setDueDate(dueDate);
   }
 
-
-  getTitle(){
-    return this.#title
+  getTitle() {
+    return this.#title;
   }
 
-  getamount(){
-    return this.#amount
+  getAmount() {
+    return this.#amount;
   }
 
-  gettype(){
-    return this.#type
-  }
-   getdescription(){
-    return this.#description
+  getType() {
+    return this.#type;
   }
 
-   getstatus(){
-    return this.#status
+  getDescription() {
+    return this.#description;
   }
 
-   getcreatedDate(){
-    return this.#createdDate
+  getStatus() {
+    return this.#status;
   }
 
-  getdueDate(){
-    return this.#dueDate
-  };
+  getCreatedDate() {
+    return this.#createdDate;
+  }
 
-  settitle(value){
-    if(typeof value !== "string" && value.trim() === ""){
-      throw new Error("invalid title");
+  getDueDate() {
+    return this.#dueDate;
+  }
+
+  setTitle(value) {
+    if (typeof value !== "string" || value.trim() === "") {
+      throw new Error("Invalid title");
     }
-    this.#title = value
-  };
-
-  setamount(value){
-    if(value <= 0){
-      throw new Error("invalid amount")
-    }
-    this.#amount = value
-  };
-
-  settype(value){
-    if(value !== "Income" && value !== "Expense"){
-      throw new Error("invalid type");
-    }
-    this.#type = value
+    this.#title = value;
   }
 
-  setDescription(value){
-    if(typeof value !== "string" && value.trim() === ""){
-      throw new Error("invalid title");
+  setAmount(value) {
+    if (typeof value !== "number" || value <= 0) {
+      throw new Error("Invalid amount");
     }
-    this.#description = value
-  };
+    this.#amount = value;
+  }
 
-  setstatus(value){
-    if(value !== "Process" && value !== "Completed"){
-      throw new Error("invalid status!");
+  setType(value) {
+    if (value !== "Income" && value !== "Expense") {
+      throw new Error("Invalid type");
     }
-    this.#status = value
-  };
+    this.#type = value;
+  }
 
-  setdueDate(value){
-    if (isNaN(new Date(value))) {
-  throw new Error("invalid Date!");
-}
+  setDescription(value) {
+    if (typeof value !== "string" || value.trim() === "") {
+      throw new Error("Invalid description");
+    }
+    this.#description = value;
+  }
 
-    this.#dueDate = value
-  };
+  setStatus(value) {
+    if (value !== "Pending" && value !== "Process" && value !== "Completed") {
+      throw new Error("Invalid status");
+    }
+    this.#status = value;
+  }
 
-  markCompleted(){
-    if(this.#status === "Completed"){
-      throw new Error("already completed"); 
+  setCreatedDate(value) {
+    if (isNaN(new Date(value).getTime())) {
+      throw new Error("Invalid created date");
+    }
+    this.#createdDate = value;
+  }
+
+  setDueDate(value) {
+    if (isNaN(new Date(value).getTime())) {
+      throw new Error("Invalid due date");
+    }
+    this.#dueDate = value;
+  }
+
+  markCompleted() {
+    if (this.#status === "Completed") {
+      throw new Error("Already completed");
     }
     this.#status = "Completed";
-  };
+  }
 
-  isoverDue(){
-    let now = new Date()
-    if(this.#status !== "Completed" && now > new Date(this.#dueDate)){
-  return true;
-} else {
-  return false;
+  isOverDue() {
+    let now = new Date();
+    let due = new Date(this.#dueDate);
+    return this.#status !== "Completed" && now > due;
+  }
 }
 
-  }
-};
 
 class FinanceManagers {
   #transaction = [];
@@ -289,7 +292,7 @@ class FinanceManagers {
 
   listTransactions() {
     this.#transaction.forEach((transaction, index) => {
-      console.log(`${index + 1}. ${transaction.getTitle()} - ${transaction.getdescription()} - ${transaction.getstatus()} - ${transaction.getdueDate()} - ${transaction.getcreatedDate()}`);
+      console.log(`${index + 1}. ${transaction.getTitle()} - ${transaction.getDescription()} - ${transaction.getStatus()} - ${transaction.getDueDate()} - ${transaction.getCreatedDate()}`);
     });
   }
 
@@ -301,6 +304,15 @@ class FinanceManagers {
     return total;
   }
 
+  processTransaction(transaction, total) {
+    if (transaction.getType() === "Income") {
+      total += transaction.getAmount();
+    } else if (transaction.getType() === "Expense") {
+      total -= transaction.getAmount();
+    }
+    return total;
+  }
+
   simulateSave(transaction, callback) {
     setTimeout(() => {
       this.#transaction.push(transaction);
@@ -308,16 +320,43 @@ class FinanceManagers {
     }, 1000);
   }
 
-  processTransaction(transaction, total) {
-    if (transaction.gettype() === "Income") {
-      total += transaction.getamount();
-    } else if (transaction.gettype() === "Expense") {
-      total -= transaction.getamount();
+  getOverdueTransactions() {
+    let now = new Date();
+    return this.#transaction.filter(t => t.getStatus() !== "Completed" && now > new Date(t.getDueDate()));
+  }
+
+  removeTransaction(title) {
+    let index = this.#transaction.findIndex(transaction => transaction.getTitle() === title);
+    if (index !== -1) {
+      this.#transaction.splice(index, 1);
+      console.log(`Transaction removed by title: ${title}`);
+    } else {
+      console.log(`Transaction with title "${title}" not found.`);
     }
+  }
+
+  markTransactionCompleted(index) {
+    if (index < 0 || index >= this.#transaction.length) {
+      console.log("Invalid index");
+      return;
+    }
+    try {
+      this.#transaction[index].markCompleted();
+      console.log("Transaction marked as completed");
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  finalizeBalance() {
+    let total = this.calculateBalance();
+    total -= 50; // service charge
     return total;
   }
 }
 
+
+// ✅ Example usage
 
 let seedArray = [
   new Transaction("Company", "Salary", 10000, "Income", "Completed", "2025-09-11", "2025-12-31"),
@@ -329,4 +368,13 @@ let seedArray = [
 const financeManager = FinanceManagers.fromSeed(seedArray);
 
 financeManager.listTransactions();
+
+financeManager.removeTransaction("Rice");
+
+financeManager.markTransactionCompleted(1); // index starts from 0
+
+console.log("Overdue Transactions:", financeManager.getOverdueTransactions());
+
 console.log("Balance:", financeManager.calculateBalance());
+
+console.log("Final Balance after service charges:", financeManager.finalizeBalance());
