@@ -359,7 +359,7 @@ class FinanceManagers {
 // ✅ Example usage
 
 let seedArray = [
-  new Transaction("Company", "Salary", 10000, "Income", "Completed", "2025-09-11", "2025-12-31"),
+  new Transaction("Company", "Salary", 10000, "Income", "Completed", "2026-012-11", "2025-12-31"),
   new Transaction("Rice", "Grocery", 5000, "Expense", "Pending", "2025-10-11", "2025-10-12"),
   new Transaction("Website", "Freelance Work", 20000, "Income", "Pending", "2025-09-11", "2026-01-12"),
   new Transaction("Bills", "Electricity", 5000, "Expense", "Pending", "2025-09-11", "2025-10-05"),
@@ -371,10 +371,27 @@ financeManager.listTransactions();
 
 financeManager.removeTransaction("Rice");
 
-financeManager.markTransactionCompleted(1); // index starts from 0
+financeManager.markTransactionCompleted(2); // index starts from 0
 
 console.log("Overdue Transactions:", financeManager.getOverdueTransactions());
 
 console.log("Balance:", financeManager.calculateBalance());
 
 console.log("Final Balance after service charges:", financeManager.finalizeBalance());
+
+
+/*markTransactionCompleted(title) {
+  const transaction = this.#transaction.find(t => t.getTitle() === title);
+
+  if (!transaction) {
+    console.log(`Transaction with title "${title}" not found.`);
+    return;
+  }
+
+  try {
+    transaction.markCompleted();
+    console.log(`Transaction "${title}" marked as completed.`);
+  } catch (error) {
+    console.log(error.message);
+  }
+} */
