@@ -219,16 +219,24 @@ let arr = [10,20,5,20,10];
 
 function unique(number){
 let uni = [...new Set(number)];
+console.log(uni)
 
-uni.sort((a,b) => b-a);
+let sort = uni.sort((a,b) => b-a);
+console.log(sort)
+console.log(uni.length)
 
-if(uni.length < 2){
+if(uni.length < 3){
   return "not valid"
 };
 return uni[1]
-};
+}
 
 console.log(unique(arr))
+
+
+let arr2 = [1,2,3,4,56,7]
+
+console.log(arr2.length)
 
 
 
