@@ -18,31 +18,31 @@ clear()  	      -  Removes all entries
 size  	        -  Returns the number of entries
 */
 
-// const userRoles = new Map();
+const userRoles = new Map();
 
-// // Add entries
-// userRoles.set("alice", "admin");
-// userRoles.set("bob", "editor");
+// Add entries
+userRoles.set("alice", "admin");
+userRoles.set("bob", "editor");
 
-// // Access entries
-// console.log(userRoles.get("alice")); // 'admin'
+// Access entries
+console.log(userRoles.get("alice")); // 'admin'
 
-// // Check if a key exists
-// console.log(userRoles.has("alice")); // true
+// Check if a key exists
+console.log(userRoles.has("alice")); // true
 
-// // Delete an entry
-// userRoles.delete("alice");
+// Delete an entry
+userRoles.delete("alice");
 
-// // Check the size
-// console.log(userRoles.size); // 1
+// Check the size
+console.log(userRoles.size); // 1
 
-// // Iterate over the map
-// userRoles.forEach((role, user) => {
-//   console.log(`${user} is ${role}`);
-// });
+// Iterate over the map
+userRoles.forEach((role, user) => {
+  console.log(`${user} is ${role}`);
+});
 
-// let value = [["nahid" , 20] , ["fazil" , 23]];
-// let map = new Map(value);
+let value = [["nahid" , 20] , ["fazil" , 23]];
+let map = new Map(value);
 
 // map.set("fouzi" , 16)         // set is to add (key , values)
 // map.delete("fouzi")           // delete we use to delete the key and value both
@@ -98,9 +98,50 @@ numbers.forEach((element) => {
 });
 
 // Size of the set
-console.log(`${numbers.size} size ki value`); // 2
-
+console.log(`${numbers.size} size ki value`); 
 // we can easily remove duplicate value from arrays.
 let arr = ["nahid" , "nahid" , "fazil" ,"fouzi" ,"fouzi"]  
-let uni = [...new Set(arr)];
+let uni = [...new Set(arr)]
 console.log(uni)
+
+
+
+// weakMap
+/**
+ ➤ What is WeakMap?
+
+A collection of key-value pairs where keys must be objects.
+Keys are held weakly, meaning if no other references exist, the key and its value can be garbage-collected.
+ */
+let weak = new WeakMap()
+
+function companyRole(data, obj) {   // 
+  weak.set(data , obj)
+}
+
+let user = {name: "Nahid pasha"}
+companyRole(user,  {age: 20})
+
+console.log(weak.get(user))
+
+// WeakSet()
+/**
+ * ➤ What is WeakSet?
+
+A collection of unique object references.
+Objects in a WeakSet are held weakly and can be garbage-collected when no other references exist.
+ */
+
+let weaks = new WeakSet()
+
+function transaction(obj) {
+  if(weaks.has(obj)){
+    console.log("already processed")
+  }else{
+    console.log("processing...")
+    weaks.add(obj)
+  }
+}
+let item = {id: 20}
+transaction(item)
+transaction(item)
