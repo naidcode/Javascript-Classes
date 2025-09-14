@@ -225,7 +225,7 @@ let sort = uni.sort((a,b) => b-a);
 console.log(sort)
 console.log(uni.length)
 
-if(uni.length < 3){
+if(uni.length < 3.5){
   return "not valid"
 };
 return uni[1]
