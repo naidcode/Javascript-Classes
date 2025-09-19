@@ -53,6 +53,17 @@ walkDog()
   .catch((error) => console.error(error))
   .finally(() => console.log("always run the code "))
 
+  /**
+   1. Promise Chaining
+
+    Instead of handling everything in one .then(), we can pass results step by step:
+
+    new Promise(resolve => resolve(2))
+      .then(num => num * 2)   // 4
+      .then(num => num * 3)   // 12
+      .then(result => console.log(result)); // final output: 12
+   */
+
   async function Done() {
     try{
 
