@@ -38,14 +38,8 @@ function trash() {
 }
 
 walkDog()
-  .then(value => {
-    console.log(value);
-    return clean();
-  })
-  .then((value) => {
-    console.log(value);
-    return trash();
-  })
+  .then(value => {console.log(value);
+    return clean();}).then((value) => {console.log(value);return trash();})
   .then((value) => {
     console.log(value);
     return console.log("i finished my work");
@@ -151,8 +145,8 @@ Promise.allSettled([promise1, promise2, promise3])
 
   const promise4 = Promise.reject("Error 1");
 const promise5 = Promise.reject("Error 2");
-const promise6 = Promise.resolve("Success 3");
-
+const promise6 = Promise.resolve("Success 3");      // any only take which is resolve doesn't matter if the 
+                                                     // resolve is at last also he take him.
 Promise.any([promise4, promise5, promise6])
   .then(result => {
     console.log("First fulfilled result:", result);
