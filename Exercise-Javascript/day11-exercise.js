@@ -74,82 +74,81 @@ console.log(mySet.size);
 class MemberBookTracker {
   #members = new Map();
 
-  addMember(name, email) {
-    if (this.#members.has(name)) {
-      console.log("Member already exists");
+  addMember(name , email){
+    if(this.#members.has(name)){
+      console.log("member already exist")
       return;
-    } else {
-      this.#members.set(name, { email, borrowedbook: new Set() });
-      console.log(`${name} added successfully`);
+    } else{
+      this.#members.set(name, {email , borrowedbook: new Set()})
+      console.log("Member successfully added")
     }
   }
 
-  removeMember(name) {
-    if (this.#members.has(name)) {
-      this.#members.delete(name);
-      console.log(`${name} removed successfully`);
-    } else {
-      console.log("Member not found");
+  removeMember(name){
+    if(this.#members.has(name)){
+      this.#members.delete(name)
+      console.log("member removed successfully")
+    } else{
+      console.log("member not found!")
     }
   }
 
-  borrowBook(name, booktitle) {
-    if (!this.#members.has(name)) {
-      console.log("Member not found");
-      return;
+  borrowBook(name , bookTitle){
+    if(!this.#members.has(name)){
+      console.log("member not found!")
+      return
+    }
+
+    let member = this.#members.get(name)
+    if(member.borrowedbook.has(bookTitle)){
+      console.log(`${bookTitle} already exist`)
+    } else{
+      member.borrowedbook.add(bookTitle)
+      console.log(`${bookTitle} borrowed successfully`)
+    }
+  }
+
+  returnBook(name , bookTitle){
+    if(!this.#members.has(name)){
+      console.log("not found!");
+      return
     }
 
     let member = this.#members.get(name);
-
-    if (member.borrowedbook.has(booktitle)) {
-      console.log(`${booktitle} is already borrowed`);
-    } else {
-      member.borrowedbook.add(booktitle);
-      console.log(`${booktitle} borrowed successfully`);
+    if(member.borrowedbook.has(bookTitle)){
+      member.borrowedbook.delete(bookTitle)
+      console.log("borrowed book return successfully")
+    } else{
+      console.log("book not found!")
     }
   }
 
-  returnBook(name, booktitle) {
-    if (!this.#members.has(name)) {
-      console.log("Member not found");
-      return;
-    }
-
-    let member = this.#members.get(name);
-
-    if (member.borrowedbook.has(booktitle)) {
-      member.borrowedbook.delete(booktitle);
-      console.log(`${booktitle} returned successfully`);
-    } else {
-      console.log(`No record of ${booktitle} being borrowed`);
+  listMember(){
+    if(this.#members.size ===0){
+      console.log("member not found!")
+      return
+    } else{
+      this.#members.forEach((i ,name) => {
+        console.log(`name: ${name} email: ${i.email}`)
+      })
     }
   }
 
-  listMember() {
-    if (this.#members.size === 0) {
-      console.log("No members found");
-    } else {
-      this.#members.forEach((member, name) => {
-        console.log(`Name: ${name} - Email: ${member.email}`);
-      });
-    }
-  }
-
-  listBooks(booktitle) {
+  listBook(bookTitle){
     let found = false;
-    this.#members.forEach((member, name) => {
-      if (member.borrowedbook.has(booktitle)) {
-        console.log(`${booktitle} is borrowed by ${name}`);
-        found = true;
-      }
-    });
-    if (!found) {
-      console.log("Book not found");
+    this.#members.forEach((member , name) => {
+      if(member.borrowedbook.has(bookTitle)){
+        console.log(`${bookTitle} borrowed By ${name}`)
+        found = true
+      } 
+    })
+
+    if(!found){
+      console.log("not found!")
     }
   }
 }
 
-// Example usage:
 
 const myTracker = new MemberBookTracker();
 
@@ -161,9 +160,9 @@ myTracker.borrowBook("Jane Smith", "Python Programming");
 myTracker.borrowBook("John Doe", "JavaScript Basics"); // Duplicate
 
 myTracker.listMember();
-myTracker.listBooks("JavaScript Basics");
+myTracker.listBook("JavaScript Basics");
 
 myTracker.returnBook("John Doe", "JavaScript Basics");
 myTracker.returnBook("John Doe", "JavaScript Basics"); // Already returned
 
-myTracker.listBooks("JavaScript Basics");
+myTracker.listBook("JavaScript Basics");
