@@ -8,6 +8,11 @@ export class User{
     this.#name = name
   }
 
+  
+  toString() {
+    return `User: ${this.#name} (ID: ${this.#userId})`
+  }
+
   getUserId(){return this.#userId}
   getName(){return this.#name}
 

@@ -8,7 +8,9 @@ export class Order{
     this.#userId = userId
     this.#bookId = bookId
   }
-
+   toString() {
+    return `Order: ${this.#orderId} | User: ${this.#userId} | Book: ${this.#bookId}`
+  }
   getOrderDetail(){
     return{
       orderId: this.#orderId,

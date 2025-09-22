@@ -7,7 +7,9 @@ export class Book{
     this.#title = title
     this.#author = author
   }
-
+   toString() {
+    return `Book: ${this.#title} by ${this.#author} (ID: ${this.#bookId})`
+  }
 
   getId(){
     return this.#bookId
