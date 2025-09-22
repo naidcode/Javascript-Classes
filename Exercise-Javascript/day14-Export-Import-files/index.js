@@ -4,7 +4,7 @@ import { Order} from "./order.js";
 import { Library } from "./library.js";
 
 let library =  new Library()
-const book1 = new Book(123456, "Clean Code", "James")
+const book1 = new Book(123456, "Clean road", "James")
 const book2 = new Book(123456, "Javascript", "Nahid")
 console.log("Books:")
 console.log(book1.toString() )
