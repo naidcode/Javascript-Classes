@@ -43,7 +43,7 @@ userRoles.forEach((role, user) => {
 
 let value = [["nahid" , 20] , ["fazil" , 23]];
 let map = new Map(value);
-
+// in values we have we can add two this first key and after how many you add thats call values
 // map.set("fouzi" , 16)         // set is to add (key , values)
 // map.delete("fouzi")           // delete we use to delete the key and value both
 // console.log(map.has("nahid")) // has we use when we want to know this value is true or false
