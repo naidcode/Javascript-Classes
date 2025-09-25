@@ -93,4 +93,75 @@ console.log(a.next())
 console.log(a.next())
 console.log(a.next())
 console.log(a.return(10))
+console.log("next answer ")
+function* numbers() {
+  yield 10;
+  yield 20;
+  yield 30;
+}
 
+const iterator = numbers();
+
+console.log(iterator.next()); // { value: 10, done: false }
+console.log(iterator.next()); // { value: 20, done: false }
+console.log(iterator.next()); // { value: 30, done: false }
+console.log(iterator.next()); // { value: undefined, done: true }
+
+class PaginatedUsers {
+  constructor(users) {
+    this.users = users;
+    this.index = 0;
+  }
+
+  [Symbol.iterator]() {
+    return {
+      users: this.users,
+      index: this.index,
+      next() {
+        if (this.index < this.users.length) {
+          return { value: this.users[this.index++], done: false };
+        } else {
+          return { done: true };
+        }
+      }
+    };
+  }
+}
+
+// Example data
+const users = new PaginatedUsers(["Alice", "Bob", "Charlie"]);
+
+for (let user of users) {
+  console.log(user);
+}
+// Alice
+// Bob
+// Charlie
+
+
+
+function Iterator(array) {
+  let nextIndex = 0;
+  return {
+    next: function () {
+      if (nextIndex < array.length) {
+        return {value: array[nextIndex++],done: false,};
+      } else {
+        return {
+          value: undefined,
+          done: true,
+        };
+      }
+    },
+  };
+}
+
+const array = [1, 2, 3, 4, 5];
+const arrayValue = Iterator(array);
+
+console.log(arrayValue.next()); // { value: 1, done: false }
+console.log(arrayValue.next()); // { value: 2, done: false }
+console.log(arrayValue.next()); // { value: 3, done: false }
+console.log(arrayValue.next()); // { value: 4, done: false }
+console.log(arrayValue.next()); // { value: 5, done: false }
+console.log(arrayValue.next()); // { value: undefined, done: true }
