@@ -196,6 +196,12 @@ class Movie{
       this.#movies.push(movie)
     }
 
+    listMovies(){
+    this.#movies.forEach((Movies , index) => {
+        console.log(`${index + 1} 🎬 ${Movies.getTitle()} by ${Movies.getDirector()} rating: ⭐ ${Movies.getRating()}`)
+      })
+    }
+
     getAllMovies(){return this.#movies}
 
     [Symbol.iterator](){
@@ -221,54 +227,64 @@ class Movie{
       }
     }
 
-  //   getMoviesByDirector(director){
-  //     let directors = this.#movies.filter(movie => movie.getDirector() === director)
-  //     let index = 0
+    getMoviesByDirector(director){
+      let directors = this.#movies.filter(movie => movie.getDirector() === director)
+      let index = 0
 
-  //     return {
-  //     [Symbol.iterator]() {
-  //       return {
-  //         next() {
-  //           if (index < directors.length) {
-  //             return { value: directors[index++], done: false }
-  //           } else {
-  //             return { done: true }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
- *getMoviesByDirector(director){
-  for (const movie of this.#movies) {
-    if(movie.getDirector() === director){
-      yield movie
+        return{
+          [Symbol.iterator](){
+            return {
+          next() {
+            if (index < directors.length) {
+              return { value: directors[index++], done: false }
+            } else {
+              return { done: true }
+            }
+          }
+        }
+      }
+          }
+        }
     }
-  }
- }
+  
+//  *getMoviesByDirector(director){
+//   for (const movie of this.#movies) {
+//     if(movie.getDirector() === director){
+//       yield movie
+//     }
+//   }
+//  }
 
-}
+
     
 
   const collection = new MovieCollection()
 
-collection.addMovie(new Movie("Inception", "Christopher Nolan", 9))
-collection.addMovie(new Movie("Titanic", "James Cameron", 8))
-collection.addMovie(new Movie("Avatar", "James Cameron", 7))
-collection.addMovie(new Movie("Interstellar", "Christopher Nolan", 10))
+collection.addMovie(new Movie("Inception", "Christopher Nolan", 9.5))
+collection.addMovie(new Movie("Titanic", "James Cameron", 8.1))
+collection.addMovie(new Movie("Avatar", "James Cameron", 7.7))
+collection.addMovie(new Movie("Interstellar", "Christopher Nolan", 9.8))
 
+
+collection.listMovies()
 // Default iteration
 for (const movie of collection) {
   console.log(movie.getTitle())
 }
 
 // Top-rated movies
+console.log("most rated movies")
 for (const movie of collection.getTopRated(8)) {
   console.log("⭐", movie.getTitle())
 }
 
+
+
 // Movies by director
+console.log("By the same director movies")
 for (const movie of collection.getMoviesByDirector("James Cameron")) {
-  console.log("🎬", movie.getTitle())
+  console.log(`🎬 ${movie.getTitle()} by ${movie.getDirector()}`)
 }
+
+
 
