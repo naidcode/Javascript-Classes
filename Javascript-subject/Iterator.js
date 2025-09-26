@@ -1,167 +1,69 @@
-/**
- An iterator is an object that defines a next() method.
-
-next() returns { value, done }.
-done: true → iteration finished.
- */
-
-
-function Create(array){
-  let index = 0
-
- return  {
-    next: function () {
-      if(index < array.length){
-        return {value: array[index++] , done: false}
-      } else{
-        return {value: undefined , done: true}
-      }
-    }
-  };
+function* num(){
+  console.log("starting 1")
+  yield 1
+  console.log("starting 2")
+  yield 2
+  console.log("starting 3")
+  yield 3
+  console.log("starting 4")
+  yield 4
 }
 
-let it =  Create([10,20,30]);
+const generator = num()
+console.log(generator.next())
+console.log(generator.next())
+console.log(generator.next())
+console.log(generator.next())
+console.log(generator.return(5)) // no code is executed returns { value: 5, done: true}
 
-console.log(it.next());
-console.log(it.next());
-console.log(it.next());
-console.log(it.next());
 
+//From within a generator function, the control can be delegated to another generator function using yield*.
 
-/**
- 🔹 Making Objects Iterable with [Symbol.iterator]
-Built-in structures like Arrays, Maps, and Sets already implement [Symbol.iterator].
-You can make your own object iterable.
- */
-let range = {
-  start: 1,
-  end: 5,
-  [Symbol.iterator]() {
-    let current = this.start;
-    let end = this.end;
-    return {
-      next() {
-        if (current <= end) {
-          return { value: current++, done: false };
-        } else {
-          return { done: true };
-        }
-      }
-    };
-  }
-};
-
-for (let num of range) {
-  console.log(num); // 1, 2, 3
+function* gi(){
+  yield 2
+  yield 3
+  yield 4
 }
 
-
-/**
- 🔹 Generator Functions (function* and yield)
-
-A generator function returns an iterator.
-Use yield to pause execution and return a value.
-Use .next() to resum
- */
-
-function* myGenerator() {
-  yield 10;
-  yield 20;
-  yield 30;
+function* g2(){
+  yield 1
+  yield* gi();
+  yield 5
 }
 
-let gen = myGenerator();
+let generators = g2()
 
-console.log(gen.next()); // { value: 1, done: false }
-console.log(gen.next()); // { value: 2, done: false }
-console.log(gen.next()); // { value: 3, done: false }
-console.log(gen.next()); // { value: undefined, done: true }
+console.log(generators.next())
+console.log(generators.next())
+console.log(generators.next())
+console.log(generators.next())
+console.log(generators.next())
+console.log(generators.return(6))
 
+//iterator
 
-function* createfunc(arr){
-  let id = 1
-  while (true) {
-    yield id
-    id++
+function* range(n){
+  for (let i = 1; i < n; i++) {
+    yield i
   }
 }
 
-let a = createfunc()
-console.log(a.next())
-console.log(a.next())
-console.log(a.next())
-console.log(a.next())
-console.log(a.next())
-console.log(a.return(10))
-console.log("next answer ")
-function* numbers() {
-  yield 10;
-  yield 20;
-  yield 30;
-}
 
-const iterator = numbers();
-
-console.log(iterator.next()); // { value: 10, done: false }
-console.log(iterator.next()); // { value: 20, done: false }
-console.log(iterator.next()); // { value: 30, done: false }
-console.log(iterator.next()); // { value: undefined, done: true }
-
-class PaginatedUsers {
-  constructor(users) {
-    this.users = users;
-    this.index = 0;
-  }
-
-  [Symbol.iterator]() {
-    return {
-      users: this.users,
-      index: this.index,
-      next() {
-        if (this.index < this.users.length) {
-          return { value: this.users[this.index++], done: false };
-        } else {
-          return { done: true };
-        }
-      }
-    };
-  }
-}
-
-// Example data
-const users = new PaginatedUsers(["Alice", "Bob", "Charlie"]);
-
-for (let user of users) {
-  console.log(user);
-}
-// Alice
-// Bob
-// Charlie
+let gen = range(10)
+console.log(gen.next())
+console.log(gen.next())
+console.log(gen.next())
+console.log(gen.next())
+console.log(gen.next())
+console.log(gen.next())
+console.log(gen.next())
+console.log(gen.next())
+console.log(gen.next())
+console.log(gen.return(10))
 
 
 
-function Iterator(array) {
-  let nextIndex = 0;
-  return {
-    next: function () {
-      if (nextIndex < array.length) {
-        return {value: array[nextIndex++],done: false,};
-      } else {
-        return {
-          value: undefined,
-          done: true,
-        };
-      }
-    },
-  };
-}
 
-const array = [1, 2, 3, 4, 5];
-const arrayValue = Iterator(array);
 
-console.log(arrayValue.next()); // { value: 1, done: false }
-console.log(arrayValue.next()); // { value: 2, done: false }
-console.log(arrayValue.next()); // { value: 3, done: false }
-console.log(arrayValue.next()); // { value: 4, done: false }
-console.log(arrayValue.next()); // { value: 5, done: false }
-console.log(arrayValue.next()); // { value: undefined, done: true }
+
+
