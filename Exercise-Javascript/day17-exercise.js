@@ -89,20 +89,27 @@ class Song {
   #title
   #artist
   #duration
+  #speed
 
   constructor(title, artist, duration){
     this.#title = title
     this.#artist = artist 
     this.#duration = duration
+   
   }
 
   getTitle(){ return this.#title }
   getArtist(){ return this.#artist }
   getDuration(){ return this.#duration }
+  getSpeed(){return this.#speed}
 }
 
 class Playlist {
   #songs = []
+  #speed
+  constructor(speed = 0){
+     this.#speed = speed
+  }
 
   addSongs(song){ this.#songs.push(song) }
 
@@ -128,7 +135,7 @@ class Playlist {
   async *[Symbol.asyncIterator](){
     
       for (const song of this.#songs) {
-        await new Promise(r => setTimeout(r,song.getDuration() * 200))
+        await new Promise(r => setTimeout(r,song.getDuration() * this.#speed))
         yield song
       }
     }
@@ -136,9 +143,9 @@ class Playlist {
 
 
 (async () => {
-  const playlist = new Playlist()
-playlist.addSongs(new Song("Song A", "Artist A", 180))
-playlist.addSongs(new Song("Song B", "Artist B", 240))
+  const playlist = new Playlist(10)
+playlist.addSongs(new Song("Song A", "Artist A", 180 ))
+playlist.addSongs(new Song("Song B", "Artist B", 240 ))
 
 console.log("Total Duration:", playlist.getTotalDuration(), "seconds")
 
