@@ -76,10 +76,10 @@ class NewsFeed {
 (async () => {
   const feed = new NewsFeed()
   feed.addArticle(new Article("AI Updates", "John", "AI is booming..."))
-  feed.addArticle(new Article("SpaceX Launch", "Elon", "Rocket launched successfully."))
+  feed.addArticle(new Article("SpaceX Launch", "Elon musk", "Rocket launched successfully."))
   
   for await(const article of feed) {
-    console.log(article.getTitle(), "-", article.getAuthor())
+    console.log(article.getTitle(), "-", article.getAuthor()) 
   }
   
 })()
