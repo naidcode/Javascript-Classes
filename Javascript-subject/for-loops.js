@@ -35,3 +35,11 @@ console.log(i)
 console.log(i)
 
 
+let ite = [1,2,3,4,5,6]
+ite.forEach(v  => {
+  console.log(v)
+});
+                                       // they both are same but for...of is easy way to use
+for (const v of ite) {
+  console.log(v)
+}
