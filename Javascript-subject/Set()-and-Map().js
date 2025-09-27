@@ -105,7 +105,12 @@ let uni = [...new Set(arr)]
 console.log(uni)
 
 
+let unique = ["nahid" , "fazil" , "shahid" , "nahid"]
+let unii = new Set(unique).add("sahil")
 
+unii.forEach(v => {
+  console.log(v)
+})
 // weakMap
 /**
  ➤ What is WeakMap?
