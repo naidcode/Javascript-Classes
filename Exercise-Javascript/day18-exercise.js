@@ -57,7 +57,7 @@ class WeatherDashboard {
 // 🔹 Usage
 (async () => {
   const dashboard = new WeatherDashboard();
-  dashboard.addCity("Mangalore");
+  dashboard.addCity("mangle");
   dashboard.addCity("Bangalore");
   dashboard.addCity("Mumbai");
   dashboard.addCity("Delhi");
