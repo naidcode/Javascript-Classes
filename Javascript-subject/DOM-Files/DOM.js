@@ -1,3 +1,11 @@
+/**
+ * * this all are DOM's selectors...
+ * * getElementById()
+ * * getElementByClassName()
+ * *getElementByTagName()
+ * * querySelector()
+ * * querySelectorAll() 
+ */
 const username = " Nahid pasha ";
 
 const welcome = document.getElementById("welcome-msg");
