@@ -24,14 +24,14 @@ ulelement.forEach((ul) => {
 // *});
 
 //* .lastElementChild
-const elements2 = document.querySelector(".fruits");
-const last = element.lastElementChild;
-last.style.backgroundColor = "orange";
+const elements2 = document.querySelector(".veg");
+const last = elements2.lastElementChild;
+last.style.backgroundColor = "red";
 
 const element2 = document.querySelectorAll("ul");
 element2.forEach((ul) => {
   let ul2 = ul.lastElementChild;
-  ul2.style.backgroundColor = "green";
+  ul2.style.backgroundColor = "blue";
 });
 
 //* .nextElementSibling
@@ -44,18 +44,18 @@ element2.forEach((ul) => {
 //* .previousElementSibling
 const element4 = document.querySelector(".veg");
 const previous = element4.previousElementSibling;
-previous.style.backgroundColor = "blue";
+previous.style.backgroundColor = "brown";
 
 //* .parentElement
 
 const element5 = document.getElementById("rasins");
 const parent = element5.parentElement;
-parent.style.backgroundColor = "purple";
+parent.style.backgroundColor = "gold";
 
 //* .children
 
 const element6 = document.querySelector(".fruits");
 const child = element6.children;
 Array.from(child).forEach((child) => {
-  child.style.color = "white";
+  child.style.backgroundColor = "silver";
 });
