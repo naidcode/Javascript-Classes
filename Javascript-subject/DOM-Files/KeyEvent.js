@@ -14,7 +14,7 @@ document.addEventListener("keyup", (event) => {
   box.style.backgroundColor = "lightblue";
 });
 
-document.addEventListener("keydown", event => {
+document.addEventListener("keydown"  , event => {
   if (event.key.startsWith("Arrow")) {
     event.preventDefault();
     switch (event.key) {
@@ -36,3 +36,16 @@ document.addEventListener("keydown", event => {
     box.style.left = `${a}px`;
   }
 });
+
+const btn = document.getElementById("btn");
+const img = document.getElementById("img")
+
+btn.addEventListener("click" , event => {
+  if(img.style.display === "block"){
+    img.style.display = "none"
+    btn.textContent = "show"
+  } else{
+    img.style.display = "block"
+    btn.textContent = "hide"
+  }
+})
