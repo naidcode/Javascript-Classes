@@ -14,7 +14,7 @@ document.addEventListener("keyup", (event) => {
   box.style.backgroundColor = "lightblue";
 });
 
-document.addEventListener("keydown"  , event => {
+document.addEventListener("keydown", (event) => {
   if (event.key.startsWith("Arrow")) {
     event.preventDefault();
     switch (event.key) {
@@ -38,14 +38,20 @@ document.addEventListener("keydown"  , event => {
 });
 
 const btn = document.getElementById("btn");
-const img = document.getElementById("img")
+const img = document.getElementById("img");
 
-btn.addEventListener("click" , event => {
-  if(img.style.display === "block"){
-    img.style.display = "none"
-    btn.textContent = "show"
+btn.addEventListener("click", (event) => {
+  if(btn.textContent === "subscribe"){
+    btn.textContent = "subscribed"
+    btn.style.backgroundColor = "grey"
+    btn.style.color = "black"
+    btn.style.border = "none"
+    btn.style.padding = "10px 15px"
   } else{
-    img.style.display = "block"
-    btn.textContent = "hide"
+    btn.textContent = "subscribe"
+    btn.style.color = "white"
+    btn.style.backgroundColor = "black"
+        btn.style.border = "none"
+
   }
-})
+});
