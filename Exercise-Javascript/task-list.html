@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    input {
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 8px 12px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+    ul {
+      margin-top: 15px;
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 8px 0;
+      padding: 8px;
+      border: 5px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      text-decoration-color: black;
+      color: gray;
+    }
+
+    .actions button {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Task List</h2>
+  <input type="text" id="taskInput" placeholder="Enter task">
+  <button id="addBtn">Add Task</button>
+
+  <ul id="taskList"></ul>
+
+  <script>
+let taskInput = document.getElementById("taskInput")
+let addBtn = document.getElementById("addBtn")
+let taskList = document.getElementById("taskList")
+
+addBtn.addEventListener("click" ,() =>{
+let createLi = document.createElement("li")
+createLi.textContent = taskInput.value;
+
+let actions = document.createElement("div")
+actions.classList.add("actions")
+
+let completed = document.createElement("button")
+completed.textContent = "completed"
+
+let remove = document.createElement("button")
+remove.textContent = "remove"
+
+completed.addEventListener("click" ,() => {
+  createLi.classList.toggle("completed")
+})
+
+remove.addEventListener("click" , ()=> {
+createLi.remove()
+})
+
+actions.appendChild(completed)
+actions.appendChild(remove)
+createLi.appendChild(actions)
+taskList.appendChild(createLi)
+
+    taskInput.value = "";
+})
+</script>
+</body>
+</html>
