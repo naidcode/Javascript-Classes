@@ -1,94 +1,135 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dom</title>
+</head> -->
+<!-- <body>
+  <p id="para"></p>
+  <button id="mybutton">submit</button>
+</body>
+<script>
+  let para = document.getElementById("para")
+  let mybutton = document.getElementById("mybutton")
+
+  para.textContent = "hello"
+
+  mybutton.addEventListener("click" ,() => {
+   if(mybutton.textContent === "submit"){
+    mybutton.textContent = "submited"
+    mybutton.style.backgroundColor = "red"
+   } else{
+    mybutton.textContent = "submit"
+    mybutton.style.backgroundColor = "green"
+   }
+  })
+</script> -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task List</title>
+  <title>Student Manager</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-
-    input {
-      padding: 8px;
-      font-size: 14px;
-    }
-
-    button {
-      padding: 8px 12px;
-      margin-left: 5px;
-      cursor: pointer;
-    }
-
-    ul {
-      margin-top: 15px;
-      list-style-type: none;
-      padding: 0;
-    }
-
-    li {
-      width: 70%;
-      margin: 8px 0;
-      padding: 8px;
-      border: 5px solid #ddd;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .completed {
-      text-decoration: line-through;
-      color: gray;
-    }
-
-    .actions button {
-      margin-left: 10px;
-    }
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { margin: 5px; padding: 5px; }
+    ul { margin-top: 20px; padding: 0; list-style: none; }
+    li { margin: 5px 0; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+    .remove-btn { margin-left: 10px; background: rgb(253, 250, 250); color: white; border: none; cursor: pointer; padding: 4px 8px; }
   </style>
 </head>
 <body>
-  <h2>Task List</h2>
-  <input type="text" id="taskInput" placeholder="Enter task">
-  <button id="addBtn">Add Task</button>
+  <h2>Student Manager</h2>
+  <input type="text" id="nameInput" placeholder="Enter name">
+  <input type="text" id="gradeInput" placeholder="Enter grade">
+  <button id="addBtn">Add Student</button>
 
-  <ul id="taskList"></ul>
+  <ul id="studentList"></ul>
 
-  <script>
-let taskInput = document.getElementById("taskInput")
-let addBtn = document.getElementById("addBtn")
-let taskList = document.getElementById("taskList")
+<script>
+  class Student {
+    #id;
+    #name;
+    #grade;
 
-addBtn.addEventListener("click" ,() =>{
-let createLi = document.createElement("li")
-createLi.textContent = taskInput.value;
+    constructor(id, name, grade) {
+      this.#id = id;
+      this.#name = name;
+      this.#grade = grade;
+    }
 
-let actions = document.createElement("div")
-actions.classList.add("actions")
+    getId() { return this.#id; }
+    getName() { return this.#name; }
+    getGrade() { return this.#grade; }
 
-let completed = document.createElement("button")
-completed.textContent = "completed"
+    getDetails() {
+      return `ID: ${this.#id} | Name: ${this.#name} | Grade: ${this.#grade}`;
+    }
+  }
 
-let remove = document.createElement("button")
-remove.textContent = "remove"
+  class StudentManager {
+    #students = [];
 
-completed.addEventListener("click" ,() => {
-  createLi.classList.toggle("completed")
-})
+    addStudent(student) {
+      this.#students.push(student);
+    }
 
-remove.addEventListener("click" , ()=> {
-createLi.remove()
-})
+    removeStudent(id) {
+      this.#students = this.#students.filter(student => student.getId() !== id);
+    }
 
-actions.appendChild(completed)
-actions.appendChild(remove)
-createLi.appendChild(actions)
-taskList.appendChild(createLi)
+    listStudents() {
+      return this.#students;
+    }
+  }
 
-    taskInput.value = "";
-})
+  // DOM Handling
+      let nameInput = document.getElementById("nameInput")
+      let gradeInput = document.getElementById("gradeInput")
+      let addBtn = document.getElementById("addBtn")
+      let studentList = document.getElementById("studentList")
 
+      let manager = new StudentManager();
+      let idCounter = 1
 
-  </script>
+      addBtn.addEventListener("click" , event => {
+        let name = nameInput.value.trim()
+        let grade = gradeInput.value.trim()
+
+        if(!name || !grade){
+          alert("first enter the input")
+          return
+        }
+
+        let student = new Student(idCounter++ , name , grade)
+        manager.addStudent(student)
+
+        renderStudent()
+        nameInput.value = ""
+        gradeInput.value = ""
+    })
+
+    function renderStudent(){
+      studentList.innerHTML = ""
+      manager.listStudents().forEach(student => {
+        let Li = document.createElement("li")
+        Li.textContent = student.getDetails()
+
+        let removeBtn = document.createElement("button")
+        removeBtn.textContent = "❌"
+        removeBtn.classList.add("remove-btn")
+        removeBtn.addEventListener("click" , event => {
+          manager.removeStudent(student.getId())
+          renderStudent()
+        });
+
+        Li.appendChild(removeBtn)
+        studentList.appendChild(Li)
+      })
+    }
+
+</script>
 </body>
 </html>
