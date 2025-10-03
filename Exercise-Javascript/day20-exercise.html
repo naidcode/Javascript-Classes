@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do-list</title>
+    <style>
+      body {
+        background-color: rgb(230, 224, 224);
+
+        font-family: Arial, sans-serif;
+      }
+      .main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      #taskInput {
+        height: 50px;
+        width: 250px;
+        padding: 0 0.4em;
+        border-radius: 10px;
+        border: none;
+        font-size: 1rem;
+      }
+      #addTask-btn {
+        padding: 1.1em 1.5em;
+        margin: 0 0.7em;
+        font-size: 0.9rem;
+        color: white;
+        background-color: rgb(5, 203, 25);
+        border: none;
+        border-radius: 10px;
+      }
+      #addTask-btn:hover {
+        background-color: green;
+      }
+      .warning-color {
+        color: red;
+        font-size: 1.2rem;
+      }
+      .completed-color {
+        color: green;
+      }
+      .remove-btn {
+        padding: 1.1em 1.5em;
+        margin: 0 0.7em;
+        font-size: 0.9rem;
+        color: white;
+        background-color: tomato;
+        border: none;
+        border-radius: 10px;
+      }
+      .completed-btn {
+        padding: 1.1em 1.5em;
+        margin: 0 0.7em;
+        font-size: 0.9rem;
+        color: white;
+        background-color: rgb(98, 156, 222);
+        border: none;
+        border-radius: 10px;
+      }
+      .completed {
+        text-decoration: line-through;
+        color: grey;
+        text-decoration-color: black;
+      }
+      .Li{
+        background-color:rgb(235, 230, 230);
+        padding: 1em 0.5em;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        box-shadow: 1.3px 1.2px 4px black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="first">
+        <input type="text" id="taskInput" placeholder="Enter Task Here " />
+        <button id="addTask-btn">Add Task</button>
+      </div>
+      <div class="second">
+        <ul id="taskList"></ul>
+        <p id="alert-color"></p>
+      </div>
+    </div>
+  </body>
+  <script>
+    class Task {
+      #id;
+      #name;
+      #completed;
+      constructor(id, name, completed = false) {
+        this.#id = id;
+        this.#name = name;
+        this.#completed = completed;
+      }
+
+      toggleCompleted() {
+        this.#completed = !this.#completed;
+      }
+
+      getId() {
+        return this.#id;
+      }
+
+      getName() {
+        return this.#name;
+      }
+
+      isCompleted() {
+        return this.#completed;
+      }
+
+      getDetails() {
+        return `ID: ${this.getId()} Name: ${this.getName()} completed: ${
+          this.#completed
+        }`;
+      }
+    }
+
+    class TaskManager {
+      #tasks = [];
+      constructor() {
+        this.loadLocalstorage();
+      }
+
+      addTasks(task) {
+        this.#tasks.push(task);
+        this.saveLocalStorage();
+      }
+
+      removeTasks(id) {
+        this.#tasks = this.#tasks.filter((task) => task.getId() !== id);
+        this.saveLocalStorage();
+      }
+
+      taskList() {
+        return this.#tasks;
+      }
+
+      saveLocalStorage() {
+        localStorage.setItem(
+          "task",
+          JSON.stringify(
+            this.#tasks.map((task) => ({
+              id: task.getId(),
+              name: task.getName(),
+              completed: task.isCompleted(),
+            }))
+          )
+        );
+      }
+
+      loadLocalstorage() {
+        let data = JSON.parse(localStorage.getItem("task")) || [];
+        this.#tasks = data.map(
+          (task) => new Task(task.id, task.name, task.completed)
+        );
+      }
+    }
+
+    const inputName = document.getElementById("taskInput");
+    const addBtn = document.getElementById("addTask-btn");
+    const taskList = document.getElementById("taskList");
+    const alertColor = document.getElementById("alert-color")
+
+    let taskManager = new TaskManager();
+    let IdCounter = taskManager.taskList().length + 1;
+
+    addBtn.addEventListener("click", (event) => {
+      let task = inputName.value.trim();
+      
+
+      if (!task) {
+        alertColor.textContent = "Enter Task Properly";
+        alertColor.classList.add("warning-color");
+        setTimeout(() => {
+          alertColor.textContent = "";
+        }, 3000);
+        return;
+      }
+// taskList.style.color = "black"
+      let tasks = new Task(IdCounter++, task, false);
+      taskManager.addTasks(tasks);
+      renderTasks();
+      inputName.value = "";
+    });
+
+    function renderTasks() {
+      taskList.innerHTML = "";
+      taskManager.taskList().map((task) => {
+        let Li = document.createElement("p");
+        Li.classList.add("Li")
+        Li.textContent = task.getDetails();
+        if (task.isCompleted()) {
+          Li.classList.add("completed");
+        }
+
+        let completedBtn = document.createElement("button");
+        completedBtn.textContent = "Completed";
+        completedBtn.classList.add("completed-btn");
+        completedBtn.addEventListener("click", () => {
+          taskList.classList.toggle("completed");
+          task.toggleCompleted();
+          taskManager.saveLocalStorage();
+          alertColor.classList.add("completed-color")
+          setTimeout(() => {
+            alertColor.textContent = ""
+          }, 2000);
+          renderTasks();
+        });
+
+        let removeBtn = document.createElement("button");
+        removeBtn.textContent = "remove";
+        removeBtn.classList.add("remove-btn");
+        removeBtn.addEventListener("click", () => {
+          taskManager.removeTasks(task.getId());
+          renderTasks();
+        });
+        Li.appendChild(completedBtn);
+        Li.appendChild(removeBtn);
+        taskList.appendChild(Li);
+      });
+    }
+    renderTasks();
+  </script>
+</html>
