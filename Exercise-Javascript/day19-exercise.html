@@ -29,107 +29,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Manager</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    input, button { margin: 5px; padding: 5px; }
-    ul { margin-top: 20px; padding: 0; list-style: none; }
-    li { margin: 5px 0; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
-    .remove-btn { margin-left: 10px; background: rgb(253, 250, 250); color: white; border: none; cursor: pointer; padding: 4px 8px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Manager</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+input, button { margin: 5px; padding: 5px; }
+ul { margin-top: 20px; padding: 0; list-style: none; }
+li { margin: 5px 0; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+.remove-btn { margin-left: 10px; background: rgb(253, 250, 250); color: white; border: none; cursor: pointer; padding: 4px 8px; }
+</style>
 </head>
 <body>
-  <h2>Student Manager</h2>
-  <input type="text" id="nameInput" placeholder="Enter name">
-  <input type="text" id="gradeInput" placeholder="Enter grade">
-  <button id="addBtn">Add Student</button>
+<h2>Student Manager</h2>
+<input type="text" id="nameInput" placeholder="Enter name">
+<input type="text" id="gradeInput" placeholder="Enter grade">
+<button id="addBtn">Add Student</button>
 
-  <ul id="studentList"></ul>
+<ul id="studentList"></ul>
+<p id="message"></p>
 
 <script>
-  class Student {
-    #id;
-    #name;
-    #grade;
+class Student {
+  #id; #name; #grade;
+  constructor(id, name, grade) {
+    this.#id = id;
+    this.#name = name;
+    this.#grade = grade;
+  }
+  getId() { return this.#id; }
+  getName() { return this.#name; }
+  getGrade() { return this.#grade; }
+  getDetails() { return `ID: ${this.#id} | Name: ${this.#name} | Grade: ${this.#grade}`; }
+}
 
-    constructor(id, name, grade) {
-      this.#id = id;
-      this.#name = name;
-      this.#grade = grade;
-    }
+class StudentManager {
+  #students = [];
+  constructor(){ this.loadFromLocalStorage(); }
 
-    getId() { return this.#id; }
-    getName() { return this.#name; }
-    getGrade() { return this.#grade; }
-
-    getDetails() {
-      return `ID: ${this.#id} | Name: ${this.#name} | Grade: ${this.#grade}`;
-    }
+  addStudent(student) {
+    this.#students.push(student);
+    this.saveToLocalStorage();
   }
 
-  class StudentManager {
-    #students = [];
-
-    addStudent(student) {
-      this.#students.push(student);
-    }
-
-    removeStudent(id) {
-      this.#students = this.#students.filter(student => student.getId() !== id);
-    }
-
-    listStudents() {
-      return this.#students;
-    }
+  removeStudent(id) {
+    this.#students = this.#students.filter(s => s.getId() !== id);
+    this.saveToLocalStorage();
   }
 
-  // DOM Handling
-      let nameInput = document.getElementById("nameInput")
-      let gradeInput = document.getElementById("gradeInput")
-      let addBtn = document.getElementById("addBtn")
-      let studentList = document.getElementById("studentList")
+  listStudents() { return this.#students; }
 
-      let manager = new StudentManager();
-      let idCounter = 1
+  saveToLocalStorage(){
+    localStorage.setItem("student" , JSON.stringify(
+      this.#students.map(s => ({id: s.getId(), name: s.getName(),grade: s.getGrade() })
+    )))
+  }
 
-      addBtn.addEventListener("click" , event => {
-        let name = nameInput.value.trim()
-        let grade = gradeInput.value.trim()
+  loadFromLocalStorage(){
+    let data = JSON.parse(localStorage.getItem("student")) || []
+    this.#students = data.map(obj => new Student(obj.id , obj.name , obj.grade)) }
+}
 
-        if(!name || !grade){
-          alert("first enter the input")
-          return
-        }
+// DOM
+let nameInput = document.getElementById("nameInput");
+let gradeInput = document.getElementById("gradeInput");
+let addBtn = document.getElementById("addBtn");
+let studentList = document.getElementById("studentList");
+let msg = document.getElementById("message");
 
-        let student = new Student(idCounter++ , name , grade)
-        manager.addStudent(student)
+let manager = new StudentManager();
+let idCounter = manager.listStudents().length + 1;
 
-        renderStudent()
-        nameInput.value = ""
-        gradeInput.value = ""
-    })
+addBtn.addEventListener("click", () => {
+  let name = nameInput.value.trim();
+  let grade = gradeInput.value.trim();
 
-    function renderStudent(){
-      studentList.innerHTML = ""
-      manager.listStudents().forEach(student => {
-        let Li = document.createElement("li")
-        Li.textContent = student.getDetails()
+  if(!name || !grade){
+    msg.textContent = "Please enter both inputs";
+    msg.style.color = "red";
+    setTimeout(() => { msg.textContent = "" }, 3000);
+    return;
+  }
 
-        let removeBtn = document.createElement("button")
-        removeBtn.textContent = "❌"
-        removeBtn.classList.add("remove-btn")
-        removeBtn.addEventListener("click" , event => {
-          manager.removeStudent(student.getId())
-          renderStudent()
-        });
+  let student = new Student(idCounter++, name, grade);
+  manager.addStudent(student);
+  renderStudents();
+  nameInput.value = ""; gradeInput.value = "";
+});
 
-        Li.appendChild(removeBtn)
-        studentList.appendChild(Li)
-      })
-    }
+function renderStudents(){
+  studentList.innerHTML = "";
+  manager.listStudents().forEach(student => {
+    let li = document.createElement("li");
+    li.textContent = student.getDetails();
 
+    let removeBtn = document.createElement("button");
+    removeBtn.textContent = "❌";
+    removeBtn.classList.add("remove-btn");
+    removeBtn.addEventListener("click", () => {
+      manager.removeStudent(student.getId());
+      renderStudents();
+    });
+
+    li.appendChild(removeBtn);
+    studentList.appendChild(li);
+  });
+}
+
+// Initial render
+renderStudents();
 </script>
 </body>
 </html>
