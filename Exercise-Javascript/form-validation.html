@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .item{
+      color: red;
+    }
+
+    .item-submit{
+      color : green;
+    }
+  </style>
+</head>
+<body>
+  <form id="form-main">
+<input type="text" id="inputName" placeholder="enter name" >
+<input type="text" id="inputEmail" placeholder="enter email" >
+<button id="submit">submit</button>
+<p id="alert-msg"></p>
+</form>
+<script>
+let form = document.getElementById("form-main");
+let Name = document.getElementById("inputName")
+let email = document.getElementById("inputEmail")
+let msg = document.getElementById("alert-msg")
+
+form.addEventListener("submit" ,event => {
+  event.preventDefault();
+
+let username = Name.value.trim()
+let userEmail = email.value.trim()
+
+if(username.length < 3){
+msg.textContent = "first enter correct user name"
+msg.classList.add("item")
+ setTimeout(() => {
+    msg.textContent = ""
+  }, 3000);
+  return
+}
+
+if(!userEmail.includes("@")){
+  msg.textContent = "first enter correct email"
+  msg.classList.add("item")
+  setTimeout(() => {
+    msg.textContent = ""
+  }, 3000);
+  return 
+}
+msg.textContent = "form submitted"
+msg.classList.add("item-submit")
+
+setTimeout(() => {
+  msg.textContent = ""
+}, 3000);
+
+Name.value = ""
+email.value = ""
+})
+</script>
+
+</body>
+</html>
