@@ -13,24 +13,23 @@
 </body>
 <script>
   // fetchName()
-  async function fetchName() {
-    try {
+  function fetchName() {
       let PokemonName = document.getElementById("pokemonName").value.toLowerCase();
-      let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${PokemonName}`)
-
-      if(!response.ok) {
-        throw new Error("fetch not match");
-      } 
-      let data = await response.json();
-       const pokemonSprite = data.sprites.front_default;
       let img = document.getElementById("pokemonSprite");
 
-      img.src = pokemonSprite
+      fetch(`https://pokeapi.co/api/v2/pokemon/${PokemonName}`)
+  .then(res => {
+    if(!res.ok) throw new Error("invalid");
+return res.json()
+  })
+  .then(data => {
+     const pokemonSprite = data.sprites.front_default;
+      img.src = pokemonSprite;
       img.style.display = "block"
-    } catch (error) {
-      console.log(error)
-    }
+  })
+  .catch(e => console.log(e))
   }
+
 
 </script>
 </html>
