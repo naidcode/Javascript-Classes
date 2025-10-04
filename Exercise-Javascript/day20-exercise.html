@@ -136,7 +136,7 @@
         this.saveLocalStorage();
       }
 
-      taskList() {
+      taskLists() {
         return this.#tasks;
       }
 
@@ -161,7 +161,8 @@
     const alertColor = document.getElementById("alert-color")
 
     let taskManager = new TaskManager();
-    let IdCounter = taskManager.taskList().length + 1;
+    let IdCounter = taskManager.taskLists().length++;
+    
 
     addBtn.addEventListener("click", (event) => {
       let task = inputName.value.trim();
@@ -184,7 +185,7 @@
 
     function renderTasks() {
       taskList.innerHTML = "";
-      taskManager.taskList().map((task) => {
+      taskManager.taskLists().forEach((task) => {
         let Li = document.createElement("p");
         Li.classList.add("Li")
         Li.textContent = task.getDetails();
