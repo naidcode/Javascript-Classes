@@ -41,9 +41,6 @@
         color: red;
         font-size: 1.2rem;
       }
-      .completed-color {
-        color: green;
-      }
       .remove-btn {
         padding: 1.1em 1.5em;
         margin: 0 0.7em;
@@ -73,6 +70,7 @@
         border-radius: 12px;
         font-size: 1.1rem;
         box-shadow: 1.3px 1.2px 4px black;
+        text-align: center;
       }
     </style>
   </head>
@@ -143,14 +141,8 @@
       }
 
       saveLocalStorage() {
-        localStorage.setItem(
-          "task",
-          JSON.stringify(
-            this.#tasks.map((task) => ({
-              id: task.getId(),
-              name: task.getName(),
-              completed: task.isCompleted(),
-            }))
+        localStorage.setItem("task",JSON.stringify(
+            this.#tasks.map((task) => ({id: task.getId(),name: task.getName(),completed: task.isCompleted(),}))
           )
         );
       }
@@ -204,13 +196,9 @@
         completedBtn.textContent = "Completed";
         completedBtn.classList.add("completed-btn");
         completedBtn.addEventListener("click", () => {
-          taskList.classList.toggle("completed");
+          Li.classList.toggle("completed");
           task.toggleCompleted();
           taskManager.saveLocalStorage();
-          alertColor.classList.add("completed-color")
-          setTimeout(() => {
-            alertColor.textContent = ""
-          }, 2000);
           renderTasks();
         });
 
@@ -224,8 +212,21 @@
         Li.appendChild(completedBtn);
         Li.appendChild(removeBtn);
         taskList.appendChild(Li);
+
+        
       });
     }
+    const clearBtn = document.createElement("button");
+    clearBtn.textContent = "Clear All";
+    clearBtn.classList.add("remove-btn")
+    clearBtn.addEventListener("click", () => {
+    localStorage.clear();
+    taskManager = new TaskManager();
     renderTasks();
+  });
+    document.querySelector(".first").appendChild(clearBtn); 
+    renderTasks();
+
+    
   </script>
 </html>
