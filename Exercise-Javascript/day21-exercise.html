@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile Fetch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #f4f4f4;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 280px;
+    }
+    img {
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="userCard">
+    <h2>Loading...</h2>
+  </div>
+
+  <button id="newUserBtn">Get New User</button>
+
+  <script>
+    class User {
+      #id;
+      #name;
+      #email;
+      #city;
+      #age
+      #picture;
+
+      constructor(id, name, email, city,age, picture) {
+        this.#id = id;
+        this.#name = name;
+        this.#email = email;
+        this.#city = city;
+        this.#age = age
+        this.#picture = picture;
+      }
+
+      getId() { return this.#id; }
+      getName() { return this.#name; }
+      getEmail() { return this.#email; }
+      getCity() { return this.#city; }
+      getAge(){return this.#age}
+      getPicture() { return this.#picture; }
+
+      getDetail() {
+        return `
+          ID: ${this.getId()}<br>
+          Name: ${this.getName()}<br>
+          Email: ${this.getEmail()}<br>
+          City: ${this.getCity()}<br>
+          Age: ${this.getAge()}<br>
+          <img src="${this.getPicture()}" alt="${this.getName()}" width="100" height="100">
+        `;
+      }
+    }
+
+    class UserManager {
+      #users = [];
+      constructor(){this.loadLocalStorage()}
+      
+      async fetchUser() {
+        try {
+          let res = await fetch("https://randomuser.me/api/")
+          let data =await res.json()
+          let u = data.results[0]
+
+          let user = new User (
+            u.login.uuid,
+            `${u.name.first} ${u.name.last}`,
+            u.email,
+            u.location.city,
+            u.dob.age,
+            u.picture.large,
+        )
+            this.#users.push(user);
+            this.saveLocalStorage();
+            this.userDisplay(user);
+
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+      userDisplay(user){
+        let userCard = document.getElementById("userCard");
+        userCard.innerHTML = user.getDetail()
+      }
+
+      saveLocalStorage(){
+        localStorage.setItem("user" , JSON.stringify(
+          this.#users.map(u => ({
+          ID: u.getId(),
+          Name: u.getName(),
+          Email:u.getEmail(),
+          City:u.getCity(),
+          Age:u.getAge(),
+          Picture:u.getPicture()
+          }))
+        ))
+      }
+
+      loadLocalStorage(){
+        let data = JSON.parse(localStorage.getItem("user")) || []
+        this.#users =  data.map(d => new User(d.id , d.name, d.email, d.city,d.age, d.picture))
+      }
+
+      lastSave(){
+        let lastUser = this.#users[this.#users.length - 1]
+        if(lastUser) this.userDisplay(lastUser)
+      }
+    }
+    let manager = new UserManager()
+    manager.lastSave()
+
+    document.getElementById("newUserBtn").addEventListener("click", () => {
+      manager.fetchUser()
+    })
+
+
+  </script>
+
+</body>
+</html>
