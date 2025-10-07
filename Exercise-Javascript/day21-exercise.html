@@ -92,7 +92,7 @@
       async fetchUser() {
         try {
           let res = await fetch("https://randomuser.me/api/")
-          let data =await res.json()
+          let data = await res.json()
           let u = data.results[0]
 
           let user = new User (
