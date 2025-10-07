@@ -53,25 +53,29 @@
 
   <script>
    class Crypto{
-     #name; #price; #symbol; #image;
-      constructor(name, price, symbol, image) {
+     #name; #price; #symbol; #image; #PriceChange;
+      constructor(name, price, symbol, image, PriceChange) {
         this.#name = name;
         this.#price = price;
         this.#symbol = symbol;
         this.#image = image;
+        this.#PriceChange = PriceChange;
       }
       getName() { return this.#name; }
       getPrice() { return this.#price; }
       getSymbol() { return this.#symbol; }
       getImage() { return this.#image; }
+      getPriceChange(){return this.#PriceChange}
 
     getDetails() {
+      let highLow = this.getPriceChange() >= 0 ? "green" : "red";
 
   return `
     <div class="card">
       <img src="${this.getImage()}" alt="${this.getName()}">
       <h3>${this.getName()} (${this.getSymbol().toUpperCase()})</h3>
       <p>💰 $${this.getPrice()}</p>
+      <p  style="color: ${highLow};"> ${this.getPriceChange().toFixed(2)}% </p>
     </div>
   `;
 }
@@ -86,7 +90,7 @@
       try {
         let response = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=20&page=1")
         let data = await response.json()
-        this.#crypto = data.map(c => new Crypto(c.name , c.current_price , c.symbol , c.image));
+        this.#crypto = data.map(c => new Crypto(c.name , c.current_price , c.symbol , c.image , c.price_change_percentage_24h));
         this.saveLocalStorage()
         this.displayCrypto()
       } catch (error) {
@@ -105,14 +109,16 @@
           Name: c.getName(),
           Price: c.getPrice(),
           Symbol: c.getSymbol(),
-          Image: c.getImage()
+          Image: c.getImage(),
+          price_change_percentage_24h: c.getPriceChange()
+
         }))
       ))
     }
 
     loadLocalStorage(){
       let data = JSON.parse(localStorage.getItem("crypto")) || [];
-      this.#crypto = data.map(d => new Crypto(d.Name, d.Price, d.Symbol, d.Image));
+      this.#crypto = data.map(d => new Crypto(d.Name, d.Price, d.Symbol, d.Image , d.price_change_percentage_24h));
       if(this.#crypto.length) this.displayCrypto();
     }
   }
@@ -123,6 +129,10 @@
   document.getElementById("refreshBtn").addEventListener("click" ,() => {
     manager.fetchCrypto()
   })
+
+  fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=20&page=1")
+  .then(res => res.json())
+  .then(data => console.log(data))
 
 </script>
 </body>
