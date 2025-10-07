@@ -7,10 +7,11 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #b9dfec;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
       text-align: center;
     }
     h1 {
+      color: white;
       margin-top: 20px;
     }
     #cryptoList {
@@ -21,10 +22,11 @@
       margin: 20px auto;
     }
     .card {
-      background: white;
+     background: #253346;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       width: 200px;
       text-align: center;
     }
@@ -73,9 +75,9 @@
   return `
     <div class="card">
       <img src="${this.getImage()}" alt="${this.getName()}">
-      <h3>${this.getName()} (${this.getSymbol().toUpperCase()})</h3>
-      <p>💰 $${this.getPrice()}</p>
-      <p  style="color: ${highLow};"> ${this.getPriceChange().toFixed(2)}% </p>
+      <h3   style="color: white; ">${this.getName()} (${this.getSymbol().toUpperCase()})</h3>
+      <p  style="color: white; ">💰 $${this.getPrice()}</p>
+      <p  style="color: ${highLow};" style="font-size: 14px;"> ${this.getPriceChange().toFixed(2)}% </p>
     </div>
   `;
 }
