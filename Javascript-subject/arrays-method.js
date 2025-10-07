@@ -78,8 +78,11 @@ let obj3 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 // let f = number.concat(number2, letter); //use to join array to the given array
 // console.log(f);
 
-// let g = letter.sort() + number.sort(); // sort all element fron the array.
-// console.log(g);
+let g = letter.sort(); // sort all element fron the array.
+console.log(g);
+
+let zzz = ["a" , "d" , "b" , "c"].sort()
+console.log(zzz)
 
 // let h = number2.reverse(); //reverse the element of the array.
 // console.log(h);
