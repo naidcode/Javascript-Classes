@@ -35,3 +35,14 @@ startJourney(car);            // Car is driving
 startJourney(bike);           // Bike is moving
 startJourney(bus);            // Bus is transporting passengers
 startJourney(brokenTransport); // This transport can't move!
+
+// fetch('https://pokeapi.co/api/v2/pokemon/pikachu')
+//   .then(res => res.json())
+//   .then(data => {
+//     console.log(data)
+//     console.log(data.sprites.front_default)
+//   })
+//   .catch(err => {
+//     console.log("Error fetching data:", err)
+//   })
+
