@@ -5,14 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-    p {
+    .hideClick {
       height: 180px;
       width: 50%;
-      background-color: aquamarine;
+      background-color: #7fffd4;
+      transition: all 2s;
     }
-
+    .hideCLick:hover{
+    background-color: #7fffd4;
+    }
     h1{
       cursor: pointer;
+      /* transition: all 2s; */
     }
   </style>
 </head>
@@ -25,12 +29,17 @@
   let clickBtn = document.getElementById("clickBtn")
   let hideClick = document.getElementById("hideClick")
 
-  clickBtn.addEventListener("mouseover" ,() => {
-    hideClick.style.display = "block"
+  clickBtn.addEventListener("click" ,() => {
+    if(hideClick.style.display === "none"){
+      hideClick.style.display = "block"
+    hideClick.classList.add("hideClick")
+    } else{
+      hideClick.style.display = "none"
+    }
   })
 
-  clickBtn.addEventListener("mouseout" ,() => {
-    hideClick.style.display = "none"
-  })
+  // clickBtn.addEventListener("mouseout" ,() => {
+  //   hideClick.style.display = "none"
+  // })
 </script>
 </html>
