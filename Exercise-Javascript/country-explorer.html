@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+  <body>
+  <h1>🌍 Country Explorer</h1>
+  <div class="controls">
+    <input type="text" id="searchBox" placeholder="Search country..." />
+    <select id="regionFilter">
+      <option value="all">All Regions</option>
+      <option value="Asia">Asia</option>
+      <option value="Europe">Europe</option>
+      <option value="Africa">Africa</option>
+      <option value="Americas">Americas</option>
+      <option value="Oceania">Oceania</option>
+    </select>
+  </div>
+  <div id="countryList"></div>
+</body>
+<script>
+//   class Country {
+//   #name;
+//   #flag;
+//   #population;
+//   #capital;
+//   #region;
+
+//   constructor(name, flag, population, capital, region) {
+//     this.#name = name;
+//     this.#flag = flag;
+//     this.#population = population;
+//     this.#capital = capital;
+//     this.#region = region
+//   }
+
+//   getName() { return this.#name; }
+//   getFlag() { return this.#flag; }
+//   getPopulation() { return this.#population; }
+//   getCapital() { return this.#capital; }
+//   getRegion(){return this.#region}
+
+//   getCardHTML() {
+//   return `
+//   <img src="${this.getFlag()}" alt="${this.getName()}">
+// <h2>${this.getName()}</h2>
+// <h3>${this.getPopulation()}</h3>
+// <h5>${this.getCapital()}</h5>
+// <p>${this.getRegion()}</p>
+
+//   `
+//   }
+// }
+
+
+// class CountryManager {
+//   #countries = [];
+  
+//   async fetchCountries() {
+//     try {
+//       let res = await fetch("https://restcountries.com/v3.1/all")
+//       let data =await res.json()
+//       let d = data.results[0]
+      
+//       for (let c of data) {
+//   let country = new Country(
+//     c.name.common,
+//     c.flags.png,
+//     c.population,
+//     c.capital ? c.capital[0] : "N/A",
+//     c.region
+//   );
+//   this.#countries.push(country);
+// }
+
+      
+//       this.displayCountries()
+//       this.#countries.push(country)
+      
+//     } catch (error) {
+//       console.log(error)
+//     }
+//   }
+  
+//   displayCountries(list) {
+//     let countryList = document.getElementById("countryList")
+//    countryList.innerHTML = this.#countries.map(c => c.getCardHTML()).join("");
+
+//   }
+  
+//   searchCountry(keyword) {
+//     this.#countries = this.#countries.filter(country => country.name === keyword)
+//   }
+
+//    filterByRegion(region) {
+//     this.#countries = this.#countries.filter(country => country.get === region )
+//   }
+  
+// }
+
+// let manager = new CountryManager()
+// manager.fetchCountries()
+
+// let searchInput = document.getElementById("searchBox")
+// let regionFilter = document.getElementById("regionFilter")
+
+// searchBtn.addEventListener("click", event =>{
+//  let input = searchInput.value.trim()
+//  let filter = regionFilter.value.trim()
+
+ 
+// } )
+
+fetch("https://restcountries.com/v3.1/all?fields=name,flags,population")
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error(error));
+
+
+</script>
+</html>
