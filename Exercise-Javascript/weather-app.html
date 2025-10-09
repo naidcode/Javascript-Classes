@@ -8,5 +8,92 @@
 <body>
   <input type="text" id="search-weather" placeholder="enter city name">
   <button id="searchBtn">Search</button>
+  <div id="weatherCard"></div>
 </body>
+<script>
+  class Weather{
+    #name
+    #temp
+    #windSpeed
+    #weatherIcon
+    constructor(weatherIcon,name,temp,windSpeed){
+      this.weatherIcon = weatherIcon
+      this.#name = name
+      this.temp  = temp
+      this.windSpeed = windSpeed
+    }
+      getWeatherIcon() {return this.#weatherIcon};
+      getName(){return this.#name}
+      getTemp(){return this.#temp}
+      getWindSpeed(){return this.#windSpeed}
+
+      getWeatherDetails(){
+        return `
+        <img src="${getWeatherIcon()}"alt="${this.getName()}"> <br>
+        <p>${this.getName()}</p><br>
+        <p>${this.getTemp()}</p><br>
+        <p>${this.getWindSpeed()}</p>
+        `
+      }
+    }
+
+    class WeatherManager{
+      #weather = [];
+      constructor(){this.loadLocalStorage()}
+
+      async fetchWeather() {
+        try {
+          let res = await  fetch("https://api.open-meteo.com/v1/forecast?latitude=12.97&longitude=77.59&current_weather=true");
+          let data =await res.json();
+          let w = data.results[0];
+          let weather = new Weather(
+            w.weathercode,
+            w.name,
+            w.temperature,
+            w.windspeed,
+          )
+          displayWeather(list)
+          this.#weather.push(weather)
+          this.saveLocalStorage()
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+      displayWeather(list){
+        let weatherCard = document.getElementById("weatherCard")
+        weatherCard.textContent  = list.getWeatherDetails();
+      }
+
+      saveLocalStorage(){
+        localStorage.setItem("weather" , JSON.stringify(
+          this.#weather.map(w =>({
+            Icon: w.getWeatherIcon(),
+            Name: w.getName(),
+            temperature: w.getTemp(),
+            WindSpeed: w.getWindSpeed()
+          }))
+        ))
+      }
+
+      loadLocalStorage(){
+        let data = JSON.parse(localStorage.getItem("weather")) ||[];
+        this.#weather = data.map(w => new Weather(w.icon,w.name,w.temperature , w.windSpeed))
+      }
+    }
+
+    let weatherManager = new WeatherManager();
+
+    let searchBtn = document.getElementById("searchBtn");
+    searchBtn.addEventListener("click" , () => {
+      weatherManager.fetchWeather()
+    })
+    // fetch("https://api.open-meteo.com/v1/forecast?latitude=12.97&longitude=77.59&current_weather=true")
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     console.log("✅ Data received:", data);
+    //     console.log("🌍 First country:", data[0]);
+    //   })
+    //   .catch(err => console.error("❌ Error:", err));
+</script>
 </html>
