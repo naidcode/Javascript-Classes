@@ -1,172 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Country Explorer</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Tracker</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f3f7;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
       text-align: center;
-      margin: 0;
-      padding: 20px;
     }
-
     h1 {
-      margin-bottom: 20px;
-    }
-
-    .controls {
-      margin-bottom: 20px;
-    }
-
-    input, select, button {
-      padding: 8px;
-      margin: 5px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      background-color: #007bff;
       color: white;
-      border: none;
-      cursor: pointer;
+      margin-top: 20px;
     }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    #countryList {
+    #cryptoList {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
+      margin: 20px auto;
     }
-
     .card {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+     background: #253346;
+      padding: 20px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       width: 200px;
       text-align: center;
     }
-
     .card img {
-      width: 100px;
-      height: 70px;
-      border-radius: 5px;
+      width: 50px;
+      height: 50px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    button:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
-  <h1>🌍 Country Explorer</h1>
-
-  <div class="controls">
-    <input type="text" id="searchBox" placeholder="Search country..." />
-    <select id="regionFilter">
-      <option value="all">All Regions</option>
-      <option value="Asia">Asia</option>
-      <option value="Europe">Europe</option>
-      <option value="Africa">Africa</option>
-      <option value="Americas">Americas</option>
-      <option value="Oceania">Oceania</option>
-    </select>
-    <button id="searchBtn">Search</button>
-  </div>
-
-  <div id="countryList"></div>
+  <h1>Top 10 Cryptocurrencies</h1>
+  <button id="refreshBtn">Refresh Prices</button>
+  <div id="cryptoList"></div>
 
   <script>
-    // ---------------- CLASS: Country ----------------
-    class Country {
-      #name; #flag; #population; #capital; #region;
-
-      constructor(name, flag, population, capital, region) {
+   class Crypto{
+     #name; #price; #symbol; #image; #PriceChange;
+      constructor(name, price, symbol, image, PriceChange) {
         this.#name = name;
-        this.#flag = flag;
-        this.#population = population;
-        this.#capital = capital;
-        this.#region = region;
+        this.#price = price;
+        this.#symbol = symbol;
+        this.#image = image;
+        this.#PriceChange = PriceChange;
       }
-
       getName() { return this.#name; }
-      getFlag() { return this.#flag; }
-      getPopulation() { return this.#population; }
-      getCapital() { return this.#capital; }
-      getRegion() { return this.#region; }
+      getPrice() { return this.#price; }
+      getSymbol() { return this.#symbol; }
+      getImage() { return this.#image; }
+      getPriceChange(){return this.#PriceChange}
 
-      getCardHTML() {
-        return `
-          <div class="card">
-            <img src="${this.getFlag()}" alt="${this.getName()}">
-            <h3>${this.getName()}</h3>
-            <p><b>Capital:</b> ${this.getCapital() || "N/A"}</p>
-            <p><b>Population:</b> ${this.getPopulation().toLocaleString()}</p>
-            <p><b>Region:</b> ${this.getRegion()}</p>
-          </div>
-        `;
+    getDetails() {
+      let highLow = this.getPriceChange() >= 0 ? "green" : "red";
+
+  return `
+    <div class="card">
+      <img src="${this.getImage()}" alt="${this.getName()}">
+      <h3   style="color: white; ">${this.getName()} (${this.getSymbol().toUpperCase()})</h3>
+      <p  style="color: white; ">💰 $${this.getPrice()}</p>
+      <p  style="color: ${highLow};" style="font-size: 14px;"> ${this.getPriceChange().toFixed(2)}% </p>
+    </div>
+  `;
+}
+
+  }
+
+  class CryptoManager{
+    #crypto = [];
+    constructor(){this.loadLocalStorage()}
+
+    async fetchCrypto() {
+      try {
+        let response = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=20&page=1")
+        let data = await response.json()
+        this.#crypto = data.map(c => new Crypto(c.name , c.current_price , c.symbol , c.image , c.price_change_percentage_24h));
+        this.saveLocalStorage()
+        this.displayCrypto(this.#crypto)
+      } catch (error) {
+        console.log(error)
       }
     }
 
-    // ---------------- CLASS: CountryManager ----------------
-    class CountryManager {
-      #countries = [];
-      #filtered = [];
-
-      async fetchCountries() {
-        try {
-          let res = await fetch("https://restcountries.com/v3.1/all");
-          let data = await res.json();
-
-          this.#countries = data.map(c => new Country(
-            c.name.common,
-            c.flags.png,
-            c.population,
-            c.capital ? c.capital[0] : "N/A",
-            c.region
-          ));
-
-          this.#filtered = this.#countries;
-          this.displayCountries(this.#filtered);
-        } catch (error) {
-          console.error("Error fetching countries:", error);
-        }
-      }
-
-      displayCountries(list) {
-        let container = document.getElementById("countryList");
-        container.innerHTML = list.map(c => c.getCardHTML()).join("");
-      }
-
-      searchCountry(keyword, region) {
-        keyword = keyword.toLowerCase();
-
-        this.#filtered = this.#countries.filter(c => {
-          const matchesName = c.getName().toLowerCase().includes(keyword);
-          const matchesRegion = region === "all" || c.getRegion() === region;
-          return matchesName && matchesRegion;
-        });
-
-        this.displayCountries(this.#filtered);
-      }
+    displayCrypto(){
+      let list = document.getElementById("cryptoList");
+      list.innerHTML = this.#crypto.map(c => c.getDetails()).join(' ');
     }
 
-    // ---------------- MAIN APP LOGIC ----------------
-    const manager = new CountryManager();
-    manager.fetchCountries();
+    saveLocalStorage(){
+      localStorage.setItem("crypto" , JSON.stringify(
+        this.#crypto.map(c => ({
+          Name: c.getName(),
+          Price: c.getPrice(),
+          Symbol: c.getSymbol(),
+          Image: c.getImage(),
+          price_change_percentage_24h: c.getPriceChange()
 
-    const searchBox = document.getElementById("searchBox");
-    const regionFilter = document.getElementById("regionFilter");
-    const searchBtn = document.getElementById("searchBtn");
+        }))
+      ))
+    }
 
-    searchBtn.addEventListener("click", () => {
-      manager.searchCountry(searchBox.value.trim(), regionFilter.value);
-    });
+    loadLocalStorage(){
+      let data = JSON.parse(localStorage.getItem("crypto")) || [];
+      this.#crypto = data.map(d => new Crypto(d.Name, d.Price, d.Symbol, d.Image , d.price_change_percentage_24h));
+      if(this.#crypto.length) this.displayCrypto();
+    }
+  }
 
-  </script>
+  let manager = new CryptoManager()
+  manager.fetchCrypto()
+
+  document.getElementById("refreshBtn").addEventListener("click" ,() => {
+    manager.fetchCrypto()
+  })
+
+  fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=20&page=1")
+  .then(res => res.json())
+  .then(data => console.log(data))
+
+</script>
 </body>
 </html>
