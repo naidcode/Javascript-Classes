@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Country Explorer</title>
+  <style>
+    body{font-family:Arial, sans-serif;background:#f0f3f7;margin:0;padding:20px;text-align:center}
+    h1{margin-bottom:16px}
+    .controls{margin-bottom:18px}
+    input,select,button{padding:8px;margin:5px;border-radius:6px;border:1px solid #ccc}
+    button{background:#007bff;color:#fff;border:none;cursor:pointer}
+    button:hover{background:#0056b3}
+    #countryList{display:flex;flex-wrap:wrap;justify-content:center;gap:18px}
+    .card{background:#fff;padding:14px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.08);width:220px;text-align:center}
+    .card img{width:120px;height:80px;object-fit:cover;border-radius:6px}
+    #message{margin:12px;color:#b00}
+  </style>
 </head>
-  <body>
+<body>
   <h1>🌍 Country Explorer</h1>
+
   <div class="controls">
-    <input type="text" id="searchBox" placeholder="Search country..." />
+    <input id="searchBox" type="text" placeholder="Search country..." />
     <select id="regionFilter">
       <option value="all">All Regions</option>
       <option value="Asia">Asia</option>
@@ -17,107 +30,131 @@
       <option value="Americas">Americas</option>
       <option value="Oceania">Oceania</option>
     </select>
+    <button id="searchBtn">Search</button>
+    <button id="resetBtn">Reset</button>
   </div>
+
+  <div id="message"></div>
   <div id="countryList"></div>
+
+  <script>
+  // Wrap to ensure DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+
+    class Country {
+      #name; #flag; #population; #capital; #region;
+      constructor(name, flag, population, capital, region){
+        this.#name = name;
+        this.#flag = flag;
+        this.#population = population;
+        this.#capital = capital;
+        this.#region = region;
+      }
+      getName(){ return this.#name }
+      getFlag(){ return this.#flag }
+      getPopulation(){ return this.#population }
+      getCapital(){ return this.#capital }
+      getRegion(){ return this.#region }
+      getCardHTML(){
+        return `
+          <div class="card">
+            <img src="${this.getFlag()}" alt="${this.getName()} flag" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%2280%22><rect width=%22100%25%22 height=%22100%25%22 fill=%23eee/></svg>'">
+            <h3>${this.getName()}</h3>
+            <p><strong>Capital:</strong> ${this.getCapital() || 'N/A'}</p>
+            <p><strong>Population:</strong> ${Number(this.getPopulation()).toLocaleString()}</p>
+            <p><strong>Region:</strong> ${this.getRegion()}</p>
+          </div>
+        `;
+      }
+    }
+
+    class CountryManager {
+      #countries = [];
+      #filtered = [];
+
+      async fetchCountries(){
+        const msg = document.getElementById('message');
+        msg.textContent = "loading..."
+        try {
+          const res = await fetch('https://restcountries.com/v3.1/all?fields=name,flags,population,capital,region');
+          if (!res.ok) throw new Error('Network response was not OK: ' + res.status);
+          const data = await res.json();
+          // data is an array
+          this.#countries = data.map(c => new Country(
+            (c.name && c.name.common) ? c.name.common : 'Unknown',
+            (c.flags && (c.flags.png || c.flags.svg)) ? (c.flags.png || c.flags.svg) : '',
+            c.population || 0,
+            Array.isArray(c.capital) ? c.capital[0] : (c.capital || 'N/A'),
+            c.region || 'N/A'
+          ));
+          this.#filtered = this.#countries;
+          this.displayCountries(this.#filtered);
+          msg.textContent = '';
+        } catch (err) {
+          console.error(err);
+          msg.textContent = 'Failed to load countries: ' + err.message;
+          // clear list to avoid stale UI
+          document.getElementById('countryList').innerHTML = '';
+        }
+      }
+
+      displayCountries(list){
+        const container = document.getElementById('countryList');
+        if(!list || list.length === 0){
+          container.innerHTML = '<p>No countries found.</p>';
+          return;
+        }
+        container.innerHTML = list.map(c => c.getCardHTML()).join('');
+      }
+
+      searchCountry(keyword, region){
+        keyword = (keyword || '').toLowerCase();
+        region = region || 'all';
+        this.#filtered = this.#countries.filter(c => {
+          const matchesName = c.getName().toLowerCase() === keyword;
+          const matchesRegion = region === 'all' || c.getRegion() === region;
+          return matchesName && matchesRegion;
+        });
+        this.displayCountries(this.#filtered);
+      }
+
+      reset(){
+        this.#filtered = this.#countries;
+        this.displayCountries(this.#filtered);
+      }
+    }
+
+    // initialize
+    const manager = new CountryManager();
+    manager.fetchCountries();
+
+    // controls
+    const searchBox = document.getElementById('searchBox');
+    const regionFilter = document.getElementById('regionFilter');
+    const searchBtn = document.getElementById('searchBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    searchBtn.addEventListener('click', () => {
+      manager.searchCountry(searchBox.value.trim(), regionFilter.value);
+    });
+
+    // allow Enter key in search box
+    searchBox.addEventListener('keydown', e => {
+      if(e.key === 'Enter') manager.searchCountry(searchBox.value.trim(), regionFilter.value);
+    });
+
+    // live filter by region dropdown
+    regionFilter.addEventListener('change', () => {
+      manager.searchCountry(searchBox.value.trim(), regionFilter.value);
+    });
+
+    resetBtn.addEventListener('click', () => {
+      searchBox.value = '';
+      regionFilter.value = 'all';
+      manager.reset();
+    });
+
+  }); // DOMContentLoaded end
+  </script>
 </body>
-<script>
-//   class Country {
-//   #name;
-//   #flag;
-//   #population;
-//   #capital;
-//   #region;
-
-//   constructor(name, flag, population, capital, region) {
-//     this.#name = name;
-//     this.#flag = flag;
-//     this.#population = population;
-//     this.#capital = capital;
-//     this.#region = region
-//   }
-
-//   getName() { return this.#name; }
-//   getFlag() { return this.#flag; }
-//   getPopulation() { return this.#population; }
-//   getCapital() { return this.#capital; }
-//   getRegion(){return this.#region}
-
-//   getCardHTML() {
-//   return `
-//   <img src="${this.getFlag()}" alt="${this.getName()}">
-// <h2>${this.getName()}</h2>
-// <h3>${this.getPopulation()}</h3>
-// <h5>${this.getCapital()}</h5>
-// <p>${this.getRegion()}</p>
-
-//   `
-//   }
-// }
-
-
-// class CountryManager {
-//   #countries = [];
-  
-//   async fetchCountries() {
-//     try {
-//       let res = await fetch("https://restcountries.com/v3.1/all")
-//       let data =await res.json()
-//       let d = data.results[0]
-      
-//       for (let c of data) {
-//   let country = new Country(
-//     c.name.common,
-//     c.flags.png,
-//     c.population,
-//     c.capital ? c.capital[0] : "N/A",
-//     c.region
-//   );
-//   this.#countries.push(country);
-// }
-
-      
-//       this.displayCountries()
-//       this.#countries.push(country)
-      
-//     } catch (error) {
-//       console.log(error)
-//     }
-//   }
-  
-//   displayCountries(list) {
-//     let countryList = document.getElementById("countryList")
-//    countryList.innerHTML = this.#countries.map(c => c.getCardHTML()).join("");
-
-//   }
-  
-//   searchCountry(keyword) {
-//     this.#countries = this.#countries.filter(country => country.name === keyword)
-//   }
-
-//    filterByRegion(region) {
-//     this.#countries = this.#countries.filter(country => country.get === region )
-//   }
-  
-// }
-
-// let manager = new CountryManager()
-// manager.fetchCountries()
-
-// let searchInput = document.getElementById("searchBox")
-// let regionFilter = document.getElementById("regionFilter")
-
-// searchBtn.addEventListener("click", event =>{
-//  let input = searchInput.value.trim()
-//  let filter = regionFilter.value.trim()
-
- 
-// } )
-
-fetch("https://restcountries.com/v3.1/all?fields=name,flags,population")
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error(error));
-
-
-</script>
 </html>
