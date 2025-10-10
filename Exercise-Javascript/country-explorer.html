@@ -80,7 +80,7 @@
           if (!res.ok) throw new Error('Network response was not OK: ' + res.status);
           const data = await res.json();
           // data is an array
-          this.#countries = data.map(c => new Country(
+        this.#countries =  data.map(c => new Country(
             (c.name && c.name.common) ? c.name.common : 'Unknown',
             (c.flags && (c.flags.png || c.flags.svg)) ? (c.flags.png || c.flags.svg) : '',
             c.population || 0,
@@ -154,7 +154,11 @@
       manager.reset();
     });
 
-  }); // DOMContentLoaded end
+  });
+   // DOMContentLoaded end
+   fetch('https://restcountries.com/v3.1/all?fields=name,flags,population,capital,region')
+   .then(res => res.json())
+   .then(data => console.log(data))
   </script>
 </body>
 </html>
