@@ -3,97 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>weather-app</title>
+  <title>User + Joke App (Function Version)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(120deg, #007bff, #00d4ff);
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+    #card {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      margin: 30px auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    button {
+      background: #0047ab;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #002b7a;
+    }
+  </style>
 </head>
 <body>
-  <input type="text" id="search-weather" placeholder="enter city name">
-  <button id="searchBtn">Search</button>
-  <div id="weatherCard"></div>
+  <h1>😄 User + Joke App (Function Version)</h1>
+  <button id="loadBtn">Load New Data</button>
+
+  <div id="card">
+    <h2 id="userName"></h2>
+    <p id="userEmail"></p>
+    <hr>
+    <p id="jokeSetup"></p>
+    <p id="jokePunchline" style="font-weight:bold;"></p>
+  </div>
+
+  <script>
+    // ✅ Function to fetch a random user
+    async function fetchUser() {
+      const res = await fetch("https://randomuser.me/api/");
+      const data = await res.json();
+      const u = data.results[0];
+      return {
+        name: `${u.name.first} ${u.name.last}`,
+        email: u.email
+      };
+    }
+
+    // ✅ Function to fetch a random joke
+    async function fetchJoke() {
+      const res = await fetch("https://official-joke-api.appspot.com/random_joke");
+      const data = await res.json();
+      return {
+        setup: data.setup,
+        punchline: data.punchline
+      };
+    }
+
+    // ✅ Display data in HTML
+    async function showData() {
+      try {
+        const user = await fetchUser();
+        const joke = await fetchJoke();
+
+        document.getElementById("userName").textContent = `User: ${user.name}`;
+        document.getElementById("userEmail").textContent = `Email: ${user.email}`;
+        document.getElementById("jokeSetup").textContent = `Joke: ${joke.setup}`;
+        document.getElementById("jokePunchline").textContent = joke.punchline;
+      } catch (err) {
+        console.error("Error:", err.message);
+      }
+    }
+
+    // Load data when button clicked
+    document.getElementById("loadBtn").addEventListener("click", showData);
+
+    // Auto-load on page start
+    showData();
+  </script>
 </body>
-<script>
-  class Weather{
-    #name
-    #temp
-    #windSpeed
-    #weatherIcon
-    constructor(weatherIcon,name,temp,windSpeed){
-      this.weatherIcon = weatherIcon
-      this.#name = name
-      this.temp  = temp
-      this.windSpeed = windSpeed
-    }
-      getWeatherIcon() {return this.#weatherIcon};
-      getName(){return this.#name}
-      getTemp(){return this.#temp}
-      getWindSpeed(){return this.#windSpeed}
-
-      getWeatherDetails(){
-        return `
-        <img src="${getWeatherIcon()}"alt="${this.getName()}"> <br>
-        <p>${this.getName()}</p><br>
-        <p>${this.getTemp()}</p><br>
-        <p>${this.getWindSpeed()}</p>
-        `
-      }
-    }
-
-    class WeatherManager{
-      #weather = [];
-      constructor(){this.loadLocalStorage()}
-
-      async fetchWeather() {
-        try {
-          let res = await  fetch("https://api.open-meteo.com/v1/forecast?latitude=12.97&longitude=77.59&current_weather=true");
-          let data =await res.json();
-          let w = data.results[0];
-          let weather = new Weather(
-            w.weathercode,
-            w.name,
-            w.temperature,
-            w.windspeed,
-          )
-          displayWeather(list)
-          this.#weather.push(weather)
-          this.saveLocalStorage()
-        } catch (error) {
-          console.log(error)
-        }
-      }
-
-      displayWeather(list){
-        let weatherCard = document.getElementById("weatherCard")
-        weatherCard.textContent  = list.getWeatherDetails();
-      }
-
-      saveLocalStorage(){
-        localStorage.setItem("weather" , JSON.stringify(
-          this.#weather.map(w =>({
-            Icon: w.getWeatherIcon(),
-            Name: w.getName(),
-            temperature: w.getTemp(),
-            WindSpeed: w.getWindSpeed()
-          }))
-        ))
-      }
-
-      loadLocalStorage(){
-        let data = JSON.parse(localStorage.getItem("weather")) ||[];
-        this.#weather = data.map(w => new Weather(w.icon,w.name,w.temperature , w.windSpeed))
-      }
-    }
-
-    let weatherManager = new WeatherManager();
-
-    let searchBtn = document.getElementById("searchBtn");
-    searchBtn.addEventListener("click" , () => {
-      weatherManager.fetchWeather()
-    })
-    // fetch("https://api.open-meteo.com/v1/forecast?latitude=12.97&longitude=77.59&current_weather=true")
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     console.log("✅ Data received:", data);
-    //     console.log("🌍 First country:", data[0]);
-    //   })
-    //   .catch(err => console.error("❌ Error:", err));
-</script>
 </html>
