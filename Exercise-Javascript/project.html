@@ -6,6 +6,102 @@
   <title>Document</title>
 </head>
 <body>
-  
+  <button id="randomUser">randomUser</button>
+  <div id="userCard"></div>
 </body>
+<script>
+  class RandomUser{
+    #name 
+    #location
+    #gender
+    #age
+    #image
+    constructor(image,name, age,gender,location){
+      this.#image = image
+      this.#name = name
+      this.#age = age
+      this.#gender = gender
+      this.#location = location
+    }
+
+    getName(){return this.#name}
+    getAge(){return this.#age}
+    getGender(){return this.#gender}
+    getLocation(){return this.#location}
+    getImage(){return this.#image}
+
+    getUserDetail(){
+      return `
+      <img src="${this.getImage()}" alt="random user image"><br>
+      <h2>${this.getName()}</h2><br>
+      <h4>${this.getAge()}<br>
+      <h4>${this.getGender()}<br>
+      <h5>${this.getLocation()}<br>
+      `
+    }
+  }
+  class UserManager{
+    #user = [];
+    constructor(){this.loadLocalStorage()}
+
+    async fetchUser() {
+      try {
+        let res = await fetch("https://randomuser.me/api/?results=5")
+        if(!res.ok)throw new Error("invalid fetch");
+        let data = await res.json()
+        let u = data.results[0]
+        if(!data.results)throw new Error("invalid data");
+        let user = new RandomUser(
+          u.picture.medium,
+          `${u.name.first} ${u.name.last}`,
+          u.dob.age,
+          u.gender,
+          u.location.country
+        )
+       this.#user.push(user);
+this.saveLocalStorage();
+this.displayUser(user);
+
+      } catch (error) {
+        console.log("error message" + error)
+      }
+    }
+    displayUser(user){
+      let userCard = document.getElementById("userCard")
+      userCard.innerHTML = user.getUserDetail()
+    }
+
+    saveLocalStorage(){
+      localStorage.setItem("user" , JSON.stringify(
+        this.#user.map(u => ({
+          Image: u.getImage(),
+          Name: u.getName(),
+          Age: u.getAge(),
+          Gender: u.getGender(),
+          Location: u.getLocation(),
+        }))
+      ))
+    }
+
+    loadLocalStorage(){
+          let data = JSON.parse(localStorage.getItem("user")) || []
+         this.#user = data.map(d => new RandomUser(
+  d.Image,
+  d.Name,
+  d.Age,
+  d.Gender,
+  d.Location
+));
+
+    }
+  }
+
+  let manager = new UserManager();
+  document.getElementById("randomUser").addEventListener("click" , ()=>{
+    manager.fetchUser();
+  })
+  // fetch("https://randomuser.me/api/?results=5")
+  // .then(res => res.json())
+  // .then(data => console.log(data))
+</script>
 </html>
