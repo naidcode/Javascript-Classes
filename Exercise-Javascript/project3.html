@@ -121,6 +121,8 @@
 
     <button class="btn" style="grid-column: span 2;">0</button>
     <button class="btn">.</button>
+        <button class="btn">x</button>
+
   </div>
 </div>
 
@@ -141,7 +143,10 @@
       } catch (error) {
         display.value = display.value
       } 
-    } else{
+    } else if(value === "x"){
+      display.value = display.value.slice(0, -1)
+    }
+    else{
       display.value += value
     }
   })
