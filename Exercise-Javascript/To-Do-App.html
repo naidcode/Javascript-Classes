@@ -14,25 +14,30 @@
       background-color: rgba(202, 202, 99, 0.405);
     }
 
-    .cantainer{
+    .container{
       background-color:rgba(149, 149, 2, 0.343);
       height: 140px;
       width: 400px;
-      margin: 120px auto;
+      margin: 120px auto 20px auto;
       border-radius: 18px;
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .cantainer h1{
+    .container h1{
       font-family: sans-serif;
       font-size: 1.5rem;
       letter-spacing: 2px;
       color: rgb(59, 86, 4);
+      text-align: center;
     }
-    .cantainer p {
+    .container p {
       font-family: sans-serif;
       font-size: 12px;
       color: rgb(51, 73, 7);
       margin: 3px 0;
+      text-align: center;
     }
     #progressBar{
       height: 10px;
@@ -44,16 +49,17 @@
 
     #progress{
       height: 10px;
-      width: 50%;
+      width: 0%;
       background-color: olivedrab;
       border-radius: 8px;
+      transition: width 0.3s ease;
     }
 
     #formInput{
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: -100px 0;
+      margin: 0 0 30px 0;
     }
     #taskInput{
       height: 40px;
@@ -61,9 +67,15 @@
       border-radius: 8px;
       border: 1px solid rgb(172, 191, 143);
       padding: 0 0 0 10px;
+      caret-color: rgb(57, 57, 4);
+      outline-color: rgb(97, 97, 10);
     }
     #taskInput::placeholder{
       color: rgb(173, 199, 122);
+    }
+
+    #taskInput:focus {
+      border-bottom: 2px solid blue;
     }
     #AddTask{
       background-color: rgb(194, 194, 6);
@@ -76,27 +88,250 @@
       border-radius:8px ;
       border: none;
       text-align: center;
+      cursor: pointer;
+    }
+    #AddTask:hover{
+      background-color: rgb(179, 179, 9);
+    }
+    #AddTask:active{
+      border:0.5px solid rgb(203, 203, 20);
     }
 
+    .warningSign{
+      color:red;
+      text-align: center;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .deleteBtn{
+      background-color: rgb(194, 66, 6);
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: sans-serif;
+      color: rgb(252, 252, 252);
+      padding: 0.5em 1.5em;
+      margin:0 10px;
+      border-radius:8px ;
+      border: none;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .deleteBtn:hover{
+      background-color: rgb(170, 50, 5);
+    }
+
+    .completeLine{
+      text-decoration: line-through;
+      text-decoration-color: rgb(51, 51, 51);
+      color: grey;
+    }
+
+    .taskBox{
+      background-color:rgb(170, 170, 86);
+      padding: 1em 0.5em;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      box-shadow: 1.3px 1.2px 4px black;
+      text-align: center;
+    }
+
+    .taskItem {
+      background-color: rgb(170, 170, 86);
+      padding: 0.7em;
+      border-radius: 12px;
+      box-shadow: 1px 1px 3px black;
+      margin: 10px auto;
+      width: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .taskItem label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .taskCheckbox {
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      accent-color: olivedrab;
+    }
+
+    #progressValue {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgb(59, 86, 4);
+    }
+
+    #TaskListz {
+      max-width: 400px;
+      margin: 20px auto;
+    }
   </style>
 </head>
 <body>
-  <div class="cantainer">
-  <h1>To-Do-List</h1>
-  <div id="progressBar">
-    <div id="progress"></div>
-    <p>50%</p>
+  <div class="container">
+    <h1>To-Do-List</h1>
+    <div id="progressBar">
+      <div id="progress"></div>
+    </div>
+    <p id="progressValue">0%</p>
   </div>
-</div>
 
-<form action="" id="formInput">
-  <input type="text" id="taskInput" placeholder="Enter Task Here">
-  <button id="AddTask">Add</button>
-</form>
-<div id="TaskList">
-</div>
+  <form id="formInput">
+    <input type="text" id="taskInput" placeholder="Enter Task Here">
+    <button id="AddTask" type="button">Add</button>
+  </form>
+
+  <div id="TaskListz">
+    <p id="message"></p>
+  </div>
+
+  <script>
+    class Task {
+      #name;
+      #completed;
+      constructor(name, completed = false) {
+        this.#name = name;
+        this.#completed = completed;
+      }
+
+      getName() {
+        return this.#name;
+      }
+
+      isCompleted() {
+        return this.#completed;
+      }
+
+      setCompleted(status) {
+        this.#completed = status;
+      }
+    }
+
+    class TaskManager {
+      #task = [];
+      constructor() {
+        this.loadLocalStorage();
+      }
+
+      Addtasks(tasks) {
+        this.#task.push(tasks);
+        this.saveLocalStorage();
+      }
+
+      removeTasks(name) {
+        this.#task = this.#task.filter(task => task.getName() !== name);
+        this.saveLocalStorage();
+      }
+
+      taskLists() {
+        return this.#task;
+      }
+
+      saveLocalStorage() {
+        const data = this.#task.map(task => ({ 
+          Name: task.getName(),
+          Completed: task.isCompleted()
+        }));
+        localStorage.setItem("task", JSON.stringify(data));
+      }
+
+      loadLocalStorage() {
+        let data = JSON.parse(localStorage.getItem("task")) || [];
+        this.#task = data.map(d => new Task(d.Name, d.Completed || false));
+      }
+    }
+
+    let TaskInput = document.getElementById("taskInput");
+    let AddBtn = document.getElementById("AddTask");
+    let Progress = document.getElementById("progress");
+    let progressValue = document.getElementById("progressValue");
+    let TaskListz = document.getElementById("TaskListz");
+    let Message = document.getElementById("message");
+
+    let manager = new TaskManager();
+
+    function UpdateProgress() {
+      let tasks = manager.taskLists();
+      let total = tasks.length;
+      let completed = tasks.filter(t => t.isCompleted()).length;
+      let percent = total ? Math.round((completed / total) * 100) : 0;
+      Progress.style.width = percent + "%";
+      progressValue.textContent = percent + "%";
+    }
+
+    AddBtn.addEventListener("click", () => {
+      let task = TaskInput.value.trim();
+
+      if (!task) {
+        Message.classList.add("warningSign");
+        Message.textContent = "First Enter Task";
+        setTimeout(() => {
+          Message.textContent = "";
+          Message.classList.remove("warningSign");
+        }, 2000);
+        return;
+      }
+
+      let tasks = new Task(task);
+      manager.Addtasks(tasks);
+      TaskInput.value = "";
+      renderList();
+    });
+
+    function renderList() {
+      TaskListz.innerHTML = "";
+      manager.taskLists().forEach((task) => {
+        let taskItem = document.createElement("div");
+        taskItem.classList.add("taskItem");
+
+        let label = document.createElement("label");
+        
+        let checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+        checkBox.classList.add("taskCheckbox");
+        checkBox.checked = task.isCompleted();
+        
+        let taskText = document.createElement("span");
+        taskText.textContent = task.getName();
+        if (task.isCompleted()) {
+          taskText.classList.add("completeLine");
+        }
+
+        checkBox.addEventListener("change", () => {
+          task.setCompleted(checkBox.checked);
+          taskText.classList.toggle("completeLine", checkBox.checked);
+          manager.saveLocalStorage();
+          UpdateProgress();
+        });
+
+        let removeBtn = document.createElement("button");
+        removeBtn.textContent = "Delete";
+        removeBtn.classList.add("deleteBtn");
+        removeBtn.addEventListener("click", () => {
+          manager.removeTasks(task.getName());
+          renderList();
+        });
+
+        label.appendChild(checkBox);
+        label.appendChild(taskText);
+        taskItem.appendChild(label);
+        taskItem.appendChild(removeBtn);
+        TaskListz.appendChild(taskItem);
+      });
+      UpdateProgress();
+    }
+
+    renderList();
+  </script>
 </body>
-<script>
-  
-</script>
 </html>
