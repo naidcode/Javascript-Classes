@@ -3,162 +3,332 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Country Explorer</title>
+  <title>Country Search - Single Result</title>
   <style>
-    body{font-family:Arial, sans-serif;background:#f0f3f7;margin:0;padding:20px;text-align:center}
-    h1{margin-bottom:16px}
-    .controls{margin-bottom:18px}
-    input,select,button{padding:8px;margin:5px;border-radius:6px;border:1px solid #ccc}
-    button{background:#007bff;color:#fff;border:none;cursor:pointer}
-    button:hover{background:#0056b3}
-    #countryList{display:flex;flex-wrap:wrap;justify-content:center;gap:18px}
-    .card{background:#fff;padding:14px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.08);width:220px;text-align:center}
-    .card img{width:120px;height:80px;object-fit:cover;border-radius:6px}
-    #message{margin:12px;color:#b00}
+    body{
+      font-family:Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height:100vh;
+      padding:20px;
+      text-align:center;
+      margin:0;
+    }
+    .container{
+      max-width:600px;
+      margin:40px auto;
+    }
+    h1{
+      color:white;
+      margin-bottom:30px;
+      font-size:2.5rem;
+    }
+    .search-box{
+      background:white;
+      padding:30px;
+      border-radius:15px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+      margin-bottom:30px;
+    }
+    .search-input-group{
+      display:flex;
+      gap:10px;
+    }
+    #searchInput{
+      flex:1;
+      padding:15px;
+      font-size:16px;
+      border:2px solid #e0e0e0;
+      border-radius:8px;
+      outline:none;
+    }
+    #searchInput:focus{border-color:#667eea}
+    #searchBtn{
+      padding:15px 30px;
+      background:#667eea;
+      color:white;
+      border:none;
+      border-radius:8px;
+      font-size:16px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    #searchBtn:hover{background:#5568d3}
+    #searchBtn:disabled{background:#ccc;cursor:not-allowed}
+    #message{
+      margin-top:15px;
+      padding:12px;
+      border-radius:8px;
+      text-align:center;
+      font-weight:500;
+    }
+    .loading{background:#d1ecf1;color:#0c5460}
+    .error{background:#f8d7da;color:#721c24}
+    .warning{background:#fff3cd;color:#856404}
+    #countryDisplay{
+      background:white;
+      padding:30px;
+      border-radius:15px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+      display:none;
+    }
+    #countryDisplay.show{display:block}
+    .country-content{
+      display:grid;
+      grid-template-columns:200px 1fr;
+      gap:30px;
+      align-items:start;
+    }
+    .country-flag{
+      width:100%;
+      border-radius:10px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    }
+    .country-details h2{
+      color:#333;
+      margin-bottom:15px;
+      font-size:2rem;
+    }
+    .country-info{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      text-align:left;
+    }
+    .info-row{
+      background:#f0f0f0;
+      padding:10px 15px;
+      border-radius:5px;
+      color:#555;
+    }
+    .info-row strong{color:#333}
+    @media (max-width:768px){
+      .country-content{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
-  <h1>🌍 Country Explorer</h1>
+  <div class="container">
+    <h1>🌍 Country Search</h1>
+    
+    <div class="search-box">
+      <div class="search-input-group">
+        <input id="searchInput" type="text" placeholder="Enter country name (e.g., India, Japan)">
+        <button id="searchBtn">Search</button>
+      </div>
+      <p id="message"></p>
+    </div>
 
-  <div class="controls">
-    <input id="searchBox" type="text" placeholder="Search country..." />
-    <select id="regionFilter">
-      <option value="all">All Regions</option>
-      <option value="Asia">Asia</option>
-      <option value="Europe">Europe</option>
-      <option value="Africa">Africa</option>
-      <option value="Americas">Americas</option>
-      <option value="Oceania">Oceania</option>
-    </select>
-    <button id="searchBtn">Search</button>
-    <button id="resetBtn">Reset</button>
+    <div id="countryDisplay"></div>
   </div>
 
-  <div id="message"></div>
-  <div id="countryList"></div>
-
   <script>
-  // Wrap to ensure DOM is ready
-  document.addEventListener('DOMContentLoaded', () => {
-
+    // ==========================================
+    // 1. DATA LAYER - Country Class
+    // ==========================================
     class Country {
-      #name; #flag; #population; #capital; #region;
-      constructor(name, flag, population, capital, region){
-        this.#name = name;
-        this.#flag = flag;
-        this.#population = population;
-        this.#capital = capital;
-        this.#region = region;
+      #name
+      #flag
+      #population
+      #capital
+      #region
+      #languages
+      #currencies
+
+      constructor(countryData) {
+        this.#name = countryData.name
+        this.#flag = countryData.flag
+        this.#population = countryData.population
+        this.#capital = countryData.capital
+        this.#region = countryData.region
+        this.#languages = countryData.languages
+        this.#currencies = countryData.currencies
       }
-      getName(){ return this.#name }
-      getFlag(){ return this.#flag }
-      getPopulation(){ return this.#population }
-      getCapital(){ return this.#capital }
-      getRegion(){ return this.#region }
-      getCardHTML(){
-        return `
-          <div class="card">
-            <img src="${this.getFlag()}" alt="${this.getName()} flag" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%2280%22><rect width=%22100%25%22 height=%22100%25%22 fill=%23eee/></svg>'">
-            <h3>${this.getName()}</h3>
-            <p><strong>Capital:</strong> ${this.getCapital() || 'N/A'}</p>
-            <p><strong>Population:</strong> ${Number(this.getPopulation()).toLocaleString()}</p>
-            <p><strong>Region:</strong> ${this.getRegion()}</p>
+
+      getName() { return this.#name }
+      getFlag() { return this.#flag }
+      getPopulation() { return this.#population }
+      getCapital() { return this.#capital }
+      getRegion() { return this.#region }
+      getLanguages() { return this.#languages }
+      getCurrencies() { return this.#currencies }
+    }
+
+    // ==========================================
+    // 2. API LAYER - Fetch ONE Country
+    // ==========================================
+    async function fetchCountry(countryName) {
+      try {
+        // Search by country name - returns array but we take first match
+        const response = await fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}?fullText=false`)
+        
+        if (!response.ok) {
+          return null
+        }
+        
+        const data = await response.json()
+        
+        if (!data || data.length === 0) {
+          return null
+        }
+
+        // Take the first matching country
+        const countryData = data[0]
+
+        // Extract languages
+        const languages = countryData.languages 
+          ? Object.values(countryData.languages).join(', ') 
+          : 'N/A'
+
+        // Extract currencies
+        const currencies = countryData.currencies
+          ? Object.values(countryData.currencies).map(c => c.name).join(', ')
+          : 'N/A'
+
+        // Create and return ONE Country object
+        return new Country({
+          name: countryData.name?.common || 'Unknown',
+          flag: countryData.flags?.png || countryData.flags?.svg || '',
+          population: countryData.population || 0,
+          capital: Array.isArray(countryData.capital) ? countryData.capital[0] : 'N/A',
+          region: countryData.region || 'N/A',
+          languages: languages,
+          currencies: currencies
+        })
+
+      } catch (error) {
+        console.error('Error fetching country:', error)
+        throw error
+      }
+    }
+
+    // ==========================================
+    // 3. UI LAYER - Display Functions
+    // ==========================================
+    
+    function showLoading() {
+      const messageEl = document.getElementById('message')
+      messageEl.textContent = '🔍 Searching for country...'
+      messageEl.className = 'loading'
+      hideCountry()
+    }
+
+    function showError(errorMessage) {
+      const messageEl = document.getElementById('message')
+      messageEl.textContent = errorMessage
+      messageEl.className = 'error'
+      hideCountry()
+    }
+
+    function showWarning(warningMessage) {
+      const messageEl = document.getElementById('message')
+      messageEl.textContent = warningMessage
+      messageEl.className = 'warning'
+      
+      setTimeout(() => {
+        clearMessage()
+      }, 3000)
+    }
+
+    function clearMessage() {
+      const messageEl = document.getElementById('message')
+      messageEl.textContent = ''
+      messageEl.className = ''
+    }
+
+    // Display ONE country (No array!)
+    function displayCountry(country) {
+      const displayEl = document.getElementById('countryDisplay')
+      
+      const flagUrl = country.getFlag() || 'https://via.placeholder.com/200x150?text=No+Flag'
+      
+      displayEl.innerHTML = `
+        <div class="country-content">
+          <div>
+            <img src="${flagUrl}" 
+                 alt="${country.getName()} flag" 
+                 class="country-flag"
+                 onerror="this.src='https://via.placeholder.com/200x150?text=No+Flag'">
           </div>
-        `;
+          <div class="country-details">
+            <h2>${country.getName()}</h2>
+            <div class="country-info">
+              <div class="info-row">
+                <strong>🏛️ Capital:</strong> ${country.getCapital()}
+              </div>
+              <div class="info-row">
+                <strong>👥 Population:</strong> ${country.getPopulation().toLocaleString()}
+              </div>
+              <div class="info-row">
+                <strong>🌍 Region:</strong> ${country.getRegion()}
+              </div>
+              <div class="info-row">
+                <strong>💬 Languages:</strong> ${country.getLanguages()}
+              </div>
+              <div class="info-row">
+                <strong>💰 Currencies:</strong> ${country.getCurrencies()}
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+      
+      displayEl.classList.add('show')
+      clearMessage()
+    }
+
+    function hideCountry() {
+      const displayEl = document.getElementById('countryDisplay')
+      displayEl.classList.remove('show')
+    }
+
+    // ==========================================
+    // 4. CONTROLLER LAYER - Event Handler
+    // ==========================================
+    
+    const searchInput = document.getElementById('searchInput')
+    const searchBtn = document.getElementById('searchBtn')
+
+    async function handleSearch() {
+      const searchTerm = searchInput.value.trim()
+
+      if (!searchTerm) {
+        showWarning('⚠️ Please enter a country name')
+        return
+      }
+
+      searchBtn.disabled = true
+      showLoading()
+
+      try {
+        // Fetch ONE country (no array!)
+        const country = await fetchCountry(searchTerm)
+
+        if (!country) {
+          showError('❌ Country not found. Please try another name.')
+        } else {
+          // Display that ONE country (no array!)
+          displayCountry(country)
+        }
+
+      } catch (error) {
+        showError('❌ Something went wrong. Please try again.')
+        console.error('Detailed error:', error)
+      } finally {
+        searchBtn.disabled = false
       }
     }
 
-    class CountryManager {
-      #countries = [];
-      #filtered = [];
-
-      async fetchCountries(){
-        const msg = document.getElementById('message');
-        msg.textContent = "loading..."
-        try {
-          const res = await fetch('https://restcountries.com/v3.1/all?fields=name,flags,population,capital,region');
-          if (!res.ok) throw new Error('Network response was not OK: ' + res.status);
-          const data = await res.json();
-          // data is an array
-        this.#countries =  data.map(c => new Country(
-            (c.name && c.name.common) ? c.name.common : 'Unknown',
-            (c.flags && (c.flags.png || c.flags.svg)) ? (c.flags.png || c.flags.svg) : '',
-            c.population || 0,
-            Array.isArray(c.capital) ? c.capital[0] : (c.capital || 'N/A'),
-            c.region || 'N/A'
-          ));
-          this.#filtered = this.#countries;
-          this.displayCountries(this.#filtered);
-          msg.textContent = '';
-        } catch (err) {
-          console.error(err);
-          msg.textContent = 'Failed to load countries: ' + err.message;
-          // clear list to avoid stale UI
-          document.getElementById('countryList').innerHTML = '';
-        }
+    searchBtn.addEventListener('click', ()  => {
+      handleSearch()
+    })
+    
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        handleSearch()
       }
+    })
 
-      displayCountries(list){
-        const container = document.getElementById('countryList');
-        if(!list || list.length === 0){
-          container.innerHTML = '<p>No countries found.</p>';
-          return;
-        }
-        container.innerHTML = list.map(c => c.getCardHTML()).join('');
-      }
-
-      searchCountry(keyword, region){
-        keyword = (keyword || '').toLowerCase();
-        region = region || 'all';
-        this.#filtered = this.#countries.filter(c => {
-          const matchesName = c.getName().toLowerCase() === keyword;
-          const matchesRegion = region === 'all' || c.getRegion() === region;
-          return matchesName && matchesRegion;
-        });
-        this.displayCountries(this.#filtered);
-      }
-
-      reset(){
-        this.#filtered = this.#countries;
-        this.displayCountries(this.#filtered);
-      }
-    }
-
-    // initialize
-    const manager = new CountryManager();
-    manager.fetchCountries();
-
-    // controls
-    const searchBox = document.getElementById('searchBox');
-    const regionFilter = document.getElementById('regionFilter');
-    const searchBtn = document.getElementById('searchBtn');
-    const resetBtn = document.getElementById('resetBtn');
-
-    searchBtn.addEventListener('click', () => {
-      manager.searchCountry(searchBox.value.trim(), regionFilter.value);
-    });
-
-    // allow Enter key in search box
-    searchBox.addEventListener('keydown', e => {
-      if(e.key === 'Enter') manager.searchCountry(searchBox.value.trim(), regionFilter.value);
-    });
-
-    // live filter by region dropdown
-    regionFilter.addEventListener('change', () => {
-      manager.searchCountry(searchBox.value.trim(), regionFilter.value);
-    });
-
-    resetBtn.addEventListener('click', () => {
-      searchBox.value = '';
-      regionFilter.value = 'all';
-      manager.reset();
-    });
-
-  });
-   // DOMContentLoaded end
-   fetch('https://restcountries.com/v3.1/all?fields=name,flags,population,capital,region')
-   .then(res => res.json())
-   .then(data => console.log(data))
+    console.log('Country Search App Loaded! Try searching for "India", "Japan", or "Brazil"')
   </script>
 </body>
 </html>
