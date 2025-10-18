@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Search App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+    }
+
+    .search-box {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      margin-bottom: 30px;
+    }
+
+    .search-input-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    #searchMovie {
+      flex: 1;
+      padding: 15px;
+      font-size: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    #searchMovie:focus {
+      border-color: #667eea;
+    }
+
+    #searchBtn {
+      padding: 15px 30px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: 600;
+    }
+
+    #searchBtn:hover {
+      background: #5568d3;
+    }
+
+    #searchBtn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    #message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .warning {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .loading {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    #movieReview {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: none;
+    }
+
+    #movieReview.show {
+      display: block;
+    }
+
+    .movie-content {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 30px;
+    }
+
+    .movie-poster {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .movie-details h2 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 2rem;
+    }
+
+    .movie-info {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 15px;
+      color: #666;
+      font-size: 14px;
+      flex-wrap: wrap;
+    }
+
+    .movie-info span {
+      background: #f0f0f0;
+      padding: 5px 12px;
+      border-radius: 5px;
+    }
+
+    .imdb-rating {
+      background: #f5c518 !important;
+      color: #000;
+      font-weight: 600;
+    }
+
+    .movie-plot {
+      color: #555;
+      line-height: 1.6;
+      font-size: 16px;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 768px) {
+      .movie-content {
+        grid-template-columns: 1fr;
+      }
+
+      .search-input-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎬 Movie Search</h1>
+    
+    <div class="search-box">
+      <div class="search-input-group">
+        <input type="text" id="searchMovie" placeholder="Try 'Inception' or 'The Matrix'">
+        <button id="searchBtn">Search</button>
+      </div>
+      <p id="message"></p>
+    </div>
+
+    <div id="movieReview"></div>
+  </div>
+
+  <script>
+    class Movie {
+      #poster
+      #title
+      #plot
+      #year
+      #imdbRating
+      #genre
+      #director
+
+
+      constructor(movieData) {
+        this.#poster = movieData.poster || 'N/A'
+        this.#title = movieData.title || 'Unknown'
+        this.#plot = movieData.plot || 'No plot available'
+        this.#year = movieData.year || 'N/A'
+        this.#imdbRating = movieData.imdbRating || 'N/A'
+        this.#genre = movieData.genre || 'N/A'
+        this.#director = movieData.director || 'N/A'
+      }
+
+
+      getPoster() { return this.#poster }
+      getTitle() { return this.#title }
+      getPlot() { return this.#plot }
+      getYear() { return this.#year }
+      getImdbRating() { return this.#imdbRating }
+      getGenre() { return this.#genre }
+      getDirector() { return this.#director }
+    }
+
+
+    async function fetchMovie(movieTitle) {
+      try {
+        // IMPORTANT: Use HTTPS not HTTP
+        const response = await fetch(`https://www.omdbapi.com/?apikey=f37fc5c4&t=${encodeURIComponent(movieTitle)}`)
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        
+        const data = await response.json()
+
+        console.log('API Response:', data) // Debug log
+
+        // API returns Response: "False" when movie not found
+        if (data.Response === "False") {
+          return null
+        }
+
+        // Create and return a Movie object with the data
+        return new Movie({
+          poster: data.Poster,
+          title: data.Title,
+          plot: data.Plot,
+          year: data.Year,
+          imdbRating: data.imdbRating,
+          genre: data.Genre,
+          director: data.Director
+        })
+
+      } catch (error) {
+        console.error("Error fetching movie:", error)
+        throw error // Re-throw so the caller can handle it
+      }
+    }
+
+    // ==========================================
+    // 3. UI LAYER - Display Functions
+    // ==========================================
+    
+    // Show loading message
+    function showLoading() {
+      const messageEl = document.getElementById("message")
+      messageEl.textContent = "🔍 Searching for movie..."
+      messageEl.className = "loading"
+      hideMovieReview()
+    }
+
+    // Show error message
+    function showError(errorMessage) {
+      const messageEl = document.getElementById("message")
+      messageEl.textContent = errorMessage
+      messageEl.className = "error"
+      hideMovieReview()
+    }
+
+    // Show warning message
+    function showWarning(warningMessage) {
+      const messageEl = document.getElementById("message")
+      messageEl.textContent = warningMessage
+      messageEl.className = "warning"
+      
+      // Clear after 3 seconds
+      setTimeout(() => {
+        clearMessage()
+      }, 3000)
+    }
+
+    // Clear message
+    function clearMessage() {
+      const messageEl = document.getElementById("message")
+      messageEl.textContent = ""
+      messageEl.className = ""
+    }
+
+    // Display movie details
+    function displayMovie(movie) {
+      const movieReviewEl = document.getElementById("movieReview")
+      
+      // Handle poster error
+      const posterUrl = movie.getPoster() !== 'N/A' ? movie.getPoster() : 'https://via.placeholder.com/300x450?text=No+Poster'
+      
+      // Create HTML structure for movie display
+      movieReviewEl.innerHTML = `
+        <div class="movie-content">
+          <div>
+            <img src="${posterUrl}" alt="${movie.getTitle()}" class="movie-poster" 
+                 onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
+          </div>
+          <div class="movie-details">
+            <h2>${movie.getTitle()}</h2>
+            <div class="movie-info">
+              <span>📅 ${movie.getYear()}</span>
+              <span class="imdb-rating">⭐ ${movie.getImdbRating()}</span>
+              <span>🎭 ${movie.getGenre()}</span>
+              <span>🎬 ${movie.getDirector()}</span>
+            </div>
+            <p class="movie-plot">${movie.getPlot()}</p>
+          </div>
+        </div>
+      `
+      
+      // Show the movie review section
+      movieReviewEl.classList.add("show")
+      clearMessage()
+    }
+
+    // Hide movie review section
+    function hideMovieReview() {
+      const movieReviewEl = document.getElementById("movieReview")
+      movieReviewEl.classList.remove("show")
+    }
+
+    // ==========================================
+    // 4. CONTROLLER LAYER - Event Handlers
+    // ==========================================
+    
+    // Get DOM elements
+    const searchInput = document.getElementById("searchMovie")
+    const searchBtn = document.getElementById("searchBtn")
+
+    // Main search handler
+    async function handleSearch() {
+      const searchTerm = searchInput.value.trim()
+
+      // Validation: Check if input is empty
+      if (!searchTerm) {
+        showWarning("⚠️ Please enter a movie name")
+        return
+      }
+
+      // Disable button during search
+      searchBtn.disabled = true
+      showLoading()
+
+      try {
+        // Fetch movie data
+        const movie = await fetchMovie(searchTerm)
+
+        // Check if movie was found
+        if (!movie) {
+          showError("❌ Movie not found. Please try another title.")
+        } else {
+          // Display the movie
+          displayMovie(movie)
+        }
+
+      } catch (error) {
+        // Handle network or other errors
+        showError("❌ Something went wrong. Please check your internet connection.")
+        console.error('Detailed error:', error)
+      } finally {
+        // Re-enable button
+        searchBtn.disabled = false
+      }
+    }
+
+    // Attach event listener to button
+    searchBtn.addEventListener("click", handleSearch)
+
+    // Allow Enter key to search
+    searchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        handleSearch()
+      }
+    })
+
+    // Test the app is loaded
+    console.log('Movie Search App Loaded! Try searching for "Inception"')
+  </script>
+</body>
+</html>
