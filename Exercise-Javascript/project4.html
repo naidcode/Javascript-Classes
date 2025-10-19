@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+    }
+
+    .balance-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .balance-card h2 {
+      color: #666;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .balance-amount {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .balance-amount.positive {
+      color: #2ecc71;
+    }
+
+    .balance-amount.negative {
+      color: #e74c3c;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .summary-card {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .summary-card h3 {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .summary-amount {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .income .summary-amount {
+      color: #2ecc71;
+    }
+
+    .expense .summary-amount {
+      color: #e74c3c;
+    }
+
+    .add-transaction {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      margin-bottom: 20px;
+    }
+
+    .add-transaction h3 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #666;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #667eea;
+    }
+
+    .btn-add {
+      width: 100%;
+      padding: 15px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-add:hover {
+      background: #5568d3;
+    }
+
+    .transactions {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .transactions h3 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .filter-btn {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .filter-btn.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .transaction-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border-left: 4px solid;
+    }
+
+    .transaction-item.income {
+      background: #d5f4e6;
+      border-left-color: #2ecc71;
+    }
+
+    .transaction-item.expense {
+      background: #fadbd8;
+      border-left-color: #e74c3c;
+    }
+
+    .transaction-details {
+      flex: 1;
+    }
+
+    .transaction-description {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .transaction-type {
+      font-size: 0.85rem;
+      color: #666;
+      text-transform: uppercase;
+    }
+
+    .transaction-amount {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .transaction-item.income .transaction-amount {
+      color: #2ecc71;
+    }
+
+    .transaction-item.expense .transaction-amount {
+      color: #e74c3c;
+    }
+
+    .btn-delete {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    .btn-delete:hover {
+      background: #c0392b;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+
+    .empty-state p {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    #message {
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      display: none;
+    }
+
+    #message.show {
+      display: block;
+    }
+
+    #message.error {
+      background: #fadbd8;
+      color: #c0392b;
+    }
+
+    #message.success {
+      background: #d5f4e6;
+      color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💰 Expense Tracker</h1>
+
+    <!-- Balance Display -->
+    <div class="balance-card">
+      <h2>Your Balance</h2>
+      <div id="balance" class="balance-amount">₹0.00</div>
+    </div>
+
+    <!-- Income/Expense Summary -->
+    <div class="summary">
+      <div class="summary-card income">
+        <h3>Income</h3>
+        <div id="totalIncome" class="summary-amount">₹0.00</div>
+      </div>
+      <div class="summary-card expense">
+        <h3>Expense</h3>
+        <div id="totalExpense" class="summary-amount">₹0.00</div>
+      </div>
+    </div>
+
+    <!-- Add Transaction Form -->
+    <div class="add-transaction">
+      <h3>Add New Transaction</h3>
+      <div id="message"></div>
+      <form id="transactionForm">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input type="text" id="description" placeholder="Enter description (e.g., Salary, Food)" required>
+        </div>
+        <div class="form-group">
+          <label for="amount">Amount</label>
+          <input type="number" id="amount" placeholder="Enter amount" step="0.01" min="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="type">Type</label>
+          <select id="type" required>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-add">Add Transaction</button>
+      </form>
+    </div>
+
+    <!-- Transaction List -->
+    <div class="transactions">
+      <h3>Transaction History</h3>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="income">Income</button>
+        <button class="filter-btn" data-filter="expense">Expense</button>
+      </div>
+      <div id="transactionList" class="transaction-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. TRANSACTION CLASS - Data Structure
+    // ==========================================
+    class Transaction {
+      #id
+      #description
+      #amount
+      #type
+
+      constructor(id, description, amount, type) {
+        this.#id = id
+        this.#description = description
+        this.#amount = parseFloat(amount)
+        this.#type = type
+      }
+
+      getId() { return this.#id }
+      getDescription() { return this.#description }
+      getAmount() { return this.#amount }
+      getType() { return this.#type }
+
+      // Generate HTML for this transaction
+      getHTML() {
+        const sign = this.#type === 'income' ? '+' : '-'
+        return `
+          <div class="transaction-item ${this.#type}">
+            <div class="transaction-details">
+              <div class="transaction-description">${this.#description}</div>
+              <div class="transaction-type">${this.#type}</div>
+            </div>
+            <div class="transaction-amount">${sign}₹${this.#amount.toFixed(2)}</div>
+            <button class="btn-delete" onclick="deleteTransaction(${this.#id})">Delete</button>
+          </div>
+        `
+      }
+    }
+
+    // ==========================================
+    // 2. GLOBAL STATE - Store all transactions
+    // ==========================================
+    let transactions = []
+    let currentFilter = 'all'
+    let nextId = 1
+
+    // ==========================================
+    // 3. CALCULATION FUNCTIONS
+    // ==========================================
+    
+    function calculateBalance() {
+      let balance = 0
+      transactions.forEach(transaction => {
+        if (transaction.getType() === 'income') {
+          balance += transaction.getAmount()
+        } else {
+          balance -= transaction.getAmount()
+        }
+      })
+      return balance
+    }
+
+    function calculateTotalIncome() {
+      return transactions
+        .filter(t => t.getType() === 'income')
+        .reduce((total, t) => total + t.getAmount(), 0)
+    }
+
+    function calculateTotalExpense() {
+      return transactions
+        .filter(t => t.getType() === 'expense')
+        .reduce((total, t) => total + t.getAmount(), 0)
+    }
+
+    // ==========================================
+    // 4. UI UPDATE FUNCTIONS
+    // ==========================================
+    
+    function updateSummary() {
+      const balance = calculateBalance()
+      const totalIncome = calculateTotalIncome()
+      const totalExpense = calculateTotalExpense()
+
+      // Update balance
+      const balanceEl = document.getElementById('balance')
+      balanceEl.textContent = `₹${balance.toFixed(2)}`
+      balanceEl.className = 'balance-amount'
+      if (balance > 0) {
+        balanceEl.classList.add('positive')
+      } else if (balance < 0) {
+        balanceEl.classList.add('negative')
+      }
+
+      // Update income/expense totals
+      document.getElementById('totalIncome').textContent = `₹${totalIncome.toFixed(2)}`
+      document.getElementById('totalExpense').textContent = `₹${totalExpense.toFixed(2)}`
+    }
+
+    function displayTransactions() {
+      const listEl = document.getElementById('transactionList')
+
+      // Filter transactions based on current filter
+      let filtered = transactions
+      if (currentFilter !== 'all') {
+        filtered = transactions.filter(t => t.getType() === currentFilter)
+      }
+
+      // If no transactions
+      if (filtered.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty-state">
+            <p>📝 No transactions yet</p>
+            <p style="font-size:0.9rem;">Add your first transaction above!</p>
+          </div>
+        `
+        return
+      }
+
+      // Display all filtered transactions (newest first)
+      listEl.innerHTML = filtered
+        .slice()
+        .reverse()
+        .map(t => t.getHTML())
+        .join('')
+    }
+
+    function showMessage(message, type) {
+      const messageEl = document.getElementById('message')
+      messageEl.textContent = message
+      messageEl.className = `show ${type}`
+      
+      setTimeout(() => {
+        messageEl.classList.remove('show')
+      }, 3000)
+    }
+
+    // ==========================================
+    // 5. TRANSACTION OPERATIONS
+    // ==========================================
+    
+    function addTransaction(description, amount, type) {
+      // Create new transaction
+      const transaction = new Transaction(nextId++, description, amount, type)
+      
+      // Add to array
+      transactions.push(transaction)
+      
+      // Update UI
+      updateSummary()
+      displayTransactions()
+      
+      // Show success message
+      showMessage(`✅ ${type === 'income' ? 'Income' : 'Expense'} added successfully!`, 'success')
+    }
+
+    function deleteTransaction(id) {
+      // Find and remove transaction
+      transactions = transactions.filter(t => t.getId() !== id)
+      
+      // Update UI
+      updateSummary()
+      displayTransactions()
+      
+      // Show success message
+      showMessage('🗑️ Transaction deleted!', 'success')
+    }
+
+    // ==========================================
+    // 6. EVENT HANDLERS
+    // ==========================================
+    
+    // Form submission
+    document.getElementById('transactionForm').addEventListener('submit', (e) => {
+      e.preventDefault()
+
+      // Get form values
+      const description = document.getElementById('description').value.trim()
+      const amount = document.getElementById('amount').value
+      const type = document.getElementById('type').value
+
+      // Validate
+      if (!description) {
+        showMessage('⚠️ Please enter a description', 'error')
+        return
+      }
+
+      if (!amount || amount <= 0) {
+        showMessage('⚠️ Please enter a valid amount', 'error')
+        return
+      }
+
+      // Add transaction
+      addTransaction(description, amount, type)
+
+      // Reset form
+      document.getElementById('transactionForm').reset()
+    })
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+
+        // Update filter and display
+        currentFilter = btn.dataset.filter
+        displayTransactions()
+      })
+    })
+
+    // ==========================================
+    // 7. INITIALIZE APP
+    // ==========================================
+    
+    // Add some sample data to get started
+    // function loadSampleData() {
+    //   addTransaction('Salary', 50000, 'income')
+    //   addTransaction('Groceries', 2500, 'expense')
+    //   addTransaction('Freelance Project', 15000, 'income')
+    //   addTransaction('Electricity Bill', 1200, 'expense')
+    //   addTransaction('Restaurant', 800, 'expense')
+    // }
+
+    // Load sample data on first visit (optional)
+    // Uncomment the line below to start with sample data
+    // loadSampleData()
+
+    // Initial display
+    updateSummary()
+    displayTransactions()
+
+    console.log('💰 Expense Tracker loaded! Add your first transaction!')
+  </script>
+</body>
+</html>
