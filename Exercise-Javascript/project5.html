@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .completed{
+      text-decoration: line-through;
+      color: grey;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" id="taskInput" placeholder="enter task">
+  <button id="addtask">add</button>
+  <div id="taskList">
+    <p id="message"></p>
+  </div>
+   <div class="stats" id="stats" style="display: none;">
+      <div>Total: <span id="totalTasks">0</span></div>
+      <div>Active: <span id="activeTasks">0</span></div>
+      <div>Completed: <span id="completedTasks">0</span></div>
+    </div>
+  </div>
+</body>
+<script>
+  class Task{
+    #name
+    #completed
+    constructor(name , completed = false){
+      this.#name =  name 
+      this.#completed = completed
+    }
+
+    getName(){return this.#name}
+    isCompleted(){return this.#completed}
+
+    setCompleted(status){
+      this.#completed = status
+    }
+  }
+
+  class TaskManager{
+    #task = [];
+    constructor(){this.loadLocalStorage()}
+
+    AddTask(tasks){
+      this.#task.push(tasks)
+      this.saveLocalstorage()
+    }
+
+    removeTask(name){
+      this.#task = this.#task.filter(t => t.getName() !== name)
+      this.saveLocalstorage()
+    }
+
+    TaskList(){
+      return this.#task;
+      this.saveLocalstorage()
+    }
+
+    getStats(){
+      let total = this.#task.length;
+      let complete = this.#task.filter(c => c.isCompleted()).length
+      let active = total - complete;
+      return {total ,active , complete}
+    }
+
+    saveLocalstorage(){
+     let data = this.#task.map(t => ({
+      Name: t.getName(),
+      Completed: t.isCompleted()
+     }))
+     localStorage.setItem("task" , JSON.stringify(data))
+    }
+
+    loadLocalStorage(){
+      let data = JSON.parse(localStorage.getItem("task")) || [];
+      this.#task = data.map(d => new Task(d.Name , d.Completed))
+    }
+  }
+
+  let taskInput = document.getElementById("taskInput");
+  let AddTask = document.getElementById("addtask");
+  let taskList = document.getElementById("taskList");
+  let message = document.getElementById("message");
+
+  let manager = new TaskManager()
+
+
+  AddTask.addEventListener("click" , () => {
+    let input = taskInput.value.trim();
+    
+    if(!input){
+      message.textContent = "first enter task"
+      message.style.color = "red";
+      setTimeout(() => {
+        message.textContent = ""
+      }, 3000);
+      return
+    }
+
+    let task = new Task(input)
+    manager.AddTask(task)
+    taskInput.value = ""
+    renderList()
+  })
+
+  function renderList(){
+    taskList.innerHTML = "";
+    manager.TaskList().forEach(task => {
+      let taskItemz = document.createElement("div")
+      let checkBox = document.createElement("input")
+      checkBox.type = "checkbox"
+      checkBox.checked = task.isCompleted();
+
+      let taskText = document.createElement("span")
+      taskText.textContent = task.getName()
+      if(task.isCompleted()){
+        taskText.classList.add("completed")
+      }
+      checkBox.addEventListener("change" ,() => {
+        task.setCompleted( checkBox.checked)
+        taskText.classList.toggle("completed" , checkBox.checked);
+        manager.saveLocalstorage()
+        updatestats()
+      })
+
+      let remove = document.createElement("button")
+      remove.textContent = "delete";
+      remove.addEventListener("click" , () => {
+        manager.removeTask(task.getName())
+        renderList();
+      })
+      taskList.appendChild(taskItemz)
+      taskItemz.appendChild(checkBox)
+      taskItemz.appendChild(taskText)
+      taskItemz.appendChild(remove)
+    })
+updatestats()
+  }
+
+  function updatestats(){
+    let task = manager.getStats()
+    document.getElementById("totalTasks").textContent = task.total
+    document.getElementById("activeTasks").textContent = task.active
+    document.getElementById("completedTasks").textContent = task.complete
+  }
+  renderList()
+</script>
+</html>
