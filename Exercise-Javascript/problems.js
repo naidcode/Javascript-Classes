@@ -90,9 +90,11 @@ foo();
 
 function groupBy(array, property){
 return array.reduce((group,items) => {
-  let key = items[property]
+  let key = items[property];
+  console.log(key)
   group[key] = group[key] || [];
   group[key].push(items)
+  console.log(group[key])
   return items
  }, {});
 }
@@ -128,6 +130,7 @@ console.log(num)
 
 let number1 = [3, 8, 2, 10, 5];
 let max = number1[0]
+// console.log(max)
 number1.forEach(num => {
   if(num > max){
     console.log(max = num)
