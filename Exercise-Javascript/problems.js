@@ -71,9 +71,57 @@ let results3 = getLessThanOrEqualThree()
 console.log(results3)
 
 function flattenArray(arr){
-arr.forEach(arr1 => {
-  
-});
+return arr.flat(Infinity)
 }
 console.log(flattenArray([1, [2, 3], [4, [5, 6]]]));
+
+function foo() {
+    var a = 1;
+    if (a >= 1) {
+        let b = 2;
+        while (b < 5) {
+            let c = b * 2;
+            b++;
+            console.log( a + c );
+        }
+    }
+}
+foo();
+
+function groupBy(array, property){
+  let group = {}
+  array.forEach(items => {
+    const key = items[property];
+    if(!group[key]){
+      group[key] = []
+    } 
+      group[key].push(items)
+    
+  });
+  return group
+}
+
+// Test it:
+const people = [
+  { name: "Alice", age: 25 },
+  { name: "Bob", age: 30 },
+  { name: "Charlie", age: 25 },
+  { name: "David", age: 30 }
+];
+
+console.log(groupBy(people, "age"));
+
+// Try with different property:
+const products = [
+  { name: "Apple", category: "fruit" },
+  { name: "Carrot", category: "vegetable" },
+  { name: "Banana", category: "fruit" }
+];
+
+console.log(groupBy(products, "category"));
+// Should return:
+// {
+//   fruit: [Apple, Banana],
+//   vegetable: [Carrot]
+// }
 
