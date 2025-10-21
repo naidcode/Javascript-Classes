@@ -130,13 +130,13 @@ console.log(num)
 
 let number1 = [3, 8, 2, 10, 5];
 let max = number1[0]
-// console.log(max)
+console.log(max)
 number1.forEach(num => {
   if(num > max){
-    console.log(max = num)
+  max = num
   }
 })
-
+console.log(max)
 let number2 = [1, 2, 3, 4, 5, 6];
 let num3 = number2.filter(num => num % 2===0)
 console.log(num3.length)
