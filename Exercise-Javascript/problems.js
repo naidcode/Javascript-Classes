@@ -142,3 +142,87 @@ let num3 = number2.filter(num => num % 2===0)
 console.log(num3.length)
 
 
+const alarm = {
+  remind(message) {
+    alert(message);
+    this.timeoutID = undefined;
+  },
+
+  setup() {
+    if (typeof this.timeoutID === "number") {
+      this.cancel();
+    }
+
+    this.timeoutID = setTimeout(
+      (msg) => {
+        this.remind(msg);
+      },
+      1000,
+      "Wake up!",
+    );
+  },
+
+  cancel() {
+    clearTimeout(this.timeoutID);
+  },
+};
+window.addEventListener("click", () => alarm.setup());
+
+function bounce(a , delay){
+let timeid;
+return function(...msg){
+clearTimeout(timeid)
+timeid = setTimeout(() => {
+  a(...msg)
+}, delay);
+}
+}
+
+let nahid = bounce((msg) => {
+  console.log(msg)
+}, 3000)
+
+
+nahid("hello nahid")
+nahid("hey")
+nahid("can you here me")
+
+
+
+
+function reverseLetter(rever){
+ let rev = rever.split('')
+  rev.reverse()
+ let revers =  rev.join('')
+ console.log(revers)
+}
+reverseLetter("hello")
+
+
+function findvowels(a){
+  let vowels = ['a','e','i','o','u']
+  let count = 0
+ for (const char of a.toLowerCase()) {
+  if(vowels.includes(char)){
+    count++
+  }
+ }
+ return count
+}
+
+console.log(findvowels("javascript"))
+
+let numzz = [1,2,3,50,60]
+let maxs = numzz[0]
+
+numzz.forEach(num => {
+  if(num > maxs){
+    maxs = num
+  }
+  return maxs
+})
+
+console.log(maxs)
+
+
+
