@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Todo App</title>
+  <title>Advanced Todo App - OOP</title>
   <style>
     * {
       margin: 0;
@@ -144,6 +144,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex: 1;
     }
 
     .category-color {
@@ -422,8 +423,8 @@
 <body>
   <div class="container">
     <header>
-      <h1>📋 Advanced Todo Manager</h1>
-      <p>Organize your tasks with categories, priorities, and due dates</p>
+      <h1>📋 Todo App - OOP Version</h1>
+      <p>Built with Classes and Object-Oriented Programming</p>
     </header>
 
     <div class="main-grid">
@@ -479,347 +480,398 @@
   </div>
 
   <script>
-    // Simple data structure using plain objects
-    const app = {
-      todos: [],
-      categories: [],
-      filters: {
-        category: null,
-        priority: null,
-        status: 'all',
-        search: ''
-      }
-    };
-
-    const colors = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#fee140', '#30cfd0'];
-    let selectedColor = colors[0];
-
-    // Initialize with default categories
-    function init() {
-      loadData();
-      if (app.categories.length === 0) {
-        addCategory('Personal', '#667eea');
-        addCategory('Work', '#f093fb');
-        addCategory('Shopping', '#4facfe');
-      }
-      renderAll();
-    }
-
-    // Category functions
-    function addCategory(name, color) {
-      const category = {
-        id: Date.now() + Math.random(),
-        name,
-        color
-      };
-      app.categories.push(category);
-      saveData();
-    }
-
-    function deleteCategory(id) {
-      app.categories = app.categories.filter(cat => cat.id !== id);
-      app.todos = app.todos.filter(todo => todo.categoryId !== id);
-      saveData();
-    }
-
-    // Todo functions
-    function addTodo(data) {
-      const todo = {
-        id: Date.now() + Math.random(),
-        title: data.title,
-        description: data.description || '',
-        categoryId: data.categoryId,
-        priority: data.priority || 'medium',
-        dueDate: data.dueDate || null,
-        completed: false,
-        createdAt: new Date().toISOString()
-      };
-      app.todos.push(todo);
-      saveData();
-    }
-
-    function deleteTodo(id) {
-      app.todos = app.todos.filter(todo => todo.id !== id);
-      saveData();
-    }
-
-    function toggleTodo(id) {
-      const todo = app.todos.find(t => t.id === id);
-      if (todo) {
-        todo.completed = !todo.completed;
-        saveData();
+    // Category Class - Represents one category
+    class Category {
+      constructor(name, color) {
+        this.id = Date.now() + Math.random();
+        this.name = name;
+        this.color = color;
       }
     }
 
-    function isOverdue(todo) {
-      if (!todo.dueDate || todo.completed) return false;
-      return new Date() > new Date(todo.dueDate);
-    }
-
-    // Filter function
-    function getFilteredTodos() {
-      let filtered = [...app.todos];
-
-      if (app.filters.category) {
-        filtered = filtered.filter(t => t.categoryId === app.filters.category);
+    // Todo Class - Represents one todo
+    class Todo {
+      constructor(data) {
+        this.id = Date.now() + Math.random();
+        this.title = data.title;
+        this.description = data.description || '';
+        this.categoryId = data.categoryId;
+        this.priority = data.priority || 'medium';
+        this.dueDate = data.dueDate || null;
+        this.completed = false;
+        this.createdAt = new Date().toISOString();
       }
 
-      if (app.filters.priority) {
-        filtered = filtered.filter(t => t.priority === app.filters.priority);
+      toggleComplete() {
+        this.completed = !this.completed;
       }
 
-      if (app.filters.status === 'active') {
-        filtered = filtered.filter(t => !t.completed);
-      } else if (app.filters.status === 'completed') {
-        filtered = filtered.filter(t => t.completed);
-      }
-
-      if (app.filters.search) {
-        const search = app.filters.search.toLowerCase();
-        filtered = filtered.filter(t => 
-          t.title.toLowerCase().includes(search) ||
-          t.description.toLowerCase().includes(search)
-        );
-      }
-
-      return filtered;
-    }
-
-    // Statistics
-    function getStats() {
-      const total = app.todos.length;
-      const completed = app.todos.filter(t => t.completed).length;
-      const active = total - completed;
-      const overdue = app.todos.filter(t => isOverdue(t)).length;
-      return { total, completed, active, overdue };
-    }
-
-    function getTodoCount(categoryId) {
-      return app.todos.filter(t => t.categoryId === categoryId).length;
-    }
-
-    // Storage
-    function saveData() {
-      localStorage.setItem('advancedTodoApp', JSON.stringify(app));
-    }
-
-    function loadData() {
-      const saved = localStorage.getItem('advancedTodoApp');
-      if (saved) {
-        const data = JSON.parse(saved);
-        app.todos = data.todos || [];
-        app.categories = data.categories || [];
+      isOverdue() {
+        if (!this.dueDate || this.completed) return false;
+        return new Date() > new Date(this.dueDate);
       }
     }
 
-    // Debounce
-    function debounce(func, delay) {
-      let timeoutId;
-      return function(...args) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => func(...args), delay);
-      };
-    }
-
-    // Render functions
-    function renderColorPicker() {
-      const picker = document.getElementById('colorPicker');
-      picker.innerHTML = colors.map(color => `
-        <div class="color-option ${color === selectedColor ? 'selected' : ''}" 
-             style="background: ${color}" 
-             data-color="${color}"></div>
-      `).join('');
-    }
-
-    function renderCategories() {
-      const list = document.getElementById('categoriesList');
-      const select = document.getElementById('todoCategory');
-
-      list.innerHTML = app.categories.map(cat => `
-        <div class="category-item ${app.filters.category === cat.id ? 'active' : ''}" 
-             style="background: ${cat.color}20; border-left: 4px solid ${cat.color}"
-             data-id="${cat.id}">
-          <div class="category-info">
-            <div class="category-color" style="background: ${cat.color}"></div>
-            <span>${cat.name}</span>
-            <span class="category-count">${getTodoCount(cat.id)}</span>
-          </div>
-          <button class="btn-delete" data-id="${cat.id}">Delete</button>
-        </div>
-      `).join('');
-
-      select.innerHTML = '<option value="">Select Category</option>' + 
-        app.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
-    }
-
-    function renderStats() {
-      const stats = getStats();
-      document.getElementById('stats').innerHTML = `
-        <div class="stat-card">
-          <div class="stat-number">${stats.total}</div>
-          <div class="stat-label">Total Tasks</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">${stats.active}</div>
-          <div class="stat-label">Active</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">${stats.completed}</div>
-          <div class="stat-label">Completed</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">${stats.overdue}</div>
-          <div class="stat-label">Overdue</div>
-        </div>
-      `;
-    }
-
-    function renderTodos() {
-      const list = document.getElementById('todosList');
-      const todos = getFilteredTodos();
-
-      if (todos.length === 0) {
-        list.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-state-icon">📝</div>
-            <h3>No tasks found</h3>
-            <p>Create your first task or adjust your filters</p>
-          </div>
-        `;
-        return;
+    // TodoManager Class - Business Logic
+    class TodoManager {
+      constructor() {
+        this.categories = [];
+        this.todos = [];
+        this.loadFromStorage();
+        
+        if (this.categories.length === 0) {
+          this.addCategory('Personal', '#667eea');
+          this.addCategory('Work', '#f093fb');
+          this.addCategory('Shopping', '#4facfe');
+        }
       }
 
-      list.innerHTML = todos.map(todo => {
-        const category = app.categories.find(c => c.id === todo.categoryId);
-        const overdue = isOverdue(todo);
+      addCategory(name, color) {
+        const category = new Category(name, color);
+        this.categories.push(category);
+        this.saveToStorage();
+        return category;
+      }
 
-        return `
-          <div class="todo-item ${todo.completed ? 'completed' : ''}" 
-               style="border-left: 4px solid ${category ? category.color : '#ccc'}">
-            <input type="checkbox" class="todo-checkbox" 
-                   ${todo.completed ? 'checked' : ''} 
-                   data-id="${todo.id}">
-            <div class="todo-content">
-              <div class="todo-title">${todo.title}</div>
-              ${todo.description ? `<div class="todo-description">${todo.description}</div>` : ''}
-              <div class="todo-meta">
-                ${category ? `<span class="badge" style="background: ${category.color}20; color: ${category.color}">${category.name}</span>` : ''}
-                <span class="badge priority-${todo.priority}">${todo.priority.toUpperCase()}</span>
-                ${todo.dueDate ? `<span class="badge ${overdue ? 'badge-overdue' : 'badge-date'}">${overdue ? '⚠️ ' : '📅 '}${new Date(todo.dueDate).toLocaleDateString()}</span>` : ''}
-              </div>
+      deleteCategory(id) {
+        this.categories = this.categories.filter(c => c.id !== id);
+        this.todos = this.todos.filter(t => t.categoryId !== id);
+        this.saveToStorage();
+      }
+
+      getCategoryById(id) {
+        return this.categories.find(c => c.id === id);
+      }
+
+      getTodoCountForCategory(categoryId) {
+        return this.todos.filter(t => t.categoryId === categoryId).length;
+      }
+
+      addTodo(data) {
+        const todo = new Todo(data);
+        this.todos.push(todo);
+        this.saveToStorage();
+        return todo;
+      }
+
+      deleteTodo(id) {
+        this.todos = this.todos.filter(t => t.id !== id);
+        this.saveToStorage();
+      }
+
+      toggleTodo(id) {
+        const todo = this.todos.find(t => t.id === id);
+        if (todo) {
+          todo.toggleComplete();
+          this.saveToStorage();
+        }
+      }
+
+      getFilteredTodos(filters) {
+        let result = [...this.todos];
+
+        if (filters.category) {
+          result = result.filter(t => t.categoryId === filters.category);
+        }
+
+        if (filters.priority) {
+          result = result.filter(t => t.priority === filters.priority);
+        }
+
+        if (filters.status === 'active') {
+          result = result.filter(t => !t.completed);
+        } else if (filters.status === 'completed') {
+          result = result.filter(t => t.completed);
+        }
+
+        if (filters.search) {
+          const searchLower = filters.search.toLowerCase();
+          result = result.filter(t => 
+            t.title.toLowerCase().includes(searchLower) ||
+            t.description.toLowerCase().includes(searchLower)
+          );
+        }
+
+        return result;
+      }
+
+      getStatistics() {
+        const total = this.todos.length;
+        const completed = this.todos.filter(t => t.completed).length;
+        const active = total - completed;
+        const overdue = this.todos.filter(t => {
+          if (!t.dueDate || t.completed) return false;
+          return new Date() > new Date(t.dueDate);
+        }).length;
+
+        return { total, completed, active, overdue };
+      }
+
+      saveToStorage() {
+        localStorage.setItem('todoAppOOP', JSON.stringify({
+          categories: this.categories,
+          todos: this.todos
+        }));
+      }
+
+      loadFromStorage() {
+        const saved = localStorage.getItem('todoAppOOP');
+        if (saved) {
+          const data = JSON.parse(saved);
+          this.categories = data.categories || [];
+          this.todos = data.todos || [];
+        }
+      }
+    }
+
+    // UIRenderer Class - Display Logic
+    class UIRenderer {
+      constructor(manager) {
+        this.manager = manager;
+        this.colors = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#fee140', '#30cfd0'];
+        this.selectedColor = this.colors[0];
+      }
+
+      renderColorPicker() {
+        const picker = document.getElementById('colorPicker');
+        picker.innerHTML = this.colors.map(color => `
+          <div class="color-option ${color === this.selectedColor ? 'selected' : ''}" 
+               style="background: ${color}" 
+               data-color="${color}"></div>
+        `).join('');
+      }
+
+      renderCategories(activeId = null) {
+        const list = document.getElementById('categoriesList');
+        const select = document.getElementById('todoCategory');
+
+        list.innerHTML = this.manager.categories.map(cat => `
+          <div class="category-item ${activeId === cat.id ? 'active' : ''}" 
+               style="background: ${cat.color}20; border-left: 4px solid ${cat.color}"
+               data-id="${cat.id}">
+            <div class="category-info">
+              <div class="category-color" style="background: ${cat.color}"></div>
+              <span>${cat.name}</span>
+              <span class="category-count">${this.manager.getTodoCountForCategory(cat.id)}</span>
             </div>
-            <button class="btn-delete-todo" data-id="${todo.id}">Delete</button>
+            <button class="btn-delete" data-id="${cat.id}">Delete</button>
+          </div>
+        `).join('');
+
+        select.innerHTML = '<option value="">Select Category</option>' + 
+          this.manager.categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+      }
+
+      renderStatistics() {
+        const stats = this.manager.getStatistics();
+        document.getElementById('stats').innerHTML = `
+          <div class="stat-card">
+            <div class="stat-number">${stats.total}</div>
+            <div class="stat-label">Total Tasks</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${stats.active}</div>
+            <div class="stat-label">Active</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${stats.completed}</div>
+            <div class="stat-label">Completed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${stats.overdue}</div>
+            <div class="stat-label">Overdue</div>
           </div>
         `;
-      }).join('');
+      }
+
+      renderTodos(filters) {
+        const list = document.getElementById('todosList');
+        const todos = this.manager.getFilteredTodos(filters);
+
+        if (todos.length === 0) {
+          list.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">📝</div>
+              <h3>No tasks found</h3>
+              <p>Create your first task or adjust your filters</p>
+            </div>
+          `;
+          return;
+        }
+
+        list.innerHTML = todos.map(todo => {
+          const category = this.manager.getCategoryById(todo.categoryId);
+          const overdue = todo.dueDate && !todo.completed && new Date() > new Date(todo.dueDate);
+
+          return `
+            <div class="todo-item ${todo.completed ? 'completed' : ''}" 
+                 style="border-left: 4px solid ${category ? category.color : '#ccc'}">
+              <input type="checkbox" class="todo-checkbox" 
+                     ${todo.completed ? 'checked' : ''} 
+                     data-id="${todo.id}">
+              <div class="todo-content">
+                <div class="todo-title">${todo.title}</div>
+                ${todo.description ? `<div class="todo-description">${todo.description}</div>` : ''}
+                <div class="todo-meta">
+                  ${category ? `<span class="badge" style="background: ${category.color}20; color: ${category.color}">${category.name}</span>` : ''}
+                  <span class="badge priority-${todo.priority}">${todo.priority.toUpperCase()}</span>
+                  ${todo.dueDate ? `<span class="badge ${overdue ? 'badge-overdue' : 'badge-date'}">${overdue ? '⚠️ ' : '📅 '}${new Date(todo.dueDate).toLocaleDateString()}</span>` : ''}
+                </div>
+              </div>
+              <button class="btn-delete-todo" data-id="${todo.id}">Delete</button>
+            </div>
+          `;
+        }).join('');
+      }
+
+      renderAll(filters, activeCategoryId = null) {
+        this.renderColorPicker();
+        this.renderCategories(activeCategoryId);
+        this.renderStatistics();
+        this.renderTodos(filters);
+      }
     }
 
-    function renderAll() {
-      renderColorPicker();
-      renderCategories();
-      renderStats();
-      renderTodos();
-    }
-
-    // Event listeners
-    document.getElementById('colorPicker').addEventListener('click', (e) => {
-      if (e.target.classList.contains('color-option')) {
-        selectedColor = e.target.dataset.color;
-        renderColorPicker();
+    // App Class - Main Controller
+    class App {
+      constructor() {
+        this.manager = new TodoManager();
+        this.renderer = new UIRenderer(this.manager);
+        this.filters = {
+          category: null,
+          priority: null,
+          status: 'all',
+          search: ''
+        };
+        
+        this.init();
       }
-    });
 
-    document.getElementById('addCategoryBtn').addEventListener('click', () => {
-      const name = document.getElementById('categoryName').value.trim();
-      if (name) {
-        addCategory(name, selectedColor);
-        document.getElementById('categoryName').value = '';
-        renderAll();
+      init() {
+        this.setupEventListeners();
+        this.renderer.renderAll(this.filters);
       }
-    });
 
-    document.getElementById('categoriesList').addEventListener('click', (e) => {
-      if (e.target.classList.contains('btn-delete')) {
-        e.stopPropagation();
-        const id = parseFloat(e.target.dataset.id);
-        if (confirm('Delete this category and all its todos?')) {
-          deleteCategory(id);
-          if (app.filters.category === id) {
-            app.filters.category = null;
+      debounce(func, delay) {
+        let timeoutId;
+        return (...args) => {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => func.apply(this, args), delay);
+        };
+      }
+
+      setupEventListeners() {
+        // Color picker
+        document.getElementById('colorPicker').addEventListener('click', (e) => {
+          if (e.target.classList.contains('color-option')) {
+            this.renderer.selectedColor = e.target.dataset.color;
+            this.renderer.renderColorPicker();
           }
-          renderAll();
-        }
-      } else if (e.target.closest('.category-item')) {
-        const id = parseFloat(e.target.closest('.category-item').dataset.id);
-        app.filters.category = app.filters.category === id ? null : id;
-        renderAll();
+        });
+
+        // Add category
+        document.getElementById('addCategoryBtn').addEventListener('click', () => {
+          const nameInput = document.getElementById('categoryName');
+          const name = nameInput.value.trim();
+          if (name) {
+            this.manager.addCategory(name, this.renderer.selectedColor);
+            nameInput.value = '';
+            this.renderer.renderAll(this.filters, this.filters.category);
+          }
+        });
+
+        // Category actions
+        document.getElementById('categoriesList').addEventListener('click', (e) => {
+          const deleteBtn = e.target.closest('.btn-delete');
+          if (deleteBtn) {
+            e.stopPropagation();
+            const id = parseFloat(deleteBtn.dataset.id);
+            if (confirm('Delete this category and all its todos?')) {
+              this.manager.deleteCategory(id);
+              if (this.filters.category === id) this.filters.category = null;
+              this.renderer.renderAll(this.filters);
+            }
+          } else {
+            const categoryItem = e.target.closest('.category-item');
+            if (categoryItem) {
+              const id = parseFloat(categoryItem.dataset.id);
+              this.filters.category = this.filters.category === id ? null : id;
+              this.renderer.renderAll(this.filters, this.filters.category);
+            }
+          }
+        });
+
+        // Add todo
+        document.getElementById('addTodoBtn').addEventListener('click', () => {
+          const title = document.getElementById('todoTitle').value.trim();
+          const categoryId = parseFloat(document.getElementById('todoCategory').value);
+          const priority = document.getElementById('todoPriority').value;
+          const dueDate = document.getElementById('todoDueDate').value;
+          const description = document.getElementById('todoDescription').value.trim();
+
+          if (title && categoryId) {
+            this.manager.addTodo({ title, categoryId, priority, dueDate, description });
+            document.getElementById('todoTitle').value = '';
+            document.getElementById('todoDescription').value = '';
+            document.getElementById('todoDueDate').value = '';
+            this.renderer.renderAll(this.filters, this.filters.category);
+          } else {
+            alert('Please enter a title and select a category!');
+          }
+        });
+
+        // Todo actions
+        document.getElementById('todosList').addEventListener('click', (e) => {
+          if (e.target.classList.contains('todo-checkbox')) {
+            const id = parseFloat(e.target.dataset.id);
+            this.manager.toggleTodo(id);
+            this.renderer.renderAll(this.filters, this.filters.category);
+          } else if (e.target.classList.contains('btn-delete-todo')) {
+            const id = parseFloat(e.target.dataset.id);
+            this.manager.deleteTodo(id);
+            this.renderer.renderAll(this.filters, this.filters.category);
+          }
+        });
+
+        // Status filters
+        document.querySelectorAll('[data-status]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-status]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.filters.status = btn.dataset.status;
+            this.renderer.renderTodos(this.filters);
+          });
+        });
+
+        // Priority filters
+        document.querySelectorAll('[data-priority]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (this.filters.priority === btn.dataset.priority) {
+              this.filters.priority = null;
+              btn.classList.remove('active');
+            } else {
+              document.querySelectorAll('[data-priority]').forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+              this.filters.priority = btn.dataset.priority;
+            }
+            this.renderer.renderTodos(this.filters);
+          });
+        });
+
+        // Search with debounce
+        const debouncedSearch = this.debounce((searchTerm) => {
+          this.filters.search = searchTerm;
+          this.renderer.renderTodos(this.filters);
+        }, 300);
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+          debouncedSearch(e.target.value);
+        });
       }
-    });
+    }
 
-    document.getElementById('addTodoBtn').addEventListener('click', () => {
-      const title = document.getElementById('todoTitle').value.trim();
-      const categoryId = parseFloat(document.getElementById('todoCategory').value);
-      const priority = document.getElementById('todoPriority').value;
-      const dueDate = document.getElementById('todoDueDate').value;
-      const description = document.getElementById('todoDescription').value.trim();
-
-      if (title && categoryId) {
-        addTodo({ title, categoryId, priority, dueDate, description });
-        document.getElementById('todoTitle').value = '';
-        document.getElementById('todoDescription').value = '';
-        document.getElementById('todoDueDate').value = '';
-        renderAll();
-      } else {
-        alert('Please enter a title and select a category!');
-      }
-    });
-
-    document.getElementById('todosList').addEventListener('click', (e) => {
-      if (e.target.classList.contains('todo-checkbox')) {
-        const id = parseFloat(e.target.dataset.id);
-        toggleTodo(id);
-        renderAll();
-      } else if (e.target.classList.contains('btn-delete-todo')) {
-        const id = parseFloat(e.target.dataset.id);
-        deleteTodo(id);
-        renderAll();
-      }
-    });
-
-    document.querySelectorAll('[data-status]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-status]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        app.filters.status = btn.dataset.status;
-        renderTodos();
-      });
-    });
-
-    document.querySelectorAll('[data-priority]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (app.filters.priority === btn.dataset.priority) {
-          app.filters.priority = null;
-          btn.classList.remove('active');
-        } else {
-          document.querySelectorAll('[data-priority]').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          app.filters.priority = btn.dataset.priority;
-        }
-        renderTodos();
-      });
-    });
-
-    const debouncedSearch = debounce((searchTerm) => {
-      app.filters.search = searchTerm;
-      renderTodos();
-    }, 300);
-
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      debouncedSearch(e.target.value);
-    });
-
-    // Initialize app
-    init();
+    // Start the app
+    const app = new App();
   </script>
 </body>
 </html>
