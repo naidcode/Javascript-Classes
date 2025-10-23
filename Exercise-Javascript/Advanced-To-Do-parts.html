@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App - Phase 1</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+    }
+
+    .sidebar {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .sidebar h2 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+
+    .main-content {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .color-picker {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.color-option {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: transform 0.2s;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+}
+
+.color-option.selected {
+  border-color: #333;
+  transform: scale(1.15);
+}
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📋 Todo App - Phase 1</h1>
+      <p>Building Categories</p>
+    </header>
+
+    <div class="main-grid">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <h2>Categories</h2>
+        <div class="categoryForm">
+        <input type="text" id="categoryInput" placeholder="Enter Category Name" maxlength="20">
+        <div id="colorPicker" class="color-picker"></div>
+        <button id="addcategory">addcategory</button>
+        </div>
+        <div class="categoryList"></div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
+        <h2>Todos will go here in Phase 2</h2>
+        <p>Focus on categories first! 🎨</p>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    class Category {
+  constructor(name, color) {
+ this.id = Date.now() + Math.random(),
+ this.name = name,
+ this.color = color
+  }
+}
+
+// // Test it:
+// const testCat = new Category('Work', '#667eea');
+// console.log(testCat); // Should show: Category { id: ..., name: 'Work', color: '#667eea' }
+
+class TodoManager {
+  constructor() {
+    // TODO: Create empty categories array
+    this.categories = [];
+  }
+
+  addCategory(name, color) {
+    let category = new Category(name , color)
+    this.categories.push(category)
+    return category
+  }
+
+  deleteCategory(id) {
+    this.categories = this.categories.filter(c => c.id !== id)
+  }
+
+  getCategories() {
+    return [...this.categories];
+  }
+}
+
+// Test it:
+const manager = new TodoManager();
+manager.addCategory('Personal', '#667eea');
+manager.addCategory('Work', '#f093fb');
+console.log(manager.getCategories()); // Should show 2 categories
+
+class UIRenderer {
+  constructor(manager) {
+    // TODO: Store reference to manager
+    this.manager = manager;
+    // TODO: Create colors array
+    this.colors = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#fee140', '#30cfd0'];
+    // TODO: Set first color as selected
+    this.selectedColor = this.colors[0];
+  }
+
+  renderColorPicker() {
+    const picker = document.getElementById('colorPicker');
+    
+  picker.innerHTML = this.colors.map(color => `
+  <div class="color-option ${color === this.selectedColor ? "selected" : ''}" style='background: ${color}' data-color="${color}"></div>
+  `).join('')
+  }
+
+  renderCategories() {
+    const list = document.getElementById('categoriesList');
+    
+    // TODO: Get categories from this.manager
+    const categories = this.manager.getCategories();
+   list.innerHTML = categories.map(cat => `
+  <div class="category-item">
+    <span>${cat.name}</span>
+    <button data-id="${cat.id}">Delete</button>
+    </div>
+   `
+
+  ).join('')
+  }
+
+  renderAll() {
+    // TODO: Call both render methods
+    this.renderColorPicker();
+    this.renderCategories();
+  }
+}
+
+class App {
+  constructor() {
+    // TODO: Create manager instance
+    this.manager = new TodoManager();
+    
+    // TODO: Create renderer instance (pass manager to it)
+    this.renderer = new UIRenderer(this.manager);
+    
+    // TODO: Call init method
+    this.init();
+  }
+
+  init() {
+    // TODO: Add 3 default categories
+    this.manager.addCategory('Personal', '#667eea');
+    this.manager.addCategory('Work', '#f093fb');
+    this.manager.addCategory('Shopping', '#4facfe');
+    
+    // TODO: Render everything
+    this.renderer.renderAll();
+    
+    // TODO: Setup event listeners (we'll add this next)
+  }
+}
+
+// START THE APP!
+const app = new App();
+    
+  </script>
+</body>
+</html>
