@@ -82,6 +82,51 @@
   border-color: #333;
   transform: scale(1.15);
 }
+
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.category-item button {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.categoryForm input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.categoryForm button {
+  width: 100%;
+  padding: 10px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.categoryForm button:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+}
     
   </style>
 </head>
@@ -101,7 +146,7 @@
         <div id="colorPicker" class="color-picker"></div>
         <button id="addcategory">addcategory</button>
         </div>
-        <div class="categoryList"></div>
+        <div id="categoryList"></div>
       </aside>
 
       <!-- MAIN CONTENT -->
@@ -214,6 +259,43 @@ class App {
     this.renderer.renderAll();
     
     // TODO: Setup event listeners (we'll add this next)
+  }
+
+  setupeventlistener(){
+    document.getElementById("colorPicker").addEventListener("click" , (e)=> {
+      if(e.target.classList.contain("color-option")){
+      this.renderer.selectedColor = e.target.dataset.color;
+
+      this.renderer.renderColorPicker();
+      }
+    })
+
+    document.getElementById("addcategory").addEventListener("click" , () => {
+      let input = document.getElementById("categoryInput")
+      let name = input.value.trim();
+
+      if(name){
+        this.manager.addCategory(name , this.renderer.selectedColor)
+
+        input.value = ""
+        this.renderer.renderCategories()
+
+      } else{
+        alert("please enter category name")
+      }
+    })
+
+    document.getElementById("categoryList").addEventListener("click" ,(e)=>{
+      if(e.target.tagName === "BUTTON"){
+        let id = parseFloat(e.target.dataset.id);
+
+        if(confirm("delete this category")){
+          this.manager.deleteCategory(id)
+
+          this.renderer.renderCategories()
+        }
+      }
+    })
   }
 }
 
