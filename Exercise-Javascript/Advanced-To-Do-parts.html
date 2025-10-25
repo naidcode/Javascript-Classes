@@ -151,13 +151,30 @@
 
       <!-- MAIN CONTENT -->
       <main class="main-content">
-        <h2>Todos will go here in Phase 2</h2>
-        <p>Focus on categories first! 🎨</p>
+        <h2>Add New Todo</h2>
+        <div class="todo-form">
+          <input type="text" id="todoInput" placeholder="enter todo here" maxlength="100">
+          <select id="select-option">
+            <option>add category</option>
+          </select>
+          <button id="addTodo">Add To-Do</button>
+        </div>
+        <div id="taskList"></div>
       </main>
     </div>
   </div>
 
   <script>
+    class Todo{
+      constructor(text , categoryId) {
+        this.id = Date.now() + Math.random(),
+        this.text = text,
+        this.completed = false,
+        this.categoryId = categoryId,
+        this.createAt = Date.now()
+      }
+    }
+
     class Category {
   constructor(name, color) {
  this.id = Date.now() + Math.random(),
@@ -172,7 +189,7 @@
 
 class TodoManager {
   constructor() {
-    // TODO: Create empty categories array
+    this.todos = [];
     this.categories = [];
   }
 
@@ -183,27 +200,46 @@ class TodoManager {
   }
 
   deleteCategory(id) {
-    this.categories = this.categories.filter(c => c.id !== id)
+    this.categories = this.categories.filter(c => c.id !== id);
+    this.todos = this.todos.filter(t => t.categoryId !== id)
   }
 
   getCategories() {
     return [...this.categories];
   }
+
+  AddTodo(text , categoryId){
+    let todo = new Todo(text , categoryId)
+    this.todos.push(todo)
+    return todo;
+  }
+
+  DeleteTdo(id){
+  this.todos = this.todos.filter(t => t.id !== id)
+  }
+
+  toggleTodo(id){
+    let toggle = this.todos.find(f => f.id === id )
+    if(toggle){
+      toggle.completed = !toggle.completed
+    }
+  }
+
+  getTodo(){
+    return [...this.todos]
+  }
 }
 
-// Test it:
-const manager = new TodoManager();
-manager.addCategory('Personal', '#667eea');
-manager.addCategory('Work', '#f093fb');
-console.log(manager.getCategories()); // Should show 2 categories
+// // Test it:
+// const manager = new TodoManager();
+// manager.addCategory('Personal', '#667eea');
+// manager.addCategory('Work', '#f093fb');
+// console.log(manager.getCategories()); // Should show 2 categories
 
 class UIRenderer {
   constructor(manager) {
-    // TODO: Store reference to manager
     this.manager = manager;
-    // TODO: Create colors array
     this.colors = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#fee140', '#30cfd0'];
-    // TODO: Set first color as selected
     this.selectedColor = this.colors[0];
   }
 
@@ -216,17 +252,20 @@ class UIRenderer {
   }
 
   renderCategories() {
-    const list = document.getElementById('categoriesList');
+    const list = document.getElementById('categoryList');
     
     // TODO: Get categories from this.manager
     const categories = this.manager.getCategories();
+    if(categories.length === 0){
+      list.innerHTML = `<p style="color: grey" style="font-size:12px">categories not yet</p>`;
+      return
+    }
    list.innerHTML = categories.map(cat => `
   <div class="category-item">
     <span>${cat.name}</span>
     <button data-id="${cat.id}">Delete</button>
     </div>
    `
-
   ).join('')
   }
 
@@ -258,12 +297,12 @@ class App {
     // TODO: Render everything
     this.renderer.renderAll();
     
-    // TODO: Setup event listeners (we'll add this next)
+  this.setupeventlistener()
   }
 
   setupeventlistener(){
     document.getElementById("colorPicker").addEventListener("click" , (e)=> {
-      if(e.target.classList.contain("color-option")){
+      if(e.target.classList.contains("color-option")){
       this.renderer.selectedColor = e.target.dataset.color;
 
       this.renderer.renderColorPicker();
