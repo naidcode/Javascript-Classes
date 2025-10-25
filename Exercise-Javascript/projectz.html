@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App OOP - Phase 2</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header { text-align: center; color: white; margin-bottom: 30px; }
+    header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+    .main-grid { display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
+    
+    /* Sidebar Styles */
+    .sidebar {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      height: fit-content;
+    }
+    .sidebar h2 { color: #667eea; margin-bottom: 15px; font-size: 1.5rem; }
+    .color-picker { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .color-option {
+      width: 35px; height: 35px; border-radius: 50%;
+      cursor: pointer; border: 3px solid transparent;
+      transition: transform 0.2s;
+    }
+    .color-option:hover { transform: scale(1.1); }
+    .color-option.selected { border-color: #333; transform: scale(1.15); }
+    .category-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px; margin-bottom: 8px; background: #f5f5f5; border-radius: 8px;
+    }
+    .category-item button {
+      background: #ff6b6b; color: white; border: none;
+      padding: 5px 10px; border-radius: 5px; cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .category-item button:hover { background: #ff5252; }
+    .categoryForm input {
+      width: 100%; padding: 10px; border: 2px solid #e0e0e0;
+      border-radius: 8px; margin-bottom: 10px; font-size: 0.95rem;
+    }
+    .categoryForm button {
+      width: 100%; padding: 10px; background: #667eea;
+      color: white; border: none; border-radius: 8px;
+      cursor: pointer; font-weight: 600; transition: all 0.3s;
+    }
+    .categoryForm button:hover { background: #5568d3; transform: translateY(-2px); }
+    
+    /* Main Content Styles */
+    .main-content {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .main-content h2 { color: #667eea; margin-bottom: 20px; }
+    
+    /* Todo Form */
+    .todo-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .todo-form input {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .todo-form select {
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      min-width: 150px;
+    }
+    .todo-form button {
+      padding: 12px 30px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .todo-form button:hover { background: #5568d3; transform: translateY(-2px); }
+    
+    /* Todos List */
+    .todos-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+      transition: all 0.3s;
+    }
+    .todo-item:hover { background: #f0f0f0; }
+    .todo-item.completed {
+      opacity: 0.6;
+      background: #f5f5f5;
+    }
+    .todo-item.completed .todo-text {
+      text-decoration: line-through;
+      color: #999;
+    }
+    .todo-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    .todo-text {
+      flex: 1;
+      font-size: 1rem;
+      color: #333;
+    }
+    .todo-category {
+      padding: 5px 12px;
+      border-radius: 15px;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .delete-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .delete-btn:hover { opacity: 1; transform: scale(1.2); }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+    .empty-state h3 { font-size: 1.5rem; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📋 Advanced Todo App</h1>
+      <p>Phase 2: Full Todo Management with OOP</p>
+    </header>
+    
+    <div class="main-grid">
+      <!-- Sidebar: Categories -->
+      <aside class="sidebar">
+        <h2>Categories</h2>
+        <div class="categoryForm">
+          <input type="text" id="categoryInput" placeholder="Category Name" maxlength="20">
+          <div id="colorPicker" class="color-picker"></div>
+          <button id="addCategory">Add Category</button>
+        </div>
+        <div id="categoryList"></div>
+      </aside>
+
+      <!-- Main Content: Todos -->
+      <main class="main-content">
+        <h2>Add New Todo</h2>
+        <div class="todo-form">
+          <input type="text" id="todoInput" placeholder="What needs to be done?" maxlength="100">
+          <select id="categorySelect">
+            <option value="">Select Category</option>
+          </select>
+          <button id="addTodoBtn">Add Todo</button>
+        </div>
+        <div id="todosContainer"></div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // ===== TODO CLASS =====
+    class Todo {
+      constructor(text, categoryId) {
+        this.id = Date.now() + Math.random();
+        this.text = text;
+        this.categoryId = categoryId;
+        this.completed = false;
+        this.createdAt = Date.now();
+      }
+    }
+
+    // ===== CATEGORY CLASS =====
+    class Category {
+      constructor(name, color) {
+        this.id = Date.now() + Math.random();
+        this.name = name;
+        this.color = color;
+      }
+    }
+
+    // ===== TODO MANAGER (Business Logic) =====
+    class TodoManager {
+      constructor() {
+        this.categories = [];
+        this.todos = [];
+      }
+
+      // Category Methods
+      addCategory(name, color) {
+        const category = new Category(name, color);
+        this.categories.push(category);
+        return category;
+      }
+
+      deleteCategory(id) {
+        this.categories = this.categories.filter(c => c.id !== id);
+        // Also delete todos in this category
+        this.todos = this.todos.filter(t => t.categoryId !== id);
+      }
+
+      getCategories() {
+        return [...this.categories];
+      }
+
+      // Todo Methods
+      addTodo(text, categoryId) {
+        const todo = new Todo(text, categoryId);
+        this.todos.push(todo);
+        return todo;
+      }
+
+      deleteTodo(id) {
+        this.todos = this.todos.filter(t => t.id !== id);
+      }
+
+      toggleTodo(id) {
+        const todo = this.todos.find(t => t.id === id);
+        if (todo) {
+          todo.completed = !todo.completed;
+        }
+      }
+
+      getTodos() {
+        return [...this.todos];
+      }
+    }
+
+    // ===== UI RENDERER (Display Logic) =====
+    class UIRenderer {
+      constructor(manager) {
+        this.manager = manager;
+        this.colors = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#fee140', '#30cfd0'];
+        this.selectedColor = this.colors[0];
+      }
+
+      renderColorPicker() {
+        const picker = document.getElementById('colorPicker');
+        picker.innerHTML = this.colors.map(color => `
+          <div class="color-option ${color === this.selectedColor ? 'selected' : ''}" 
+               style="background: ${color}" data-color="${color}"></div>
+        `).join('');
+      }
+
+      renderCategories() {
+        const list = document.getElementById('categoryList');
+        const categories = this.manager.getCategories();
+        
+        if (categories.length === 0) {
+          list.innerHTML = '<p style="color: #999; font-size: 0.9rem;">No categories yet</p>';
+          return;
+        }
+
+        list.innerHTML = categories.map(cat => `
+          <div class="category-item">
+            <span>
+              <span style="display: inline-block; width: 12px; height: 12px; background: ${cat.color}; border-radius: 50%; margin-right: 8px;"></span>
+              ${cat.name}
+            </span>
+            <button data-id="${cat.id}">Delete</button>
+          </div>
+        `).join('');
+      }
+
+      renderCategorySelect() {
+        const select = document.getElementById('categorySelect');
+        const categories = this.manager.getCategories();
+        
+        if (categories.length === 0) {
+          select.innerHTML = '<option value="">No categories available</option>';
+          return;
+        }
+
+        select.innerHTML = `
+          <option value="">Select Category</option>
+          ${categories.map(cat => `
+            <option value="${cat.id}">${cat.name}</option>
+          `).join('')}
+        `;
+      }
+
+      renderTodos() {
+        const container = document.getElementById('todosContainer');
+        const todos = this.manager.getTodos();
+        
+        if (todos.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <h3>✨ No Todos Yet!</h3>
+              <p>Add your first todo above to get started</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = `
+          <div class="todos-list">
+            ${todos.map(todo => {
+              const category = this.manager.categories.find(c => c.id === todo.categoryId);
+              
+              return `
+                <div class="todo-item ${todo.completed ? 'completed' : ''}">
+                  <input type="checkbox" 
+                         data-id="${todo.id}" 
+                         ${todo.completed ? 'checked' : ''}>
+                  <span class="todo-text">${todo.text}</span>
+                  <span class="todo-category" style="background: ${category ? category.color : '#999'}">
+                    ${category ? category.name : 'Unknown'}
+                  </span>
+                  <button class="delete-btn" data-id="${todo.id}">🗑️</button>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      renderAll() {
+        this.renderColorPicker();
+        this.renderCategories();
+        this.renderCategorySelect();
+        this.renderTodos();
+      }
+    }
+
+    // ===== APP (Main Controller) =====
+    class App {
+      constructor() {
+        this.manager = new TodoManager();
+        this.renderer = new UIRenderer(this.manager);
+        this.init();
+      }
+
+      init() {
+        // Add some default categories
+        this.manager.addCategory('Personal', '#667eea');
+        this.manager.addCategory('Work', '#f093fb');
+        this.manager.addCategory('Shopping', '#4facfe');
+        
+        // Render everything
+        this.renderer.renderAll();
+        
+        // Setup event listeners
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        // Color Picker
+        document.getElementById('colorPicker').addEventListener('click', (e) => {
+          if (e.target.classList.contains('color-option')) {
+            this.renderer.selectedColor = e.target.dataset.color;
+            this.renderer.renderColorPicker();
+          }
+        });
+
+        // Add Category
+        document.getElementById('addCategory').addEventListener('click', () => {
+          const input = document.getElementById('categoryInput');
+          const name = input.value.trim();
+          
+          if (name) {
+            this.manager.addCategory(name, this.renderer.selectedColor);
+            input.value = '';
+            this.renderer.renderCategories();
+            this.renderer.renderCategorySelect();
+          } else {
+            alert('Please enter a category name');
+          }
+        });
+
+        // Delete Category
+        document.getElementById('categoryList').addEventListener('click', (e) => {
+          if (e.target.tagName === 'BUTTON') {
+            const id = parseFloat(e.target.dataset.id);
+            if (confirm('Delete this category and all its todos?')) {
+              this.manager.deleteCategory(id);
+              this.renderer.renderAll();
+            }
+          }
+        });
+
+        // Add Todo
+        document.getElementById('addTodoBtn').addEventListener('click', () => {
+          const input = document.getElementById('todoInput');
+          const select = document.getElementById('categorySelect');
+          const text = input.value.trim();
+          const categoryId = parseFloat(select.value);
+
+          if (!text) {
+            alert('Please enter a todo');
+            return;
+          }
+
+          if (!categoryId) {
+            alert('Please select a category');
+            return;
+          }
+
+          this.manager.addTodo(text, categoryId);
+          input.value = '';
+          this.renderer.renderTodos();
+        });
+
+        // Toggle & Delete Todos
+        document.getElementById('todosContainer').addEventListener('click', (e) => {
+          // Toggle checkbox
+          if (e.target.type === 'checkbox') {
+            const id = parseFloat(e.target.dataset.id);
+            this.manager.toggleTodo(id);
+            this.renderer.renderTodos();
+          }
+
+          // Delete todo
+          if (e.target.classList.contains('delete-btn')) {
+            const id = parseFloat(e.target.dataset.id);
+            if (confirm('Delete this todo?')) {
+              this.manager.deleteTodo(id);
+              this.renderer.renderTodos();
+            }
+          }
+        });
+      }
+    }
+
+    // Start the app!
+    const app = new App();
+  </script>
+</body>
+</html>
