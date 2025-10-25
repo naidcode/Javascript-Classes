@@ -5,60 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Todo App - Phase 1</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 20px;
-    }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-    header {
-      text-align: center;
-      color: white;
-      margin-bottom: 30px;
-    }
+/* ===== HEADER ===== */
+header {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+}
 
-    header h1 {
-      font-size: 2.5rem;
-    }
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-    .main-grid {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 20px;
-    }
+header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
 
-    .sidebar {
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
+/* ===== GRID LAYOUT ===== */
+.main-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+}
 
-    .sidebar h2 {
-      color: #667eea;
-      margin-bottom: 15px;
-    }
+/* ===== SIDEBAR (Categories) ===== */
+.sidebar {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  height: fit-content;
+}
 
-    .main-content {
-      background: white;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
+.sidebar h2 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
 
-    .color-picker {
+/* Color Picker */
+.color-picker {
   display: flex;
   gap: 8px;
   margin-bottom: 10px;
@@ -71,7 +77,7 @@
   border-radius: 50%;
   cursor: pointer;
   border: 3px solid transparent;
-  transition: transform 0.2s;
+  transition: transform 0.2s, border-color 0.2s;
 }
 
 .color-option:hover {
@@ -81,27 +87,10 @@
 .color-option.selected {
   border-color: #333;
   transform: scale(1.15);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-.category-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  margin-bottom: 8px;
-  background: #f5f5f5;
-  border-radius: 8px;
-}
-
-.category-item button {
-  background: #ff6b6b;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
+/* Category Form */
 .categoryForm input {
   width: 100%;
   padding: 10px;
@@ -109,6 +98,12 @@
   border-radius: 8px;
   margin-bottom: 10px;
   font-size: 0.95rem;
+  transition: border-color 0.3s;
+}
+
+.categoryForm input:focus {
+  outline: none;
+  border-color: #667eea;
 }
 
 .categoryForm button {
@@ -120,12 +115,239 @@
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 1rem;
   transition: all 0.3s;
 }
 
 .categoryForm button:hover {
   background: #5568d3;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Category List */
+.category-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.category-item:hover {
+  background: #ececec;
+}
+
+.category-item span {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.category-item button {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.category-item button:hover {
+  background: #ff5252;
+}
+
+/* ===== MAIN CONTENT (Todos) ===== */
+.main-content {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.main-content h2 {
+  color: #667eea;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+/* Todo Form */
+.todo-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.todo-form input {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.todo-form input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.todo-form select {
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  min-width: 150px;
+  transition: border-color 0.3s;
+}
+
+.todo-form select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.todo-form button {
+  padding: 12px 30px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.todo-form button:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Empty State */
+.empty-taskBar {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.empty-taskBar h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.empty-taskBar p {
+  font-size: 1rem;
+}
+
+/* Todos List Container */
+.todoBar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Individual Todo Item */
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  transition: all 0.3s;
+}
+
+.todo-item:hover {
+  background: #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.todo-item.completed {
+  opacity: 0.6;
+  background: #f5f5f5;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: #999;
+}
+
+/* Checkbox */
+.todo-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+/* Todo Text */
+.todo-item span:not(.todo-category) {
+  flex: 1;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Category Badge */
+.todo-category {
+  padding: 5px 12px;
+  border-radius: 15px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Delete Button */
+.delete-Btn {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.2s;
+  padding: 5px;
+}
+
+.delete-Btn:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .todo-form {
+    flex-direction: column;
+  }
+
+  .todo-form input,
+  .todo-form select,
+  .todo-form button {
+    width: 100%;
+  }
+
+  .todo-item {
+    flex-wrap: wrap;
+  }
 }
     
   </style>
@@ -214,7 +436,7 @@ class TodoManager {
     return todo;
   }
 
-  DeleteTdo(id){
+  DeleteTodo(id){
   this.todos = this.todos.filter(t => t.id !== id)
   }
 
@@ -269,10 +491,62 @@ class UIRenderer {
   ).join('')
   }
 
+  renderselector(){
+    let select = document.getElementById("select-option")
+    let categories = this.manager.getCategories();
+
+    if(categories.length === 0){
+      select.innerHTML = `<p style="color: grey" style="font-size: 12px">No Categories Available</p>`;
+      return
+    }
+
+    select.innerHTML  = `
+    <option value="">Add Category</option>
+      ${categories.map(cat =>
+       `<option value="${cat.id}">${cat.name}</option>`
+      ).join("")}
+      `;
+  }
+
+  renderTodo(){
+    let container = document.getElementById("taskList");
+    let todo = this.manager.getTodo();
+
+    if(todo.length === 0){
+      container.innerHTML = `
+      <div class="empty-taskBar">
+        <h3>✨ No To-Do Yet</h3>
+        <p>Add your first todo above to get started</p>
+        </div
+      `;
+      return;
+      }
+
+      container.innerHTML = `
+      <div class="todoBar">
+        ${todo.map(todo => {
+          const categories = this.manager.categories.find(f => f.id === todo.categoryId);
+          return`
+          <div class="todo-item ${todo.completed ? 'completed' : ''}";>
+            <input type="checkbox" data-id="${todo.id}" ${todo.completed ? 'checked' : ''}>
+            <span>${todo.text}</span>
+            <span class="todo-category" style="background: ${categories ? categories.color: "#999"}">${categories ? categories.name : "Unknown"}</sapn>
+              <button class="delete-Btn" data-id="${todo.id}">🗑️</button
+            </div>
+          `;
+        }).join('')}
+        </div>
+      `
+  }
+
+
+
   renderAll() {
     // TODO: Call both render methods
     this.renderColorPicker();
     this.renderCategories();
+    this.renderselector();
+    this.renderTodo();
   }
 }
 
@@ -313,15 +587,22 @@ class App {
       let input = document.getElementById("categoryInput")
       let name = input.value.trim();
 
-      if(name){
-        this.manager.addCategory(name , this.renderer.selectedColor)
+      // if(name){
+      //   this.manager.addCategory(name , this.renderer.selectedColor)  you can do like this also.
 
-        input.value = ""
-        this.renderer.renderCategories()
+      //   input.value = ""
+      //   this.renderer.renderCategories()
 
-      } else{
-        alert("please enter category name")
-      }
+      // } else{
+      //   alert("please enter category name")
+      // }
+      if(!name){
+        alert("please enter the category name")
+      } 
+      this.manager.addCategory(name,this.renderer.selectedColor)
+      input.value = ""
+      this.renderer.renderCategories()
+       this.renderer.renderselector()
     })
 
     document.getElementById("categoryList").addEventListener("click" ,(e)=>{
@@ -332,10 +613,49 @@ class App {
           this.manager.deleteCategory(id)
 
           this.renderer.renderCategories()
+           this.renderer.renderselector() 
         }
       }
+    });
+
+    document.getElementById("addTodo").addEventListener("click" , () => {
+      let input = document.getElementById("todoInput");
+      let select = document.getElementById("select-option");
+    let text =   input.value.trim();
+      let category = parseFloat(select.value);
+
+      if(!text){
+        alert("first enter todo task");
+        return
+      } 
+      if(!category){
+        alert("please select category")
+        return
+      }
+      this.manager.AddTodo(text ,category )
+      input.value = "";
+      this.renderer.renderTodo();
+    });
+
+    document.getElementById("taskList").addEventListener("click" , (e) => {
+      if(e.target.type === "checkbox"){
+        let id = parseFloat(e.target.dataset.id);
+        this.manager.toggleTodo(id)
+        this.renderer.renderTodo();
+      }
+
+      if(e.target.classList.contains("delete-Btn")){
+        let id = parseFloat(e.target.dataset.id)
+        if(confirm("this todo delete")){
+
+          this.manager.DeleteTodo(id)
+          this.renderer.renderTodo();
+        }
+        }
     })
   }
+
+
 }
 
 // START THE APP!
