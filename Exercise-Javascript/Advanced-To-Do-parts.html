@@ -250,6 +250,10 @@ header p {
   font-size: 1rem;
 }
 
+.pm{
+  margin-top: 12px;
+}
+
 /* Todos List Container */
 .todoBar {
   display: flex;
@@ -325,6 +329,39 @@ header p {
   transform: scale(1.2);
 }
 
+/* Filter Buttons */
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.filter-btn {
+  padding: 8px 20px;
+  background: white;
+  color: #666;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.filter-btn:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.filter-btn.active {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 950px) {
   .main-grid {
@@ -381,6 +418,14 @@ header p {
           </select>
           <button id="addTodo">Add To-Do</button>
         </div>
+        
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="active">Active</button>
+          <button class="filter-btn" data-filter="completed">Completed</button>
+        </div>
+        
+        <div id="todo-form"></div>
         <div id="taskList"></div>
       </main>
     </div>
@@ -392,8 +437,8 @@ header p {
         this.id = Date.now() + Math.random(),
         this.text = text,
         this.completed = false,
-        this.categoryId = categoryId,
-        this.createAt = Date.now()
+        this.categoryId = categoryId
+        // this.createAt = Date.now()  no need
       }
     }
 
@@ -413,6 +458,7 @@ class TodoManager {
   constructor() {
     this.todos = [];
     this.categories = [];
+
   }
 
   addCategory(name, color) {
@@ -423,7 +469,7 @@ class TodoManager {
 
   deleteCategory(id) {
     this.categories = this.categories.filter(c => c.id !== id);
-    this.todos = this.todos.filter(t => t.categoryId !== id)
+    // this.todos = this.todos.filter(t => t.categoryId !== id)  no need
   }
 
   getCategories() {
@@ -449,6 +495,17 @@ class TodoManager {
 
   getTodo(){
     return [...this.todos]
+  }
+
+  getFilteredTodos(filter){
+    let Alltodo = this.getTodo()
+
+    if(filter === "active"){
+      return Alltodo.filter(t => !t.completed)
+    } else if(filter === "completed"){
+      return Alltodo.filter(t => t.completed)
+    }
+    return Alltodo
   }
 }
 
@@ -479,7 +536,7 @@ class UIRenderer {
     // TODO: Get categories from this.manager
     const categories = this.manager.getCategories();
     if(categories.length === 0){
-      list.innerHTML = `<p style="color: grey" style="font-size:12px">categories not yet</p>`;
+      list.innerHTML = `<p class="pm" style="color: grey" style="font-size:12px">categories not yet</p>`;
       return
     }
    list.innerHTML = categories.map(cat => `
@@ -496,35 +553,38 @@ class UIRenderer {
     let categories = this.manager.getCategories();
 
     if(categories.length === 0){
-      select.innerHTML = `<p style="color: grey" style="font-size: 12px">No Categories Available</p>`;
+      select.innerHTML =  '<option value="">No categories available</option>';
       return
     }
 
     select.innerHTML  = `
     <option value="">Add Category</option>
-      ${categories.map(cat =>
-       `<option value="${cat.id}">${cat.name}</option>`
+    ${categories.map(cat =>
+    `<option value="${cat.id}">${cat.name}</option>`
       ).join("")}
       `;
   }
 
-  renderTodo(){
+  renderTodo(filter = "all"){
     let container = document.getElementById("taskList");
-    let todo = this.manager.getTodo();
+    let todos = this.manager.getFilteredTodos(filter);
+    // let todo = this.manager.getTodo();
 
-    if(todo.length === 0){
+    if(todos.length === 0){
       container.innerHTML = `
       <div class="empty-taskBar">
-        <h3>✨ No To-Do Yet</h3>
-        <p>Add your first todo above to get started</p>
-        </div
+        <h3>✨ No To-Do ${filter === "all" ? "yet" : "here"}</h3>
+        <p id="message">${filter === "active" ? "all task completed 🥳" : 
+          filter === "completed" ? "no task yet complted" : 
+          'add your first todo above to get started'}</p>
+        </div>
       `;
       return;
       }
 
       container.innerHTML = `
       <div class="todoBar">
-        ${todo.map(todo => {
+        ${todos.map(todo => {
           const categories = this.manager.categories.find(f => f.id === todo.categoryId);
           return`
           <div class="todo-item ${todo.completed ? 'completed' : ''}";>
@@ -557,6 +617,7 @@ class App {
     
     // TODO: Create renderer instance (pass manager to it)
     this.renderer = new UIRenderer(this.manager);
+    this.currentfilter = "all"
     
     // TODO: Call init method
     this.init();
@@ -634,14 +695,14 @@ class App {
       }
       this.manager.AddTodo(text ,category )
       input.value = "";
-      this.renderer.renderTodo();
+      this.renderer.renderTodo(this.currentfilter);
     });
 
     document.getElementById("taskList").addEventListener("click" , (e) => {
       if(e.target.type === "checkbox"){
         let id = parseFloat(e.target.dataset.id);
         this.manager.toggleTodo(id)
-        this.renderer.renderTodo();
+        this.renderer.renderTodo(this.currentfilter);
       }
 
       if(e.target.classList.contains("delete-Btn")){
@@ -649,10 +710,27 @@ class App {
         if(confirm("this todo delete")){
 
           this.manager.DeleteTodo(id)
-          this.renderer.renderTodo();
+          this.renderer.renderTodo(this.currentfilter);
         }
         }
-    })
+      });
+      document.querySelector(".filter-buttons").addEventListener("click" , (e) => {
+        if(e.target.classList.contains("filter-btn")){
+  
+          this.currentfilter = e.target.dataset.filter;
+        
+  
+        document.querySelectorAll(".filter-btn").forEach(buttons => {
+          buttons.classList.remove("active")
+        });
+  
+        e.target.classList.add("active");
+
+        this.renderer.renderTodo(this.currentfilter)
+      }
+      })
+
+
   }
 
 
