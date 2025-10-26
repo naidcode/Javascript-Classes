@@ -103,7 +103,7 @@
             u.dob.age,
             u.picture.large,
         )
-            this.#users.push(user);
+            // this.#users.push(user);
             this.saveLocalStorage();
             this.userDisplay(user);
 
@@ -133,16 +133,12 @@
 
       loadLocalStorage(){
         let data = JSON.parse(localStorage.getItem("user")) || []
-        this.#users =  data.map(d => new User(d.id , d.name, d.email, d.city,d.age, d.picture))
+       return data.map(d => new User(d.id , d.name, d.email, d.city,d.age, d.picture))
       }
 
-      lastSave(){
-        let lastUser = this.#users[this.#users.length - 1]
-        if(lastUser) this.userDisplay(lastUser)
-      }
+   
     }
     let manager = new UserManager()
-    manager.lastSave()
 
     document.getElementById("newUserBtn").addEventListener("click", () => {
       manager.fetchUser()
