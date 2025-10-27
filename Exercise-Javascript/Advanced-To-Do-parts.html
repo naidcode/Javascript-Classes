@@ -425,7 +425,7 @@ header p {
           <button class="filter-btn" data-filter="completed">Completed</button>
         </div>
         
-        <div id="todo-form"></div>
+        <!-- <div id="todo-form"></div> -->
         <div id="taskList"></div>
       </main>
     </div>
@@ -575,7 +575,7 @@ class UIRenderer {
       <div class="empty-taskBar">
         <h3>✨ No To-Do ${filter === "all" ? "yet" : "here"}</h3>
         <p id="message">${filter === "active" ? "all task completed 🥳" : 
-          filter === "completed" ? "no task yet complted" : 
+          filter === "completed" ? "no task yet completed" : 
           'add your first todo above to get started'}</p>
         </div>
       `;
@@ -591,7 +591,7 @@ class UIRenderer {
             <input type="checkbox" data-id="${todo.id}" ${todo.completed ? 'checked' : ''}>
             <span>${todo.text}</span>
             <span class="todo-category" style="background: ${categories ? categories.color: "#999"}">${categories ? categories.name : "Unknown"}</sapn>
-              <button class="delete-Btn" data-id="${todo.id}">🗑️</button
+              <button class="delete-Btn" data-id="${todo.id}">🗑️</button>
             </div>
           `;
         }).join('')}
@@ -663,7 +663,7 @@ class App {
       this.manager.addCategory(name,this.renderer.selectedColor)
       input.value = ""
       this.renderer.renderCategories()
-       this.renderer.renderselector()
+      this.renderer.renderselector()
     })
 
     document.getElementById("categoryList").addEventListener("click" ,(e)=>{
