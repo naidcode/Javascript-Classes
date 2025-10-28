@@ -402,7 +402,6 @@ header p {
         <h2>Categories</h2>
         <div class="categoryForm">
         <input type="text" id="categoryInput" placeholder="Enter Category Name" maxlength="20">
-        <div id="colorPicker" class="color-picker"></div>
         <button id="addcategory">addcategory</button>
         </div>
         <div id="categoryList"></div>
@@ -443,10 +442,9 @@ header p {
     }
 
     class Category {
-  constructor(name, color) {
+  constructor(name) {
  this.id = Date.now() + Math.random(),
- this.name = name,
- this.color = color
+ this.name = name
   }
 }
 
@@ -461,15 +459,14 @@ class TodoManager {
 
   }
 
-  addCategory(name, color) {
-    let category = new Category(name , color)
+  addCategory(name) {
+    let category = new Category(name)
     this.categories.push(category)
     return category
   }
 
   deleteCategory(id) {
     this.categories = this.categories.filter(c => c.id !== id);
-    // this.todos = this.todos.filter(t => t.categoryId !== id)  no need
   }
 
   getCategories() {
@@ -518,16 +515,6 @@ class TodoManager {
 class UIRenderer {
   constructor(manager) {
     this.manager = manager;
-    this.colors = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#fee140', '#30cfd0'];
-    this.selectedColor = this.colors[0];
-  }
-
-  renderColorPicker() {
-    const picker = document.getElementById('colorPicker');
-    
-  picker.innerHTML = this.colors.map(color => `
-  <div class="color-option ${color === this.selectedColor ? "selected" : ''}" style='background: ${color}' data-color="${color}"></div>
-  `).join('')
   }
 
   renderCategories() {
@@ -603,7 +590,6 @@ class UIRenderer {
 
   renderAll() {
     // TODO: Call both render methods
-    this.renderColorPicker();
     this.renderCategories();
     this.renderselector();
     this.renderTodo();
@@ -625,9 +611,9 @@ class App {
 
   init() {
     // TODO: Add 3 default categories
-    this.manager.addCategory('Personal', '#667eea');
-    this.manager.addCategory('Work', '#f093fb');
-    this.manager.addCategory('Shopping', '#4facfe');
+    this.manager.addCategory('Personal');
+    this.manager.addCategory('Work');
+    this.manager.addCategory('Shopping');
     
     // TODO: Render everything
     this.renderer.renderAll();
@@ -636,13 +622,6 @@ class App {
   }
 
   setupeventlistener(){
-    document.getElementById("colorPicker").addEventListener("click" , (e)=> {
-      if(e.target.classList.contains("color-option")){
-      this.renderer.selectedColor = e.target.dataset.color;
-
-      this.renderer.renderColorPicker();
-      }
-    })
 
     document.getElementById("addcategory").addEventListener("click" , () => {
       let input = document.getElementById("categoryInput")
