@@ -40,11 +40,10 @@
       document.getElementById("ItemName").value = "";
       document.getElementById("itemPrice").value = "";
 
-      renderCart()
-
+      renderCart();
     }
 
-   // ✅ Function to render cart
+    // ✅ Function to render cart
     function renderCart() {
       const ul = document.getElementById("listItem");
       ul.innerHTML = ""; // Clear previous list
@@ -62,7 +61,7 @@
         // Create delete button
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "❌ Delete";
-        deleteButton.onclick = function() {
+        deleteButton.onclick = function () {
           Cart.splice(i, 1);
           updateStorage();
           renderCart();
@@ -73,11 +72,10 @@
       }
       document.getElementById("totalPrice").textContent = `Total: ${total}`;
     }
-    
 
     function updateStorage() {
       localStorage.setItem("Cart", JSON.stringify(Cart));
     }
-    renderCart()
+    renderCart();
   </script>
 </html>
